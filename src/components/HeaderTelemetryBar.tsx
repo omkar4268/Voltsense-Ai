@@ -23,6 +23,7 @@ interface HeaderTelemetryBarProps {
   activeTabTitle?: string;
   isSimRunning?: boolean;
   onToggleSim?: () => void;
+  onGoHome?: () => void;
 }
 
 export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
@@ -34,6 +35,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
   activeTabTitle = 'Overview',
   isSimRunning = true,
   onToggleSim,
+  onGoHome,
 }) => {
   return (
     <header className="border-b border-slate-800/80 bg-[#080D1A]/95 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-6 py-3 transition-colors">
@@ -155,6 +157,18 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
               ) : (
                 <Play className="w-3.5 h-3.5 text-emerald-400" />
               )}
+            </button>
+          )}
+
+          {/* Commercial Home Button */}
+          {onGoHome && (
+            <button
+              onClick={onGoHome}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-amber-300 hover:text-amber-200 transition-all shadow-sm"
+              title="Return to Commercial Showcase"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Commercial Home</span>
             </button>
           )}
 

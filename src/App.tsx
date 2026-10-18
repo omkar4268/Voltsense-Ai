@@ -10,6 +10,7 @@ import { BatteryDegradationPanel } from './components/BatteryDegradationPanel';
 import { AuditLedgerTerminal } from './components/AuditLedgerTerminal';
 import { PitchDeckModal } from './components/PitchDeckModal';
 import { AuroraCurtain } from './components/ui/aurora-curtain';
+import { LandingPage } from './components/LandingPage';
 import { 
   Sun, 
   BatteryCharging, 
@@ -96,7 +97,7 @@ export const App: React.FC = () => {
     },
   ]);
 
-  const [activeTab, setActiveTab] = useState<NavTab>('overview');
+  const [activeTab, setActiveTab] = useState<NavTab>('landing');
   const [overviewDisplay, setOverviewDisplay] = useState<'circuit' | 'aurora-3d'>('circuit');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(true);
@@ -271,6 +272,7 @@ export const App: React.FC = () => {
 
   const getTabTitle = (tab: NavTab) => {
     switch (tab) {
+      case 'landing': return 'Commercial Home';
       case 'overview': return 'Overview';
       case 'forecast': return 'AI Forecast';
       case 'battery': return 'Battery Life';
@@ -284,6 +286,23 @@ export const App: React.FC = () => {
     message: 'Edge-AI active on Raspberry Pi 5 · 100% clean autonomous dispatch',
     timestamp: '12:00:00'
   };
+
+  if (activeTab === 'landing') {
+    return (
+      <div className="min-h-screen bg-[#060913] text-slate-100 font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+        <LandingPage
+          onLaunchConsole={() => setActiveTab('overview')}
+          onOpenSpecs={() => setIsSpecsModalOpen(true)}
+          state={state}
+          onApplyScenario={handleApplyScenario}
+        />
+        <PitchDeckModal
+          isOpen={isSpecsModalOpen}
+          onClose={() => setIsSpecsModalOpen(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#070A12] text-slate-100 flex font-sans selection:bg-emerald-500/30 selection:text-emerald-200 relative overflow-x-hidden">
@@ -314,6 +333,7 @@ export const App: React.FC = () => {
           activeTabTitle={getTabTitle(activeTab)}
           isSimRunning={isSimulationRunning}
           onToggleSim={() => setIsSimulationRunning(!isSimulationRunning)}
+          onGoHome={() => setActiveTab('landing')}
         />
 
         {/* Main Canvas Body */}

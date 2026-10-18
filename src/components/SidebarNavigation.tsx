@@ -7,11 +7,13 @@ import {
   Terminal, 
   FileText, 
   Cpu, 
-  Layers
+  Layers,
+  Sparkles,
+  Home
 } from 'lucide-react';
 import { MicrogridState } from '../types';
 
-export type NavTab = 'overview' | 'forecast' | 'battery' | 'sandbox' | 'ledger' | 'specs';
+export type NavTab = 'landing' | 'overview' | 'forecast' | 'battery' | 'sandbox' | 'ledger' | 'specs';
 
 interface SidebarNavigationProps {
   activeTab: NavTab;
@@ -29,6 +31,14 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   onCloseMobile,
 }) => {
   const navItems = [
+    {
+      id: 'landing' as NavTab,
+      label: 'Commercial Home',
+      subtitle: 'Product Showcase & ROI',
+      icon: Sparkles,
+      color: 'text-amber-400',
+      activeBg: 'bg-amber-500/15 border-amber-500/40 text-amber-300',
+    },
     {
       id: 'overview' as NavTab,
       label: 'Overview',
