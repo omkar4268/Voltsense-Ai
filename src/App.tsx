@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ControllerMode, ForecastPoint, LedgerLog, MicrogridState } from './types';
 import { generateInitialForecast, stepSimulation } from './utils/simulationEngine';
+import { SidebarNavigation, NavTab } from './components/SidebarNavigation';
 import { HeaderTelemetryBar } from './components/HeaderTelemetryBar';
 import { PowerTopologyTwin } from './components/PowerTopologyTwin';
 import { SandboxControlPanel } from './components/SandboxControlPanel';
@@ -8,7 +9,20 @@ import { ForecastChartModule } from './components/ForecastChartModule';
 import { BatteryDegradationPanel } from './components/BatteryDegradationPanel';
 import { AuditLedgerTerminal } from './components/AuditLedgerTerminal';
 import { PitchDeckModal } from './components/PitchDeckModal';
-import { Play, Pause, RefreshCw, Zap, Shield, Sparkles } from 'lucide-react';
+import { 
+  Sun, 
+  BatteryCharging, 
+  Factory, 
+  Leaf, 
+  Flame, 
+  Cpu, 
+  TrendingUp, 
+  Sliders, 
+  Layers,
+  ChevronRight,
+  ShieldCheck,
+  Sparkles
+} from 'lucide-react';
 
 const INITIAL_STATE: MicrogridState = {
   irradiance: 780,
@@ -78,6 +92,9 @@ export const App: React.FC = () => {
     },
   ]);
 
+  const [activeTab, setActiveTab] = useState<NavTab>('overview');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(true);
   const [isPitchModalOpen, setIsPitchModalOpen] = useState<boolean>(false);
   const [tickCounter, setTickCounter] = useState<number>(0);
@@ -97,7 +114,7 @@ export const App: React.FC = () => {
         setState((prevState) => {
           const { nextState, newLog } = stepSimulation(prevState, nextCount);
           if (newLog) {
-            setLogs((prevLogs) => [newLog, ...prevLogs.slice(0, 120)]); // Keep last 120 logs
+            setLogs((prevLogs) => [newLog, ...prevLogs.slice(0, 150)]);
           }
           return nextState;
         });
@@ -172,98 +189,307 @@ export const App: React.FC = () => {
     setLogs([]);
   }, []);
 
+  const getTabTitle = (tab: NavTab) => {
+    switch (tab) {
+      case 'overview': return 'Microgrid Digital Twin & Power Topology';
+      case 'forecast': return '24-Hour Predictive AI Horizon';
+      case 'battery': return 'BESS Electrochemical Health & Wear';
+      case 'sandbox': return 'Judge Sandbox & Chaos Simulator';
+      case 'ledger': return 'Verifiable ESG Carbon Audit Ledger';
+      case 'pitch': return 'Hackathon Pitch Deck & Architecture';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#070A12] text-slate-100 flex flex-col font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className="min-h-screen bg-[#070A12] text-slate-100 flex font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
       
-      {/* Top Hardware & Edge Telemetry Bar */}
-      <HeaderTelemetryBar
+      {/* 1. Responsive Sidebar Navigation */}
+      <SidebarNavigation
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        isCollapsed={isSidebarCollapsed}
+        onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         state={state}
-        onModeChange={handleModeChange}
-        onTriggerChaos={handleTriggerChaos}
-        onOpenPitchModal={() => setIsPitchModalOpen(true)}
+        mobileOpen={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Main SCADA Command Center Body */}
-      <main className="flex-1 max-w-[1720px] w-full mx-auto p-3 sm:p-5 space-y-4 sm:space-y-5">
+      {/* 2. Main Content Canvas */}
+      <div className="flex-1 flex flex-col min-w-0">
         
-        {/* ROW 1: Digital Twin Topology (Left 60%) + Judge Sandbox Sliders (Right 40%) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-          <div className="lg:col-span-7 xl:col-span-7 flex flex-col">
-            <PowerTopologyTwin state={state} />
+        {/* Executive Header Bar */}
+        <HeaderTelemetryBar
+          state={state}
+          onModeChange={handleModeChange}
+          onTriggerChaos={handleTriggerChaos}
+          onOpenPitchModal={() => setIsPitchModalOpen(true)}
+          onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          activeTabTitle={getTabTitle(activeTab)}
+          isSimRunning={isSimulationRunning}
+          onToggleSim={() => setIsSimulationRunning(!isSimulationRunning)}
+        />
+
+        {/* Tabbed Content Body with Breathable Spacing */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
+          
+          {/* TAB 1: OVERVIEW (Clean Digital Twin + 4 High-Level KPI Cards) */}
+          {activeTab === 'overview' && (
+            <div className="space-y-6 animate-fade-in">
+              
+              {/* 4 Spacious Primary KPI Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                
+                {/* KPI 1: Solar */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg relative overflow-hidden group">
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                    <span className="font-semibold flex items-center gap-1.5 text-slate-300">
+                      <Sun className="w-4 h-4 text-emerald-400" /> Solar PV Output
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                      {state.irradiance} W/m²
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold font-mono text-emerald-400 glow-text-emerald">
+                      {state.solarKW}
+                    </span>
+                    <span className="text-sm text-slate-400 font-mono">kW Active</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-2 flex justify-between font-mono">
+                    <span>Weather: {state.weatherHorizon}</span>
+                    <span className="text-emerald-400 font-bold">100% Zero-Carbon</span>
+                  </div>
+                </div>
+
+                {/* KPI 2: Battery Storage */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg relative overflow-hidden group">
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                    <span className="font-semibold flex items-center gap-1.5 text-slate-300">
+                      <BatteryCharging className="w-4 h-4 text-cyan-400" /> BESS Storage
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                      {state.bessHealthPct}% SoH
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold font-mono text-cyan-300 glow-text-cyan">
+                      {state.bessSoC}%
+                    </span>
+                    <span className="text-sm font-mono text-cyan-400">
+                      ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-2 flex justify-between font-mono">
+                    <span>Constraint: ≥{state.minSocConstraint}%</span>
+                    <span className="text-cyan-300 font-bold">DoD: {state.bessDoD}%</span>
+                  </div>
+                </div>
+
+                {/* KPI 3: Facility Demand */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg relative overflow-hidden group">
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                    <span className="font-semibold flex items-center gap-1.5 text-slate-300">
+                      <Factory className="w-4 h-4 text-amber-400" /> Facility & EV Load
+                    </span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                      Live Metered
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold font-mono text-amber-400 glow-text-amber">
+                      {state.facilityLoadKW}
+                    </span>
+                    <span className="text-sm text-slate-400 font-mono">kW Demand</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-2 flex justify-between font-mono">
+                    <span>Base: {state.baseFacilityLoad} kW</span>
+                    <span className="text-amber-300 font-bold">+ EV Fleet Surge</span>
+                  </div>
+                </div>
+
+                {/* KPI 4: Carbon & Diesel Suppression */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/60 border border-slate-800 shadow-lg relative overflow-hidden group">
+                  <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+                    <span className="font-semibold flex items-center gap-1.5 text-slate-300">
+                      <Leaf className="w-4 h-4 text-emerald-400" /> Avoided Emissions
+                    </span>
+                    <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
+                      state.dieselStatus === 'ACTIVE' 
+                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse'
+                        : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/30'
+                    }`}>
+                      DIESEL: {state.dieselStatus}
+                    </span>
+                  </div>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-extrabold font-mono text-emerald-400 glow-text-emerald">
+                      {state.cumulativeCo2SavedKg.toFixed(2)}
+                    </span>
+                    <span className="text-sm text-slate-400 font-mono">kg CO₂</span>
+                  </div>
+                  <div className="text-[11px] text-slate-400 mt-2 flex justify-between font-mono">
+                    <span>Clean: {state.cleanEnergyRatioPct}%</span>
+                    <span className="text-emerald-300 font-bold">Saved: ${state.costSavingsUSD}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Main Spacious Microgrid Digital Twin Topology Canvas */}
+              <div className="w-full">
+                <PowerTopologyTwin state={state} />
+              </div>
+
+              {/* Quick Navigation Cards to Deep Dive */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                <div 
+                  onClick={() => setActiveTab('forecast')}
+                  className="p-4 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/40 cursor-pointer transition-all flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-lg bg-cyan-500/10 text-cyan-400">
+                      <TrendingUp className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-200 group-hover:text-cyan-300">
+                        24-Hour Predictive AI Horizon
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        View 96 intervals & XGBoost/LSTM MAPE
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400" />
+                </div>
+
+                <div 
+                  onClick={() => setActiveTab('battery')}
+                  className="p-4 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-purple-500/40 cursor-pointer transition-all flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-lg bg-purple-500/10 text-purple-400">
+                      <BatteryCharging className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-200 group-hover:text-purple-300">
+                        Battery Health & Degradation
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        Explore +15.2% life & 10-yr wear curves
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-purple-400" />
+                </div>
+
+                <div 
+                  onClick={() => setActiveTab('sandbox')}
+                  className="p-4 rounded-xl bg-slate-900/50 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/40 cursor-pointer transition-all flex items-center justify-between group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-lg bg-amber-500/10 text-amber-400">
+                      <Sliders className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-bold text-slate-200 group-hover:text-amber-300">
+                        Judge Sandbox & Sliders
+                      </div>
+                      <div className="text-xs text-slate-400">
+                        Inject chaos & manipulate physics live
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400" />
+                </div>
+              </div>
+
+            </div>
+          )}
+
+          {/* TAB 2: 24-HOUR AI FORECAST */}
+          {activeTab === 'forecast' && (
+            <div className="space-y-6 animate-fade-in">
+              <ForecastChartModule
+                forecast={forecast}
+                currentSimMinutes={state.simulatedTimeMinutes}
+              />
+            </div>
+          )}
+
+          {/* TAB 3: BATTERY HEALTH & WEAR */}
+          {activeTab === 'battery' && (
+            <div className="space-y-6 animate-fade-in">
+              <BatteryDegradationPanel state={state} />
+            </div>
+          )}
+
+          {/* TAB 4: JUDGE SANDBOX & CHAOS */}
+          {activeTab === 'sandbox' && (
+            <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
+              <SandboxControlPanel
+                state={state}
+                onUpdateState={handleUpdateState}
+                onResetDefaults={handleResetDefaults}
+              />
+            </div>
+          )}
+
+          {/* TAB 5: ESG CARBON LEDGER */}
+          {activeTab === 'ledger' && (
+            <div className="space-y-6 animate-fade-in">
+              <AuditLedgerTerminal
+                logs={logs}
+                state={state}
+                forecast={forecast}
+                onClearLogs={handleClearLogs}
+              />
+            </div>
+          )}
+
+          {/* TAB 6: PITCH & SPECS */}
+          {activeTab === 'pitch' && (
+            <div className="animate-fade-in">
+              <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 text-center max-w-2xl mx-auto space-y-4">
+                <Sparkles className="w-10 h-10 text-cyan-400 mx-auto" />
+                <h2 className="text-xl font-bold text-white">
+                  VoltSense AI Pitch Deck & Specifications
+                </h2>
+                <p className="text-sm text-slate-300">
+                  Open the full modal to review the problem abstract, edge hardware specs (RPi 5 + ESP32 RTOS), mathematical formulation, and verified hackathon impact metrics.
+                </p>
+                <button
+                  onClick={() => setIsPitchModalOpen(true)}
+                  className="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold font-mono transition-all"
+                >
+                  Open Full Pitch Deck Modal
+                </button>
+              </div>
+            </div>
+          )}
+
+        </main>
+
+        {/* Executive SCADA Footer */}
+        <footer className="border-t border-slate-800/80 bg-[#070A14] px-6 py-3 text-xs font-mono text-slate-500">
+          <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-2 text-slate-300">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                VoltSense AI Dispatch Engine Active
+              </span>
+              <span>|</span>
+              <span>Target: ARM64 Cortex-A76 / ESP-IDF</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <span>Ticks: {tickCounter}</span>
+              <span className="text-emerald-400 font-bold">100% Offline Autonomous</span>
+            </div>
           </div>
-          <div className="lg:col-span-5 xl:col-span-5 flex flex-col">
-            <SandboxControlPanel
-              state={state}
-              onUpdateState={handleUpdateState}
-              onResetDefaults={handleResetDefaults}
-            />
-          </div>
-        </div>
+        </footer>
 
-        {/* ROW 2: 24-Hour Predictive AI Forecast (Left 60%) + BESS Degradation Optimizer (Right 40%) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
-          <div className="lg:col-span-7 xl:col-span-7 flex flex-col">
-            <ForecastChartModule
-              forecast={forecast}
-              currentSimMinutes={state.simulatedTimeMinutes}
-            />
-          </div>
-          <div className="lg:col-span-5 xl:col-span-5 flex flex-col">
-            <BatteryDegradationPanel state={state} />
-          </div>
-        </div>
+      </div>
 
-        {/* ROW 3: Verifiable ESG Carbon Accounting & Autonomous Audit Ledger (Full Width) */}
-        <div className="w-full">
-          <AuditLedgerTerminal
-            logs={logs}
-            state={state}
-            forecast={forecast}
-            onClearLogs={handleClearLogs}
-          />
-        </div>
-
-      </main>
-
-      {/* Industrial SCADA Footer Bar */}
-      <footer className="border-t border-slate-800/80 bg-[#070A12] px-4 py-2 text-[11px] font-mono text-slate-500">
-        <div className="max-w-[1720px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1.5 text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              VoltSense AI Edge Dispatch Kernel
-            </span>
-            <span>|</span>
-            <span>Target Platform: ARM64 Linux / ESP-IDF RTOS</span>
-            <span>|</span>
-            <span>Deterministic ONNX Engine: v1.17</span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => setIsSimulationRunning(!isSimulationRunning)}
-              className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-900 border border-slate-800 hover:text-slate-200 transition-colors"
-            >
-              {isSimulationRunning ? (
-                <>
-                  <Pause className="w-3 h-3 text-amber-400" />
-                  <span>Pause Engine</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3 h-3 text-emerald-400" />
-                  <span>Resume Engine</span>
-                </>
-              )}
-            </button>
-
-            <span>Session Ticks: {tickCounter}</span>
-            <span className="text-emerald-400 font-bold">100% Client-Side Simulation Active</span>
-          </div>
-        </div>
-      </footer>
-
-      {/* Interactive Hackathon Pitch & Architecture Modal */}
+      {/* Pitch Deck Modal */}
       <PitchDeckModal
         isOpen={isPitchModalOpen}
         onClose={() => setIsPitchModalOpen(false)}

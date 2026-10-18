@@ -9,7 +9,11 @@ import {
   BookOpen, 
   WifiOff, 
   Radio, 
-  Sparkles 
+  Sparkles,
+  Menu,
+  Activity,
+  Play,
+  Pause
 } from 'lucide-react';
 
 interface HeaderTelemetryBarProps {
@@ -17,6 +21,10 @@ interface HeaderTelemetryBarProps {
   onModeChange: (mode: ControllerMode) => void;
   onTriggerChaos: () => void;
   onOpenPitchModal: () => void;
+  onToggleMobileMenu?: () => void;
+  activeTabTitle?: string;
+  isSimRunning?: boolean;
+  onToggleSim?: () => void;
 }
 
 export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
@@ -24,128 +32,123 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
   onModeChange,
   onTriggerChaos,
   onOpenPitchModal,
+  onToggleMobileMenu,
+  activeTabTitle = 'Microgrid Overview',
+  isSimRunning = true,
+  onToggleSim,
 }) => {
   return (
-    <header className="border-b border-slate-800/80 bg-[#070A12]/95 backdrop-blur-md sticky top-0 z-40 px-4 py-2.5">
-      <div className="max-w-[1720px] mx-auto flex flex-col xl:flex-row items-start xl:items-center justify-between gap-3">
+    <header className="border-b border-slate-800/80 bg-[#070A14]/90 backdrop-blur-md sticky top-0 z-30 px-4 sm:px-6 py-3">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
         
-        {/* Brand Logo & Tagline */}
+        {/* Left: Mobile Menu Button + Page Title Breadcrumb */}
         <div className="flex items-center gap-3">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-            <Zap className="w-5 h-5 text-emerald-400 animate-pulse" />
-            <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-          </div>
+          {onToggleMobileMenu && (
+            <button
+              onClick={onToggleMobileMenu}
+              className="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
+
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-                VoltSense <span className="text-emerald-400 font-mono">AI</span>
-              </h1>
-              <span className="text-[10px] uppercase font-mono tracking-widest px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
-                SCADA v2.4
-              </span>
+            <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+              <span>VoltSense Edge-AI</span>
+              <span>/</span>
+              <span className="text-emerald-400 font-bold">{activeTabTitle}</span>
             </div>
-            <p className="text-[11px] text-slate-400 hidden sm:block">
-              Edge-AI predictive power dispatch & battery optimization for sustainable microgrids
-            </p>
+            <h1 className="text-base sm:text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+              {activeTabTitle}
+              <span className="text-[11px] font-mono font-normal px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                Live 1.5s Closed-Loop
+              </span>
+            </h1>
           </div>
         </div>
 
-        {/* Live Hardware & Edge Telemetry Pill */}
-        <div className="flex flex-wrap items-center gap-2 bg-slate-900/80 border border-slate-800 rounded-lg px-3 py-1.5 text-[11px] font-mono">
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="font-semibold text-slate-200">Edge Node:</span>
-            <span className="text-cyan-300">RPi 5 + ESP32</span>
-          </div>
-          <span className="text-slate-600">|</span>
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <Radio className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Runtime:</span>
-            <span className="text-emerald-400 font-medium">ONNX (XGBoost/LSTM)</span>
-          </div>
-          <span className="text-slate-600">|</span>
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>Latency:</span>
-            <span className="text-emerald-300 font-bold">{state.inferenceLatencyMs}ms</span>
-          </div>
-          <span className="text-slate-600">|</span>
-          <div className="flex items-center gap-1.5 text-slate-300">
-            <WifiOff className="w-3.5 h-3.5 text-purple-400" />
-            <span className="text-purple-300">Cloud Dep: 0% (Autonomous)</span>
-          </div>
-        </div>
-
-        {/* Action Controls & Mode Switcher */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full xl:w-auto justify-end">
+        {/* Right: Controller Mode Switcher + Chaos Test + Simulation Controls */}
+        <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-start lg:justify-end">
           
           {/* Controller Mode 3-Way Switcher */}
-          <div className="inline-flex p-1 bg-slate-950 border border-slate-800 rounded-lg text-xs font-medium">
+          <div className="inline-flex p-1 bg-slate-950 border border-slate-800 rounded-xl text-xs font-medium">
             <button
               onClick={() => onModeChange('autonomous')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 state.controllerMode === 'autonomous'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm font-bold'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Dynamic predictive routing + cycle-wear protection"
+              title="Predictive dynamic routing with cycle-wear dampening"
             >
               <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Autonomous Edge-AI</span>
+              <span>Autonomous AI</span>
             </button>
             <button
               onClick={() => onModeChange('legacy')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 state.controllerMode === 'legacy'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-[0_0_12px_rgba(245,158,11,0.3)]'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm font-bold'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Reactive rules that trigger diesel late and wear out battery"
+              title="Reactive threshold rules (benchmark comparisons)"
             >
               <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
               <span>Legacy Static</span>
             </button>
             <button
               onClick={() => onModeChange('islanded')}
-              className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
                 state.controllerMode === 'islanded'
-                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-[0_0_12px_rgba(239,68,68,0.3)]'
+                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm font-bold'
                   : 'text-slate-400 hover:text-slate-200'
               }`}
-              title="Disconnects from main grid, prioritizes emergency loads"
+              title="Grid breaker open, isolated microgrid"
             >
               <ShieldCheck className="w-3.5 h-3.5 text-rose-400" />
-              <span>Islanded Grid</span>
+              <span>Islanded</span>
             </button>
           </div>
 
           {/* Quick Chaos Stress-Test Button */}
           <button
             onClick={onTriggerChaos}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all border ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-mono font-bold transition-all border ${
               state.isCloudCoverChaosActive
                 ? 'bg-amber-500 text-slate-950 border-amber-400 animate-pulse shadow-[0_0_20px_rgba(245,158,11,0.5)]'
-                : 'bg-slate-900 hover:bg-slate-800 text-amber-400 border-amber-500/40 hover:border-amber-400 shadow-sm'
+                : 'bg-slate-900/90 hover:bg-slate-800 text-amber-400 border-amber-500/40 hover:border-amber-400'
             }`}
           >
             <CloudRain className="w-3.5 h-3.5" />
             <span>
               {state.isCloudCoverChaosActive
-                ? `CHAOS ACTIVE (-80% Solar) [${state.cloudChaosCountdown}s]`
-                : 'Cloud Cover Chaos (-80%)'}
+                ? `CHAOS ACTIVE (-80%) [${state.cloudChaosCountdown}s]`
+                : 'Cloud Chaos (-80%)'}
             </span>
           </button>
 
-          {/* Pitch Deck / Architecture Specs Modal Button */}
+          {/* Simulation Pause / Resume */}
+          {onToggleSim && (
+            <button
+              onClick={onToggleSim}
+              className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors"
+              title={isSimRunning ? 'Pause Live Simulation' : 'Resume Live Simulation'}
+            >
+              {isSimRunning ? (
+                <Pause className="w-4 h-4 text-amber-400" />
+              ) : (
+                <Play className="w-4 h-4 text-emerald-400" />
+              )}
+            </button>
+          )}
+
+          {/* Pitch & Specs Modal Button */}
           <button
             onClick={onOpenPitchModal}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gradient-to-r from-cyan-900/60 to-blue-900/60 hover:from-cyan-800/80 hover:to-blue-800/80 text-cyan-200 border border-cyan-500/40 transition-all shadow-[0_0_12px_rgba(6,182,212,0.2)]"
+            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-gradient-to-r from-cyan-950/80 to-blue-950/80 hover:from-cyan-900 hover:to-blue-900 text-cyan-200 border border-cyan-500/40 transition-all shadow-sm"
           >
             <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Pitch & Architecture</span>
+            <span>Pitch Specs</span>
           </button>
 
         </div>

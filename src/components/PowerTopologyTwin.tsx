@@ -217,38 +217,38 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
         {/* Node 1: Solar PV Array (Top-Left) */}
         <div 
           onClick={() => setSelectedNode('solar')}
-          className={`absolute top-[8%] left-[4%] sm:left-[8%] z-10 w-44 sm:w-52 p-3 rounded-xl bg-slate-900/90 border transition-all cursor-pointer backdrop-blur-md ${
+          className={`absolute top-[6%] left-[3%] sm:left-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
             selectedNode === 'solar'
-              ? 'border-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.35)] scale-105'
+              ? 'border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.4)] scale-105'
               : 'border-slate-800 hover:border-emerald-500/50'
           }`}
         >
-          <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
-                <Sun className="w-4 h-4 animate-spin-slow" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
+                <Sun className="w-5 h-5 animate-spin-slow" />
               </div>
-              <span className="text-xs font-bold text-slate-200">Solar PV Array</span>
+              <span className="text-sm font-bold text-white">Solar PV Array</span>
             </div>
-            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
-              isSolarGenerating ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-400'
+            <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
+              isSolarGenerating ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'
             }`}>
-              {isSolarGenerating ? 'GEN' : 'IDLE'}
+              {isSolarGenerating ? 'GENERATING' : 'IDLE'}
             </span>
           </div>
 
-          <div className="space-y-1 font-mono text-[11px]">
+          <div className="space-y-1.5 font-mono text-xs">
             <div className="flex justify-between items-baseline">
-              <span className="text-slate-400">Output:</span>
-              <span className="text-emerald-400 text-sm font-bold glow-text-emerald">
+              <span className="text-slate-400">Active Output:</span>
+              <span className="text-emerald-400 text-base sm:text-lg font-extrabold glow-text-emerald">
                 {state.solarKW} kW
               </span>
             </div>
-            <div className="flex justify-between text-slate-400 text-[10px]">
+            <div className="flex justify-between text-slate-300 text-[11px]">
               <span>Irradiance:</span>
-              <span className="text-slate-300">{state.irradiance} W/m²</span>
+              <span className="font-semibold text-white">{state.irradiance} W/m²</span>
             </div>
-            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
               <div 
                 className="bg-emerald-400 h-full rounded-full transition-all duration-500"
                 style={{ width: `${Math.min(100, (state.solarKW / 95) * 100)}%` }}
@@ -260,46 +260,46 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
         {/* Node 2: BESS Energy Storage (Bottom-Left) */}
         <div 
           onClick={() => setSelectedNode('bess')}
-          className={`absolute bottom-[6%] left-[4%] sm:left-[8%] z-10 w-44 sm:w-52 p-3 rounded-xl bg-slate-900/90 border transition-all cursor-pointer backdrop-blur-md ${
+          className={`absolute bottom-[6%] left-[3%] sm:left-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
             selectedNode === 'bess'
-              ? 'border-cyan-400 shadow-[0_0_20px_rgba(6,182,212,0.35)] scale-105'
+              ? 'border-cyan-400 shadow-[0_0_25px_rgba(6,182,212,0.4)] scale-105'
               : 'border-slate-800 hover:border-cyan-500/50'
           }`}
         >
-          <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-400">
                 {isBessCharging ? (
-                  <BatteryCharging className="w-4 h-4 animate-bounce" />
+                  <BatteryCharging className="w-5 h-5 animate-bounce" />
                 ) : (
-                  <Battery className="w-4 h-4" />
+                  <Battery className="w-5 h-5" />
                 )}
               </div>
-              <span className="text-xs font-bold text-slate-200">BESS Storage</span>
+              <span className="text-sm font-bold text-white">BESS Storage</span>
             </div>
-            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded font-bold ${
+            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full font-bold ${
               isBessDischarging 
-                ? 'bg-cyan-500/20 text-cyan-300' 
+                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' 
                 : isBessCharging 
-                ? 'bg-emerald-500/20 text-emerald-300' 
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
                 : 'bg-slate-800 text-slate-400'
             }`}>
-              {isBessDischarging ? 'DISCHG' : isBessCharging ? 'CHGING' : 'STANDBY'}
+              {isBessDischarging ? 'DISCHARGE' : isBessCharging ? 'CHARGING' : 'STANDBY'}
             </span>
           </div>
 
-          <div className="space-y-1 font-mono text-[11px]">
+          <div className="space-y-1.5 font-mono text-xs">
             <div className="flex justify-between items-baseline">
               <span className="text-slate-400">SoC / Rate:</span>
-              <span className="text-cyan-300 text-sm font-bold glow-text-cyan">
+              <span className="text-cyan-300 text-base sm:text-lg font-extrabold glow-text-cyan">
                 {state.bessSoC}% ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
               </span>
             </div>
-            <div className="flex justify-between text-slate-400 text-[10px]">
+            <div className="flex justify-between text-slate-300 text-[11px]">
               <span>Health / DoD:</span>
-              <span className="text-slate-300">{state.bessHealthPct}% | {state.bessDoD}%</span>
+              <span className="font-semibold text-white">{state.bessHealthPct}% | {state.bessDoD}%</span>
             </div>
-            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
               <div 
                 className={`h-full rounded-full transition-all duration-500 ${
                   state.bessSoC <= state.minSocConstraint ? 'bg-amber-500' : 'bg-cyan-400'
@@ -313,20 +313,20 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
         {/* Node 3: Grid & Backup Diesel Generator (Top-Right) */}
         <div 
           onClick={() => setSelectedNode('grid')}
-          className={`absolute top-[8%] right-[4%] sm:right-[8%] z-10 w-44 sm:w-52 p-3 rounded-xl bg-slate-900/90 border transition-all cursor-pointer backdrop-blur-md ${
+          className={`absolute top-[6%] right-[3%] sm:right-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
             selectedNode === 'grid'
-              ? 'border-purple-400 shadow-[0_0_20px_rgba(168,85,247,0.35)] scale-105'
+              ? 'border-purple-400 shadow-[0_0_25px_rgba(168,85,247,0.4)] scale-105'
               : 'border-slate-800 hover:border-purple-500/50'
           }`}
         >
-          <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-purple-500/20 text-purple-400">
-                <Flame className={`w-4 h-4 ${isDieselActive ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`} />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-purple-500/20 text-purple-400">
+                <Flame className={`w-5 h-5 ${isDieselActive ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`} />
               </div>
-              <span className="text-xs font-bold text-slate-200">Grid & Diesel</span>
+              <span className="text-sm font-bold text-white">Grid & Diesel</span>
             </div>
-            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded font-bold ${
+            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full font-bold ${
               state.dieselStatus === 'ACTIVE'
                 ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse'
                 : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/30'
@@ -335,22 +335,22 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
             </span>
           </div>
 
-          <div className="space-y-1 font-mono text-[11px]">
+          <div className="space-y-1.5 font-mono text-xs">
             <div className="flex justify-between items-baseline">
               <span className="text-slate-400">Grid Flow:</span>
-              <span className={`text-sm font-bold ${
+              <span className={`text-base sm:text-lg font-extrabold ${
                 isGridImporting ? 'text-amber-400' : isGridExporting ? 'text-emerald-400' : 'text-slate-400'
               }`}>
                 {state.gridKW > 0 ? `+${state.gridKW} kW Imp` : state.gridKW < 0 ? `${state.gridKW} kW Exp` : '0 kW (Islanded)'}
               </span>
             </div>
-            <div className="flex justify-between text-slate-400 text-[10px]">
+            <div className="flex justify-between text-slate-300 text-[11px]">
               <span>Diesel Gen:</span>
               <span className={state.dieselKW > 0 ? 'text-rose-400 font-bold' : 'text-slate-400'}>
                 {state.dieselKW} kW
               </span>
             </div>
-            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
               <div 
                 className={`h-full rounded-full transition-all duration-500 ${
                   isDieselActive ? 'bg-rose-500' : 'bg-purple-400'
@@ -364,36 +364,36 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
         {/* Node 4: Facility & EV Microgrid Load (Bottom-Right) */}
         <div 
           onClick={() => setSelectedNode('load')}
-          className={`absolute bottom-[6%] right-[4%] sm:right-[8%] z-10 w-44 sm:w-52 p-3 rounded-xl bg-slate-900/90 border transition-all cursor-pointer backdrop-blur-md ${
+          className={`absolute bottom-[6%] right-[3%] sm:right-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
             selectedNode === 'load'
-              ? 'border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.35)] scale-105'
+              ? 'border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.4)] scale-105'
               : 'border-slate-800 hover:border-amber-500/50'
           }`}
         >
-          <div className="flex items-center justify-between mb-1.5">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400">
-                <Factory className="w-4 h-4" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
+                <Factory className="w-5 h-5" />
               </div>
-              <span className="text-xs font-bold text-slate-200">Facility & EV Load</span>
+              <span className="text-sm font-bold text-white">Facility Demand</span>
             </div>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">
+            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
               DEMAND
             </span>
           </div>
 
-          <div className="space-y-1 font-mono text-[11px]">
+          <div className="space-y-1.5 font-mono text-xs">
             <div className="flex justify-between items-baseline">
-              <span className="text-slate-400">Total Demand:</span>
-              <span className="text-amber-400 text-sm font-bold glow-text-amber">
+              <span className="text-slate-400">Total Load:</span>
+              <span className="text-amber-400 text-base sm:text-lg font-extrabold glow-text-amber">
                 {state.facilityLoadKW} kW
               </span>
             </div>
-            <div className="flex justify-between text-slate-400 text-[10px]">
-              <span>Base / EV Fleet:</span>
-              <span className="text-slate-300">{state.baseFacilityLoad} kW + EV</span>
+            <div className="flex justify-between text-slate-300 text-[11px]">
+              <span>Base / Fleet:</span>
+              <span className="font-semibold text-white">{state.baseFacilityLoad} kW + EV</span>
             </div>
-            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
               <div 
                 className="bg-amber-400 h-full rounded-full transition-all duration-500"
                 style={{ width: `${Math.min(100, (state.facilityLoadKW / 150) * 100)}%` }}

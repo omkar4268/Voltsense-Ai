@@ -28,12 +28,12 @@ export const AuditLedgerTerminal: React.FC<AuditLedgerTerminalProps> = ({
 }) => {
   const [selectedFilter, setSelectedFilter] = useState<string>('ALL');
   const [autoScroll, setAutoScroll] = useState<boolean>(true);
-  const terminalEndRef = useRef<HTMLDivElement>(null);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to latest log if enabled
+  // Auto-scroll internally inside terminal container only (never jumps browser page)
   useEffect(() => {
-    if (autoScroll && terminalEndRef.current) {
-      terminalEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (autoScroll && terminalContainerRef.current) {
+      terminalContainerRef.current.scrollTop = terminalContainerRef.current.scrollHeight;
     }
   }, [logs, autoScroll]);
 
@@ -146,7 +146,10 @@ export const AuditLedgerTerminal: React.FC<AuditLedgerTerminalProps> = ({
       </div>
 
       {/* Live Scrolling Terminal Window */}
-      <div className="bg-[#05070E] border border-slate-800/80 rounded-xl p-3 h-[240px] overflow-y-auto font-mono text-xs space-y-1.5 shadow-inner">
+      <div 
+        ref={terminalContainerRef}
+        className="bg-[#05070E] border border-slate-800/80 rounded-xl p-3 h-[300px] overflow-y-auto font-mono text-xs space-y-1.5 shadow-inner"
+      >
         {filteredLogs.length === 0 ? (
           <div className="h-full flex items-center justify-center text-slate-500 text-center">
             <span>No log records for current filter. Live events will append every 1.5 seconds...</span>
@@ -155,26 +158,25 @@ export const AuditLedgerTerminal: React.FC<AuditLedgerTerminalProps> = ({
           filteredLogs.map((log) => (
             <div 
               key={log.id} 
-              className="flex items-start gap-2 py-0.5 border-b border-slate-900/50 hover:bg-slate-900/40 px-1 rounded transition-colors"
+              className="flex items-start gap-2 py-1 border-b border-slate-900/50 hover:bg-slate-900/40 px-1.5 rounded transition-colors"
             >
-              <span className="text-slate-500 text-[10px] whitespace-nowrap pt-0.5">
+              <span className="text-slate-500 text-[11px] whitespace-nowrap pt-0.5">
                 [{log.timestamp}]
               </span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded border font-semibold whitespace-nowrap ${log.badgeColor}`}>
+              <span className={`text-[10px] px-1.5 py-0.5 rounded border font-semibold whitespace-nowrap ${log.badgeColor}`}>
                 {log.type}
               </span>
-              <span className="text-slate-300 flex-1 leading-relaxed text-[11px]">
+              <span className="text-slate-300 flex-1 leading-relaxed text-xs">
                 {log.message}
               </span>
               {log.deltaCo2 > 0 && (
-                <span className="text-[10px] text-emerald-400 font-bold whitespace-nowrap pl-2">
+                <span className="text-xs text-emerald-400 font-bold whitespace-nowrap pl-2">
                   +{log.deltaCo2.toFixed(3)} kg CO₂
                 </span>
               )}
             </div>
           ))
         )}
-        <div ref={terminalEndRef} />
       </div>
 
       {/* Terminal Footer Indicator */}
