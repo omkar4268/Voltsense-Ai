@@ -1,17 +1,6 @@
 import React, { useState } from 'react';
 import { MicrogridState } from '../types';
-import { 
-  Sun, 
-  BatteryCharging, 
-  Battery, 
-  Factory, 
-  Flame, 
-  Zap, 
-  Activity, 
-  HelpCircle,
-  Shield,
-  Layers
-} from 'lucide-react';
+import { Layers } from 'lucide-react';
 
 interface PowerTopologyTwinProps {
   state: MicrogridState;
@@ -20,7 +9,7 @@ interface PowerTopologyTwinProps {
 export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) => {
   const [selectedNode, setSelectedNode] = useState<string | null>(null);
 
-  // Flow directions and active status
+  // Status flags
   const isSolarGenerating = state.solarKW > 0.5;
   const isBessDischarging = state.bessKW > 0.2;
   const isBessCharging = state.bessKW < -0.2;
@@ -28,78 +17,88 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
   const isGridExporting = state.gridKW < -0.2;
   const isDieselActive = state.dieselStatus === 'ACTIVE' && state.dieselKW > 0;
 
-  // Particle flow speed calculation (higher kW = faster flow)
-  const solarFlowDuration = Math.max(0.6, 2.5 - (state.solarKW / 100) * 1.8);
-  const bessFlowDuration = Math.max(0.6, 2.5 - (Math.abs(state.bessKW) / 80) * 1.8);
-  const loadFlowDuration = Math.max(0.6, 2.5 - (state.facilityLoadKW / 150) * 1.8);
-  const gridFlowDuration = Math.max(0.6, 2.5 - (Math.abs(state.gridKW) / 100) * 1.8);
+  // Particle flow speed (seconds per cycle)
+  const solarFlowSpeed = Math.max(0.8, 2.5 - (state.solarKW / 100) * 1.7);
+  const bessFlowSpeed = Math.max(0.8, 2.5 - (Math.abs(state.bessKW) / 80) * 1.7);
+  const loadFlowSpeed = Math.max(0.8, 2.5 - (state.facilityLoadKW / 150) * 1.7);
+  const gridFlowSpeed = Math.max(0.8, 2.5 - (Math.abs(state.gridKW) / 100) * 1.7);
 
   return (
-    <div className="glass-panel rounded-2xl p-4 xl:p-5 relative overflow-hidden border border-slate-800 shadow-2xl flex flex-col justify-between">
+    <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-2xl relative overflow-hidden bg-[#0A0F1D]/80">
       
       {/* Topology Header */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30">
-            <Layers className="w-4 h-4 text-emerald-400" />
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800/80">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            <Layers className="w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-sm font-bold tracking-tight text-slate-100 flex items-center gap-2">
-              Microgrid Digital Twin // Power Flow Topology
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
-                100Hz Bus Sync
+            <h2 className="text-base font-bold text-white tracking-tight flex items-center gap-2">
+              Live Microgrid Power Topology
+              <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                Synchronized
               </span>
             </h2>
-            <p className="text-[11px] text-slate-400">
-              Interactive bi-directional energy transfer topology with live particle vectors
+            <p className="text-xs text-slate-400">
+              Interactive 4-station energy balance diagram with real-time vector flows
             </p>
           </div>
         </div>
 
-        {/* Real-time Conservation of Energy Indicator */}
-        <div className="hidden sm:flex items-center gap-2 text-[11px] font-mono bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800">
-          <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-          <span className="text-slate-400">Power Balance (Σ P):</span>
-          <span className="text-emerald-300 font-semibold">
-            {(state.solarKW + Math.max(0, state.bessKW) + Math.max(0, state.gridKW) + state.dieselKW).toFixed(1)} kW in = {(state.facilityLoadKW + Math.max(0, -state.bessKW) + Math.max(0, -state.gridKW)).toFixed(1)} kW out
+        {/* Status Pill */}
+        <div className="flex items-center gap-3 font-mono text-xs bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800 text-slate-300">
+          <span className="flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            Mode: <strong className="text-emerald-400">{state.controllerMode.toUpperCase()}</strong>
+          </span>
+          <span>|</span>
+          <span>
+            Clean Energy: <strong className="text-cyan-300">{state.cleanEnergyRatioPct}%</strong>
           </span>
         </div>
       </div>
 
-      {/* SVG Interactive Canvas with 4 Nodes and Directional Particle Wires */}
-      <div className="relative w-full aspect-[16/9] min-h-[360px] max-h-[460px] flex items-center justify-center bg-[#05070E]/80 rounded-xl border border-slate-800/80 p-2 overflow-hidden">
+      {/* SVG Canvas - Unified Coordinates (1000 x 600) */}
+      <div className="w-full aspect-[16/9] min-h-[420px] max-h-[580px] bg-[#060913] rounded-2xl border border-slate-800/90 relative overflow-hidden flex items-center justify-center p-2">
         
-        {/* Subtle Background Grid */}
+        {/* Subtle dot matrix grid */}
         <div 
-          className="absolute inset-0 opacity-15 pointer-events-none"
+          className="absolute inset-0 opacity-10 pointer-events-none"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #334155 1px, transparent 0)`,
-            backgroundSize: '24px 24px',
+            backgroundImage: `radial-gradient(circle at 1px 1px, #64748b 1px, transparent 0)`,
+            backgroundSize: '28px 28px',
           }}
         />
 
-        {/* SVG Interconnecting Bus Lines & Animated Flow */}
         <svg 
-          viewBox="0 0 800 480" 
-          className="absolute inset-0 w-full h-full pointer-events-none"
+          viewBox="0 0 1000 580" 
+          className="w-full h-full select-none"
+          preserveAspectRatio="xMidYMid meet"
         >
           <defs>
-            <linearGradient id="wireGradientSolar" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#10B981" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#06B6D4" stopOpacity="0.8" />
-            </linearGradient>
-            <linearGradient id="wireGradientBess" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#06B6D4" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#10B981" stopOpacity="0.8" />
-            </linearGradient>
-            <linearGradient id="wireGradientDiesel" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#EF4444" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#F59E0B" stopOpacity="0.8" />
-            </linearGradient>
-
-            {/* Glowing filter */}
-            <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
+            <filter id="glow-emerald" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="glow-amber" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="glow-rose" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -107,323 +106,242 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({ state }) =
             </filter>
           </defs>
 
-          {/* Central Bus Junction Crossbar */}
-          <rect x="360" y="210" width="80" height="60" rx="10" fill="#0b1329" stroke="#1e293b" strokeWidth="2" />
+          {/* BUS WIRES: Connected directly from station centers to central hub */}
 
-          {/* Wire 1: Solar (Top-Left: 160, 110) -> Central Bus (370, 220) */}
-          <path
-            d="M 230 130 L 370 220"
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
+          {/* Wire 1: Solar (330, 140) -> Hub (450, 270) */}
+          <line x1="330" y1="140" x2="450" y2="270" stroke="#1e293b" strokeWidth="4" strokeLinecap="round" />
           {isSolarGenerating && (
-            <path
-              d="M 230 130 L 370 220"
-              fill="none"
-              stroke="#10B981"
-              strokeWidth="3.5"
-              strokeDasharray="6 8"
-              strokeLinecap="round"
-              filter="url(#glowFilter)"
-              style={{
-                animation: `dash-flow ${solarFlowDuration}s linear infinite`,
-              }}
+            <line 
+              x1="330" y1="140" x2="450" y2="270" 
+              stroke="#10B981" strokeWidth="4" strokeDasharray="8 8" strokeLinecap="round"
+              filter="url(#glow-emerald)"
+              style={{ animation: `dash-flow ${solarFlowSpeed}s linear infinite` }}
             />
           )}
 
-          {/* Wire 2: BESS (Bottom-Left: 160, 370) <-> Central Bus (370, 260) */}
-          <path
-            d="M 230 350 L 370 260"
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
+          {/* Wire 2: BESS (330, 440) <-> Hub (450, 310) */}
+          <line x1="330" y1="440" x2="450" y2="310" stroke="#1e293b" strokeWidth="4" strokeLinecap="round" />
           {(isBessCharging || isBessDischarging) && (
-            <path
-              d={isBessCharging ? "M 370 260 L 230 350" : "M 230 350 L 370 260"}
-              fill="none"
-              stroke={isBessDischarging ? "#06B6D4" : "#10B981"}
-              strokeWidth="3.5"
-              strokeDasharray="6 8"
-              strokeLinecap="round"
-              filter="url(#glowFilter)"
-              style={{
-                animation: `dash-flow ${bessFlowDuration}s linear infinite`,
-              }}
+            <line 
+              x1={isBessCharging ? "450" : "330"} y1={isBessCharging ? "310" : "440"} 
+              x2={isBessCharging ? "330" : "450"} y2={isBessCharging ? "440" : "310"} 
+              stroke={isBessDischarging ? "#06B6D4" : "#10B981"} 
+              strokeWidth="4" strokeDasharray="8 8" strokeLinecap="round"
+              filter="url(#glow-cyan)"
+              style={{ animation: `dash-flow ${bessFlowSpeed}s linear infinite` }}
             />
           )}
 
-          {/* Wire 3: Central Bus (430, 260) -> Facility Load (Bottom-Right: 640, 350) */}
-          <path
-            d="M 430 260 L 570 350"
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-          <path
-            d="M 430 260 L 570 350"
-            fill="none"
-            stroke="#F59E0B"
-            strokeWidth="3.5"
-            strokeDasharray="6 8"
-            strokeLinecap="round"
-            filter="url(#glowFilter)"
-            style={{
-              animation: `dash-flow ${loadFlowDuration}s linear infinite`,
-            }}
-          />
-
-          {/* Wire 4: Grid & Diesel (Top-Right: 640, 130) <-> Central Bus (430, 220) */}
-          <path
-            d="M 570 130 L 430 220"
-            fill="none"
-            stroke="#1e293b"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
+          {/* Wire 3: Hub (550, 270) -> Grid & Diesel (670, 140) */}
+          <line x1="550" y1="270" x2="670" y2="140" stroke="#1e293b" strokeWidth="4" strokeLinecap="round" />
           {(isGridImporting || isGridExporting || isDieselActive) && (
-            <path
-              d={isGridExporting ? "M 430 220 L 570 130" : "M 570 130 L 430 220"}
-              fill="none"
-              stroke={isDieselActive ? "#EF4444" : isGridImporting ? "#F59E0B" : "#10B981"}
-              strokeWidth="3.5"
-              strokeDasharray="6 8"
-              strokeLinecap="round"
-              filter="url(#glowFilter)"
-              style={{
-                animation: `dash-flow ${gridFlowDuration}s linear infinite`,
-              }}
+            <line 
+              x1={isGridExporting ? "550" : "670"} y1={isGridExporting ? "270" : "140"} 
+              x2={isGridExporting ? "670" : "550"} y2={isGridExporting ? "140" : "270"} 
+              stroke={isDieselActive ? "#EF4444" : isGridImporting ? "#F59E0B" : "#10B981"} 
+              strokeWidth="4" strokeDasharray="8 8" strokeLinecap="round"
+              filter={isDieselActive ? "url(#glow-rose)" : "url(#glow-amber)"}
+              style={{ animation: `dash-flow ${gridFlowSpeed}s linear infinite` }}
             />
           )}
-        </svg>
 
-        {/* Central Edge Dispatch Hub Node */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
-          <div className="p-3 rounded-2xl bg-slate-900 border-2 border-cyan-500/60 shadow-[0_0_25px_rgba(6,182,212,0.3)] flex flex-col items-center gap-1">
-            <Zap className="w-6 h-6 text-cyan-400 animate-pulse" />
-            <span className="text-[10px] font-mono font-bold tracking-wider text-cyan-300">
-              AI BUS HUB
-            </span>
-            <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300">
+          {/* Wire 4: Hub (550, 310) -> Load (670, 440) */}
+          <line x1="550" y1="310" x2="670" y2="440" stroke="#1e293b" strokeWidth="4" strokeLinecap="round" />
+          <line 
+            x1="550" y1="310" x2="670" y2="440" 
+            stroke="#F59E0B" strokeWidth="4" strokeDasharray="8 8" strokeLinecap="round"
+            filter="url(#glow-amber)"
+            style={{ animation: `dash-flow ${loadFlowSpeed}s linear infinite` }}
+          />
+
+          {/* CENTRAL AI BUS HUB */}
+          <g transform="translate(440, 235)">
+            <rect x="0" y="0" width="120" height="110" rx="20" fill="#0c1326" stroke="#06B6D4" strokeWidth="2.5" filter="url(#glow-cyan)" />
+            <circle cx="60" cy="40" r="18" fill="#06B6D4" fillOpacity="0.15" />
+            <path d="M 58 30 L 52 42 L 59 42 L 56 50 L 67 38 L 60 38 Z" fill="#06B6D4" />
+            <text x="60" y="72" textAnchor="middle" fill="#e2e8f0" fontSize="12" fontWeight="bold" fontFamily="system-ui, sans-serif">AI BUS HUB</text>
+            <rect x="20" y="80" width="80" height="20" rx="10" fill="#1e293b" />
+            <text x="60" y="94" textAnchor="middle" fill="#38bdf8" fontSize="10" fontWeight="bold" fontFamily="monospace">
               {state.controllerMode.toUpperCase()}
-            </span>
-          </div>
-        </div>
+            </text>
+          </g>
 
-        {/* Node 1: Solar PV Array (Top-Left) */}
-        <div 
-          onClick={() => setSelectedNode('solar')}
-          className={`absolute top-[6%] left-[3%] sm:left-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
-            selectedNode === 'solar'
-              ? 'border-emerald-400 shadow-[0_0_25px_rgba(16,185,129,0.4)] scale-105'
-              : 'border-slate-800 hover:border-emerald-500/50'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400">
-                <Sun className="w-5 h-5 animate-spin-slow" />
-              </div>
-              <span className="text-sm font-bold text-white">Solar PV Array</span>
-            </div>
-            <span className={`text-[11px] font-mono font-bold px-2 py-0.5 rounded-full ${
-              isSolarGenerating ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-400'
-            }`}>
-              {isSolarGenerating ? 'GENERATING' : 'IDLE'}
-            </span>
-          </div>
+          {/* NODE 1: SOLAR PV ARRAY (Top-Left: x=60, y=60, width=270, height=160) */}
+          <g 
+            transform="translate(60, 60)" 
+            className="cursor-pointer"
+            onClick={() => setSelectedNode('solar')}
+          >
+            <rect 
+              x="0" y="0" width="270" height="160" rx="18" 
+              fill="#0d1527" 
+              stroke={selectedNode === 'solar' ? '#10B981' : '#1e293b'} 
+              strokeWidth={selectedNode === 'solar' ? '3' : '1.5'} 
+            />
+            {/* Header */}
+            <circle cx="36" cy="36" r="16" fill="#10B981" fillOpacity="0.2" />
+            <path d="M 36 26 L 36 29 M 36 43 L 36 46 M 26 36 L 29 36 M 43 36 L 46 36 M 29 29 L 31 31 M 41 41 L 43 43 M 29 43 L 31 41 M 41 31 L 43 29" stroke="#10B981" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="36" cy="36" r="5" fill="#10B981" />
+            
+            <text x="64" y="34" fill="#ffffff" fontSize="15" fontWeight="bold" fontFamily="system-ui, sans-serif">Solar PV Array</text>
+            <text x="64" y="48" fill="#94a3b8" fontSize="11" fontFamily="system-ui, sans-serif">Clean Generation</text>
 
-          <div className="space-y-1.5 font-mono text-xs">
-            <div className="flex justify-between items-baseline">
-              <span className="text-slate-400">Active Output:</span>
-              <span className="text-emerald-400 text-base sm:text-lg font-extrabold glow-text-emerald">
-                {state.solarKW} kW
-              </span>
-            </div>
-            <div className="flex justify-between text-slate-300 text-[11px]">
-              <span>Irradiance:</span>
-              <span className="font-semibold text-white">{state.irradiance} W/m²</span>
-            </div>
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
-              <div 
-                className="bg-emerald-400 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(100, (state.solarKW / 95) * 100)}%` }}
-              />
-            </div>
-          </div>
-        </div>
+            <rect x="180" y="24" width="76" height="22" rx="11" fill={isSolarGenerating ? "#064e3b" : "#1e293b"} />
+            <text x="218" y="39" textAnchor="middle" fill={isSolarGenerating ? "#34d399" : "#64748b"} fontSize="10" fontWeight="bold" fontFamily="monospace">
+              {isSolarGenerating ? "ACTIVE" : "IDLE"}
+            </text>
 
-        {/* Node 2: BESS Energy Storage (Bottom-Left) */}
-        <div 
-          onClick={() => setSelectedNode('bess')}
-          className={`absolute bottom-[6%] left-[3%] sm:left-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
-            selectedNode === 'bess'
-              ? 'border-cyan-400 shadow-[0_0_25px_rgba(6,182,212,0.4)] scale-105'
-              : 'border-slate-800 hover:border-cyan-500/50'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-cyan-500/20 text-cyan-400">
-                {isBessCharging ? (
-                  <BatteryCharging className="w-5 h-5 animate-bounce" />
-                ) : (
-                  <Battery className="w-5 h-5" />
-                )}
-              </div>
-              <span className="text-sm font-bold text-white">BESS Storage</span>
-            </div>
-            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full font-bold ${
-              isBessDischarging 
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' 
-                : isBessCharging 
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' 
-                : 'bg-slate-800 text-slate-400'
-            }`}>
-              {isBessDischarging ? 'DISCHARGE' : isBessCharging ? 'CHARGING' : 'STANDBY'}
-            </span>
-          </div>
+            {/* Metrics */}
+            <text x="24" y="86" fill="#94a3b8" fontSize="12" fontFamily="system-ui, sans-serif">Active Power Output</text>
+            <text x="24" y="118" fill="#10B981" fontSize="26" fontWeight="bold" fontFamily="monospace">{state.solarKW} kW</text>
 
-          <div className="space-y-1.5 font-mono text-xs">
-            <div className="flex justify-between items-baseline">
-              <span className="text-slate-400">SoC / Rate:</span>
-              <span className="text-cyan-300 text-base sm:text-lg font-extrabold glow-text-cyan">
-                {state.bessSoC}% ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
-              </span>
-            </div>
-            <div className="flex justify-between text-slate-300 text-[11px]">
-              <span>Health / DoD:</span>
-              <span className="font-semibold text-white">{state.bessHealthPct}% | {state.bessDoD}%</span>
-            </div>
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
-              <div 
-                className={`h-full rounded-full transition-all duration-500 ${
-                  state.bessSoC <= state.minSocConstraint ? 'bg-amber-500' : 'bg-cyan-400'
-                }`}
-                style={{ width: `${state.bessSoC}%` }}
-              />
-            </div>
-          </div>
-        </div>
+            <text x="246" y="116" textAnchor="end" fill="#cbd5e1" fontSize="12" fontFamily="monospace">{state.irradiance} W/m²</text>
+            
+            {/* Progress bar */}
+            <rect x="24" y="132" width="222" height="6" rx="3" fill="#1e293b" />
+            <rect x="24" y="132" width={Math.min(222, (state.solarKW / 95) * 222)} height="6" rx="3" fill="#10B981" />
+          </g>
 
-        {/* Node 3: Grid & Backup Diesel Generator (Top-Right) */}
-        <div 
-          onClick={() => setSelectedNode('grid')}
-          className={`absolute top-[6%] right-[3%] sm:right-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
-            selectedNode === 'grid'
-              ? 'border-purple-400 shadow-[0_0_25px_rgba(168,85,247,0.4)] scale-105'
-              : 'border-slate-800 hover:border-purple-500/50'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-purple-500/20 text-purple-400">
-                <Flame className={`w-5 h-5 ${isDieselActive ? 'text-rose-400 animate-pulse' : 'text-slate-400'}`} />
-              </div>
-              <span className="text-sm font-bold text-white">Grid & Diesel</span>
-            </div>
-            <span className={`text-[11px] font-mono px-2 py-0.5 rounded-full font-bold ${
-              state.dieselStatus === 'ACTIVE'
-                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse'
-                : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/30'
-            }`}>
-              DIESEL: {state.dieselStatus}
-            </span>
-          </div>
+          {/* NODE 2: BESS STORAGE (Bottom-Left: x=60, y=360, width=270, height=160) */}
+          <g 
+            transform="translate(60, 360)" 
+            className="cursor-pointer"
+            onClick={() => setSelectedNode('bess')}
+          >
+            <rect 
+              x="0" y="0" width="270" height="160" rx="18" 
+              fill="#0d1527" 
+              stroke={selectedNode === 'bess' ? '#06B6D4' : '#1e293b'} 
+              strokeWidth={selectedNode === 'bess' ? '3' : '1.5'} 
+            />
+            {/* Header */}
+            <circle cx="36" cy="36" r="16" fill="#06B6D4" fillOpacity="0.2" />
+            <rect x="28" y="28" width="16" height="16" rx="3" fill="none" stroke="#06B6D4" strokeWidth="2" />
+            <line x1="33" y1="25" x2="39" y2="25" stroke="#06B6D4" strokeWidth="2" strokeLinecap="round" />
+            <rect x="31" y="32" width="10" height="8" rx="1" fill="#06B6D4" />
 
-          <div className="space-y-1.5 font-mono text-xs">
-            <div className="flex justify-between items-baseline">
-              <span className="text-slate-400">Grid Flow:</span>
-              <span className={`text-base sm:text-lg font-extrabold ${
-                isGridImporting ? 'text-amber-400' : isGridExporting ? 'text-emerald-400' : 'text-slate-400'
-              }`}>
-                {state.gridKW > 0 ? `+${state.gridKW} kW Imp` : state.gridKW < 0 ? `${state.gridKW} kW Exp` : '0 kW (Islanded)'}
-              </span>
-            </div>
-            <div className="flex justify-between text-slate-300 text-[11px]">
-              <span>Diesel Gen:</span>
-              <span className={state.dieselKW > 0 ? 'text-rose-400 font-bold' : 'text-slate-400'}>
-                {state.dieselKW} kW
-              </span>
-            </div>
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
-              <div 
-                className={`h-full rounded-full transition-all duration-500 ${
-                  isDieselActive ? 'bg-rose-500' : 'bg-purple-400'
-                }`}
-                style={{ width: `${Math.min(100, (Math.abs(state.gridKW) / 100) * 100)}%` }}
-              />
-            </div>
-          </div>
-        </div>
+            <text x="64" y="34" fill="#ffffff" fontSize="15" fontWeight="bold" fontFamily="system-ui, sans-serif">BESS Storage</text>
+            <text x="64" y="48" fill="#94a3b8" fontSize="11" fontFamily="system-ui, sans-serif">200 kWh LiFePO4</text>
 
-        {/* Node 4: Facility & EV Microgrid Load (Bottom-Right) */}
-        <div 
-          onClick={() => setSelectedNode('load')}
-          className={`absolute bottom-[6%] right-[3%] sm:right-[6%] z-10 w-52 sm:w-64 p-4 rounded-2xl bg-slate-900/95 border transition-all cursor-pointer backdrop-blur-md ${
-            selectedNode === 'load'
-              ? 'border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.4)] scale-105'
-              : 'border-slate-800 hover:border-amber-500/50'
-          }`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 rounded-xl bg-amber-500/20 text-amber-400">
-                <Factory className="w-5 h-5" />
-              </div>
-              <span className="text-sm font-bold text-white">Facility Demand</span>
-            </div>
-            <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
+            <rect x="175" y="24" width="81" height="22" rx="11" fill={isBessCharging ? "#064e3b" : isBessDischarging ? "#083344" : "#1e293b"} />
+            <text x="215" y="39" textAnchor="middle" fill={isBessCharging ? "#34d399" : isBessDischarging ? "#38bdf8" : "#64748b"} fontSize="10" fontWeight="bold" fontFamily="monospace">
+              {isBessCharging ? "CHARGING" : isBessDischarging ? "DISCHARGE" : "STANDBY"}
+            </text>
+
+            {/* Metrics */}
+            <text x="24" y="86" fill="#94a3b8" fontSize="12" fontFamily="system-ui, sans-serif">State of Charge (SoC)</text>
+            <text x="24" y="118" fill="#06B6D4" fontSize="26" fontWeight="bold" fontFamily="monospace">{state.bessSoC}%</text>
+
+            <text x="246" y="116" textAnchor="end" fill="#cbd5e1" fontSize="12" fontFamily="monospace">
+              {state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW
+            </text>
+
+            {/* Progress bar */}
+            <rect x="24" y="132" width="222" height="6" rx="3" fill="#1e293b" />
+            <rect x="24" y="132" width={Math.min(222, (state.bessSoC / 100) * 222)} height="6" rx="3" fill={state.bessSoC <= state.minSocConstraint ? "#f59e0b" : "#06B6D4"} />
+          </g>
+
+          {/* NODE 3: GRID & BACKUP DIESEL (Top-Right: x=670, y=60, width=270, height=160) */}
+          <g 
+            transform="translate(670, 60)" 
+            className="cursor-pointer"
+            onClick={() => setSelectedNode('grid')}
+          >
+            <rect 
+              x="0" y="0" width="270" height="160" rx="18" 
+              fill="#0d1527" 
+              stroke={selectedNode === 'grid' ? '#a855f7' : '#1e293b'} 
+              strokeWidth={selectedNode === 'grid' ? '3' : '1.5'} 
+            />
+            {/* Header */}
+            <circle cx="36" cy="36" r="16" fill="#a855f7" fillOpacity="0.2" />
+            <path d="M 33 26 C 36 29 42 34 38 43 C 37 45 35 46 33 46 C 30 46 28 44 28 41 C 28 35 32 30 33 26 Z" fill={isDieselActive ? "#ef4444" : "#a855f7"} />
+
+            <text x="64" y="34" fill="#ffffff" fontSize="15" fontWeight="bold" fontFamily="system-ui, sans-serif">Grid & Backup</text>
+            <text x="64" y="48" fill="#94a3b8" fontSize="11" fontFamily="system-ui, sans-serif">Diesel Generator</text>
+
+            <rect x="160" y="24" width="96" height="22" rx="11" fill={isDieselActive ? "#450a0a" : "#064e3b"} />
+            <text x="208" y="39" textAnchor="middle" fill={isDieselActive ? "#f87171" : "#34d399"} fontSize="10" fontWeight="bold" fontFamily="monospace">
+              {isDieselActive ? "GEN ACTIVE" : "SUPPRESSED"}
+            </text>
+
+            {/* Metrics */}
+            <text x="24" y="86" fill="#94a3b8" fontSize="12" fontFamily="system-ui, sans-serif">Grid Import / Export</text>
+            <text x="24" y="118" fill={isGridImporting ? "#f59e0b" : isGridExporting ? "#10b981" : "#94a3b8"} fontSize="24" fontWeight="bold" fontFamily="monospace">
+              {state.gridKW > 0 ? `+${state.gridKW} kW` : state.gridKW < 0 ? `${state.gridKW} kW` : "0 kW (Island)"}
+            </text>
+
+            <text x="246" y="116" textAnchor="end" fill={state.dieselKW > 0 ? "#f87171" : "#64748b"} fontSize="12" fontFamily="monospace">
+              Gen: {state.dieselKW} kW
+            </text>
+
+            {/* Progress bar */}
+            <rect x="24" y="132" width="222" height="6" rx="3" fill="#1e293b" />
+            <rect x="24" y="132" width={Math.min(222, (Math.abs(state.gridKW) / 100) * 222)} height="6" rx="3" fill={isDieselActive ? "#ef4444" : "#a855f7"} />
+          </g>
+
+          {/* NODE 4: FACILITY DEMAND (Bottom-Right: x=670, y=360, width=270, height=160) */}
+          <g 
+            transform="translate(670, 360)" 
+            className="cursor-pointer"
+            onClick={() => setSelectedNode('load')}
+          >
+            <rect 
+              x="0" y="0" width="270" height="160" rx="18" 
+              fill="#0d1527" 
+              stroke={selectedNode === 'load' ? '#f59e0b' : '#1e293b'} 
+              strokeWidth={selectedNode === 'load' ? '3' : '1.5'} 
+            />
+            {/* Header */}
+            <circle cx="36" cy="36" r="16" fill="#f59e0b" fillOpacity="0.2" />
+            <path d="M 27 45 L 27 34 L 34 38 L 34 32 L 41 36 L 41 28 L 47 31 L 47 45 Z" fill="#f59e0b" />
+
+            <text x="64" y="34" fill="#ffffff" fontSize="15" fontWeight="bold" fontFamily="system-ui, sans-serif">Facility & EV Load</text>
+            <text x="64" y="48" fill="#94a3b8" fontSize="11" fontFamily="system-ui, sans-serif">Commercial Microgrid</text>
+
+            <rect x="175" y="24" width="81" height="22" rx="11" fill="#451a03" />
+            <text x="215" y="39" textAnchor="middle" fill="#fbbf24" fontSize="10" fontWeight="bold" fontFamily="monospace">
               DEMAND
-            </span>
-          </div>
+            </text>
 
-          <div className="space-y-1.5 font-mono text-xs">
-            <div className="flex justify-between items-baseline">
-              <span className="text-slate-400">Total Load:</span>
-              <span className="text-amber-400 text-base sm:text-lg font-extrabold glow-text-amber">
-                {state.facilityLoadKW} kW
-              </span>
-            </div>
-            <div className="flex justify-between text-slate-300 text-[11px]">
-              <span>Base / Fleet:</span>
-              <span className="font-semibold text-white">{state.baseFacilityLoad} kW + EV</span>
-            </div>
-            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mt-1">
-              <div 
-                className="bg-amber-400 h-full rounded-full transition-all duration-500"
-                style={{ width: `${Math.min(100, (state.facilityLoadKW / 150) * 100)}%` }}
-              />
-            </div>
-          </div>
-        </div>
+            {/* Metrics */}
+            <text x="24" y="86" fill="#94a3b8" fontSize="12" fontFamily="system-ui, sans-serif">Total Consumed Load</text>
+            <text x="24" y="118" fill="#f59e0b" fontSize="26" fontWeight="bold" fontFamily="monospace">{state.facilityLoadKW} kW</text>
+
+            <text x="246" y="116" textAnchor="end" fill="#cbd5e1" fontSize="12" fontFamily="monospace">
+              Base: {state.baseFacilityLoad} kW
+            </text>
+
+            {/* Progress bar */}
+            <rect x="24" y="132" width="222" height="6" rx="3" fill="#1e293b" />
+            <rect x="24" y="132" width={Math.min(222, (state.facilityLoadKW / 150) * 222)} height="6" rx="3" fill="#f59e0b" />
+          </g>
+
+        </svg>
 
       </div>
 
-      {/* Node Inspector Drawer on Selection */}
+      {/* Node Inspector Drawer */}
       {selectedNode && (
-        <div className="mt-3 p-3 rounded-xl bg-slate-950/90 border border-slate-800 flex items-center justify-between text-xs">
+        <div className="mt-4 p-3.5 rounded-2xl bg-slate-950/90 border border-slate-800 flex items-center justify-between text-xs animate-fade-in">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-200 uppercase">{selectedNode} Telemetry Inspector:</span>
-            <span className="text-slate-400">
-              {selectedNode === 'solar' && `Real-time irradiance ${state.irradiance} W/m² with ${state.weatherHorizon} sky model.`}
-              {selectedNode === 'bess' && `Capacity 200 kWh. Min protected SoC constraint set at ${state.minSocConstraint}%. Temp: ${state.bessTempC}°C.`}
-              {selectedNode === 'grid' && `Diesel backup suppressed by AI. Carbon intensity baseline: 0.68 kg CO2/kWh.`}
-              {selectedNode === 'load' && `Microgrid consumer combining 3-phase building load and fast DC EV chargers.`}
+            <span className="font-bold text-white uppercase">{selectedNode} Details:</span>
+            <span className="text-slate-300">
+              {selectedNode === 'solar' && `Real-time irradiance ${state.irradiance} W/m². Clean zero-carbon solar output supplying ${state.solarKW} kW.`}
+              {selectedNode === 'bess' && `Capacity: 200 kWh. Minimum protected constraint: ${state.minSocConstraint}%. Battery temp: ${state.bessTempC}°C.`}
+              {selectedNode === 'grid' && `Diesel backup suppressed by AI. Grid flow: ${state.gridKW} kW. Emission reduction target: 28.4%.`}
+              {selectedNode === 'load' && `Combined 3-phase building load + high-speed EV chargers totaling ${state.facilityLoadKW} kW.`}
             </span>
           </div>
           <button 
             onClick={() => setSelectedNode(null)}
-            className="text-[11px] font-mono text-slate-400 hover:text-white px-2 py-0.5 rounded bg-slate-900 border border-slate-800"
+            className="text-[11px] font-mono text-slate-400 hover:text-white px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800"
           >
-            Dismiss
+            Close
           </button>
         </div>
       )}
+
     </div>
   );
 };
