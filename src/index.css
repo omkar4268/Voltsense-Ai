@@ -8,6 +8,18 @@
   --accent-cyan: #06B6D4;
   --accent-amber: #F59E0B;
   --accent-rose: #EF4444;
+
+  --color-background: #070A12;
+  --color-foreground: #f1f5f9;
+  --color-card: #0b1120;
+  --color-card-foreground: #f1f5f9;
+  --color-popover: #0b1120;
+  --color-popover-foreground: #f1f5f9;
+  --color-primary: #10B981;
+  --color-primary-foreground: #022c22;
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+  --color-border: #1e293b;
 }
 
 body {
