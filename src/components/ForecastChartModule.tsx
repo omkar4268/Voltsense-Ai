@@ -52,19 +52,19 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-xl flex flex-col justify-between">
+    <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-white/10 shadow-xl flex flex-col justify-between bg-[#20241b]/90 font-sans">
       
       {/* Module Header & View Mode Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-white/10">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+          <div className="p-2 rounded-xl bg-[#10b981]/15 border border-[#34d399]/30 text-[#34d399]">
             <TrendingUp className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-sm font-bold tracking-tight text-slate-100 flex items-center gap-2">
+            <h2 className="text-sm font-light tracking-tight text-white flex items-center gap-2">
               Predictive Telemetry & Solar Flux Model
             </h2>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#9da395] font-light">
               Ensemble XGBoost + BiLSTM edge inference simulating 24h rolling horizon
             </p>
           </div>
@@ -72,40 +72,40 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
 
         {/* View Mode Switcher (2D Multi-Horizon vs 3D Aurora Curtain) */}
         <div className="flex items-center gap-2">
-          <div className="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-800 relative">
+          <div className="inline-flex p-1 bg-[#121510] rounded-xl border border-white/10 relative">
             <button
               onClick={() => setViewMode('2d')}
-              className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 z-10 ${
-                viewMode === '2d' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+              className={`relative px-3 py-1.5 rounded-lg text-xs font-light transition-all flex items-center gap-1.5 z-10 ${
+                viewMode === '2d' ? 'text-white font-normal' : 'text-[#9da395] hover:text-[#f2f3ef]'
               }`}
             >
               {viewMode === '2d' && (
                 <motion.div
                   layoutId="activeChartTab"
-                  className="absolute inset-0 bg-slate-800 rounded-lg -z-10 shadow-sm border border-slate-700"
+                  className="absolute inset-0 bg-[#282e22] rounded-lg -z-10 shadow-sm border border-white/10"
                   transition={{ type: "spring", stiffness: 450, damping: 35 }}
                 />
               )}
-              <BarChart2 className="w-3.5 h-3.5 text-emerald-400" />
+              <BarChart2 className="w-3.5 h-3.5 text-[#34d399]" />
               <span>2D Forecast Curve</span>
             </button>
 
             <button
               onClick={() => setViewMode('3d')}
-              className={`relative px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 z-10 ${
-                viewMode === '3d' ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+              className={`relative px-3 py-1.5 rounded-lg text-xs font-light transition-all flex items-center gap-1.5 z-10 ${
+                viewMode === '3d' ? 'text-white font-normal' : 'text-[#9da395] hover:text-[#f2f3ef]'
               }`}
             >
               {viewMode === '3d' && (
                 <motion.div
                   layoutId="activeChartTab"
-                  className="absolute inset-0 bg-slate-800 rounded-lg -z-10 shadow-sm border border-slate-700"
+                  className="absolute inset-0 bg-[#282e22] rounded-lg -z-10 shadow-sm border border-white/10"
                   transition={{ type: "spring", stiffness: 450, damping: 35 }}
                 />
               )}
-              <BoxIcon className="w-3.5 h-3.5 text-cyan-400" />
+              <BoxIcon className="w-3.5 h-3.5 text-[#86efac]" />
               <span>3D Solar Flux Curtain</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-ping" />
             </button>
           </div>
         </div>
@@ -125,44 +125,44 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
             {/* Filter Buttons & Slot Clock */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-2 text-xs">
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-mono text-slate-400">View Metric:</span>
-                <div className="inline-flex p-0.5 bg-slate-950 rounded-lg border border-slate-800">
+                <span className="text-[11px] font-mono text-[#9da395]">View Metric:</span>
+                <div className="inline-flex p-0.5 bg-[#121510] rounded-lg border border-white/10">
                   <button
                     onClick={() => setFilterMode('all')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all ${
                       filterMode === 'all'
-                        ? 'bg-slate-800 text-white font-semibold'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#282e22] text-white font-normal'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
                     All Signals
                   </button>
                   <button
                     onClick={() => setFilterMode('solar')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all ${
                       filterMode === 'solar'
-                        ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#10b981]/20 text-[#86efac] border border-[#34d399]/30'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
                     Solar Gen
                   </button>
                   <button
                     onClick={() => setFilterMode('load')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all ${
                       filterMode === 'load'
                         ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
                     Facility Load
                   </button>
                   <button
                     onClick={() => setFilterMode('soc')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all ${
                       filterMode === 'soc'
-                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#34d399]/20 text-[#86efac] border border-[#34d399]/30'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
                     Battery SoC
@@ -172,14 +172,14 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
 
               {/* Accuracy & Sync Badges */}
               <div className="flex items-center gap-2 font-mono text-[11px]">
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-300">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
-                  <span className="text-slate-400">MAPE:</span>
-                  <span className="text-emerald-400 font-bold">3.12%</span>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#121510] border border-white/10 text-[#cbd0c5]">
+                  <CheckCircle2 className="w-3 h-3 text-[#34d399]" />
+                  <span className="text-[#9da395]">MAPE:</span>
+                  <span className="text-[#34d399] font-medium">3.12%</span>
                 </div>
-                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 text-slate-300">
-                  <span className="text-slate-400">Epoch:</span>
-                  <span className="text-cyan-400 font-bold">{currentSlot.timeStr} (#{currentSlotIndex + 1}/96)</span>
+                <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[#121510] border border-white/10 text-[#cbd0c5]">
+                  <span className="text-[#9da395]">Epoch:</span>
+                  <span className="text-[#86efac] font-medium">{currentSlot.timeStr} (#{currentSlotIndex + 1}/96)</span>
                 </div>
               </div>
             </div>
@@ -199,17 +199,17 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
                     </linearGradient>
                   </defs>
 
-                  <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" opacity={0.6} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#282e22" opacity={0.6} />
                   <XAxis 
                     dataKey="timeStr" 
-                    stroke="#64748b" 
+                    stroke="#7c8177" 
                     fontSize={10} 
                     tickLine={false} 
                     interval={11}
                   />
                   <YAxis 
                     yAxisId="power"
-                    stroke="#64748b" 
+                    stroke="#7c8177" 
                     fontSize={10} 
                     tickLine={false} 
                     unit="kW"
@@ -218,7 +218,7 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
                   <YAxis 
                     yAxisId="soc" 
                     orientation="right" 
-                    stroke="#06B6D4" 
+                    stroke="#34D399" 
                     fontSize={10} 
                     tickLine={false} 
                     unit="%" 
@@ -229,18 +229,18 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
                     content={({ active, payload, label }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <div className="p-3 bg-slate-950/95 border border-slate-800 rounded-xl shadow-2xl text-[11px] font-mono">
-                            <div className="text-slate-400 font-bold border-b border-slate-800 pb-1 mb-1.5 flex justify-between">
+                          <div className="p-3 bg-[#121510] border border-white/10 rounded-xl shadow-2xl text-[11px] font-mono">
+                            <div className="text-[#9da395] font-light border-b border-white/10 pb-1 mb-1.5 flex justify-between">
                               <span>Horizon Time:</span>
                               <span className="text-white">{label}</span>
                             </div>
                             {payload.map((entry, idx) => (
                               <div key={idx} className="flex justify-between items-center gap-4 py-0.5">
-                                <span className="flex items-center gap-1.5 text-slate-300">
+                                <span className="flex items-center gap-1.5 text-[#cbd0c5]">
                                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
                                   {entry.name}:
                                 </span>
-                                <span className="font-bold" style={{ color: entry.color }}>
+                                <span className="font-medium" style={{ color: entry.color }}>
                                   {entry.value} {entry.unit || ''}
                                 </span>
                               </div>
@@ -326,10 +326,10 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
             </div>
 
             {/* 2D Legend */}
-            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800/80 text-[11px] font-mono text-slate-400">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/10 text-[11px] font-mono text-[#9da395]">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3 h-0.5 bg-emerald-400 rounded"></span>
+                  <span className="w-3 h-0.5 bg-[#10b981] rounded"></span>
                   <span>Solar (kW)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -337,15 +337,15 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
                   <span>Facility Load (kW)</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="w-3 h-0.5 bg-cyan-400 rounded"></span>
+                  <span className="w-3 h-0.5 bg-[#34d399] rounded"></span>
                   <span>Projected SoC (%)</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-slate-500">
-                  <span className="w-3 h-0.5 border-t border-dashed border-slate-400"></span>
+                <div className="flex items-center gap-1.5 text-[#7c8177]">
+                  <span className="w-3 h-0.5 border-t border-dashed border-[#9da395]"></span>
                   <span>Dashed = AI Forecast</span>
                 </div>
               </div>
-              <span className="text-emerald-400 font-semibold">
+              <span className="text-[#86efac] font-medium">
                 96 Epochs Synchronized
               </span>
             </div>
@@ -360,30 +360,30 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
             className="space-y-3"
           >
             {/* 3D Telemetry Stats & Spectral Controls Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-slate-800/60 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 pb-2 border-b border-white/10 text-xs">
               
               {/* Spectral Palette Switcher */}
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-mono text-slate-400">Spectrum:</span>
-                <div className="inline-flex p-0.5 bg-slate-950 rounded-lg border border-slate-800">
+                <span className="text-[11px] font-mono text-[#9da395]">Spectrum:</span>
+                <div className="inline-flex p-0.5 bg-[#121510] rounded-lg border border-white/10">
                   <button
                     onClick={() => setCurtainPalette('aurora')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all flex items-center gap-1 ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all flex items-center gap-1 ${
                       curtainPalette === 'aurora'
-                        ? 'bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#10b981]/20 text-[#86efac] font-medium border border-[#34d399]/30'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
-                    <Sun className="w-3 h-3 text-emerald-400" />
+                    <Sun className="w-3 h-3 text-[#34d399]" />
                     <span>Solar Radiance</span>
                   </button>
 
                   <button
                     onClick={() => setCurtainPalette('ember')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all flex items-center gap-1 ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all flex items-center gap-1 ${
                       curtainPalette === 'ember'
-                        ? 'bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-amber-500/20 text-amber-300 font-medium border border-amber-500/30'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
                     <Flame className="w-3 h-3 text-amber-400" />
@@ -392,13 +392,13 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
 
                   <button
                     onClick={() => setCurtainPalette('ocean')}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-all flex items-center gap-1 ${
+                    className={`px-2.5 py-1 rounded-md text-[11px] font-light transition-all flex items-center gap-1 ${
                       curtainPalette === 'ocean'
-                        ? 'bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#34d399]/20 text-[#86efac] font-medium border border-[#34d399]/30'
+                        : 'text-[#9da395] hover:text-[#f2f3ef]'
                     }`}
                   >
-                    <Droplets className="w-3 h-3 text-cyan-400" />
+                    <Droplets className="w-3 h-3 text-[#34d399]" />
                     <span>Atmosphere Influx</span>
                   </button>
                 </div>
@@ -406,20 +406,20 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
 
               {/* Real-time Photon / Solar stats */}
               <div className="flex items-center gap-2 font-mono text-[11px]">
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
-                  <span className="text-slate-400">Solar Power:</span>
-                  <span className="text-emerald-400 font-bold">{currentSlot.actualSolar} kW</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#121510] border border-white/10 text-[#cbd0c5]">
+                  <span className="text-[#9da395]">Solar Power:</span>
+                  <span className="text-[#86efac] font-medium">{currentSlot.actualSolar} kW</span>
                 </div>
-                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-300">
-                  <span className="text-slate-400">Cloud Extinction:</span>
-                  <span className="text-cyan-400 font-bold">0.14 τ</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#121510] border border-white/10 text-[#cbd0c5]">
+                  <span className="text-[#9da395]">Cloud Extinction:</span>
+                  <span className="text-[#34d399] font-medium">0.14 τ</span>
                 </div>
                 <button
                   onClick={() => setAutoRotateSpeed(speed => (speed > 0 ? 0 : 0.16))}
                   className={`px-2 py-1 rounded-lg border text-[11px] flex items-center gap-1 transition-all ${
                     autoRotateSpeed > 0
-                      ? 'bg-slate-800 border-slate-700 text-slate-200'
-                      : 'bg-slate-950 border-slate-800 text-slate-400'
+                      ? 'bg-[#282e22] border-white/10 text-[#f2f3ef]'
+                      : 'bg-[#121510] border-white/10 text-[#9da395]'
                   }`}
                   title="Toggle 3D Orbit Auto-Rotation"
                 >
@@ -431,7 +431,7 @@ export const ForecastChartModule: React.FC<ForecastChartModuleProps> = ({
             </div>
 
             {/* Embedded Realistic 3D Aurora Curtain Component */}
-            <div className="rounded-xl overflow-hidden border border-slate-800/80 bg-slate-950/60 shadow-inner">
+            <div className="rounded-xl overflow-hidden border border-white/10 bg-[#121510] shadow-inner">
               <AuroraCurtain
                 columns={56}
                 layers={3}

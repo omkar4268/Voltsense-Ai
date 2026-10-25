@@ -56,19 +56,19 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-4 xl:p-5 border border-slate-800 shadow-xl flex flex-col justify-between">
+    <div className="glass-panel rounded-2xl p-4 xl:p-5 border border-white/10 shadow-xl flex flex-col justify-between bg-[#20241b]/90 font-sans">
       <div>
         {/* Panel Header */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
-              <Sliders className="w-4 h-4 text-cyan-400" />
+            <div className="p-1.5 rounded-lg bg-[#10b981]/15 border border-[#34d399]/30">
+              <Sliders className="w-4 h-4 text-[#34d399]" />
             </div>
             <div>
-              <h2 className="text-sm font-bold tracking-tight text-slate-100 flex items-center gap-1.5">
+              <h2 className="text-sm font-light tracking-tight text-white flex items-center gap-1.5">
                 Judge Sandbox // Real-Time Microgrid Controls
               </h2>
-              <p className="text-[11px] text-slate-400">
+              <p className="text-[11px] text-[#9da395] font-light">
                 Manipulate physics parameters live to observe sub-second Edge-AI response
               </p>
             </div>
@@ -76,7 +76,7 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
 
           <button
             onClick={onResetDefaults}
-            className="flex items-center gap-1 text-[11px] font-mono text-slate-400 hover:text-slate-200 px-2 py-1 rounded bg-slate-900 border border-slate-800 transition-colors"
+            className="flex items-center gap-1 text-[11px] font-mono text-[#9da395] hover:text-[#f2f3ef] px-2 py-1 rounded bg-[#161913] border border-white/10 transition-colors"
             title="Reset to default baseline conditions"
           >
             <RotateCcw className="w-3 h-3" />
@@ -86,48 +86,48 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
 
         {/* Quick Scenario Preset Buttons */}
         <div className="mb-4">
-          <span className="text-[11px] font-mono text-slate-400 block mb-1.5">
+          <span className="text-[11px] font-mono text-[#9da395] block mb-1.5 font-light">
             Quick Test Scenarios:
           </span>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs font-medium">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-xs font-light">
             <button
               onClick={() => setScenario('surplus')}
-              className="px-2 py-1.5 rounded-lg bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/30 text-left transition-all"
+              className="px-2 py-1.5 rounded-lg bg-[#10b981]/15 hover:bg-[#10b981]/25 text-[#86efac] border border-[#34d399]/30 text-left transition-all"
             >
-              <div className="font-bold flex items-center gap-1">
-                <Sun className="w-3 h-3 text-emerald-400" /> Noon Surplus
+              <div className="font-normal flex items-center gap-1">
+                <Sun className="w-3 h-3 text-[#34d399]" /> Noon Surplus
               </div>
-              <div className="text-[10px] text-emerald-400/80 font-mono">980 W/m² · 32kW Load</div>
+              <div className="text-[10px] text-[#34d399] font-mono font-light">980 W/m² · 32kW Load</div>
             </button>
 
             <button
               onClick={() => setScenario('evening')}
               className="px-2 py-1.5 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-500/30 text-left transition-all"
             >
-              <div className="font-bold flex items-center gap-1">
+              <div className="font-normal flex items-center gap-1">
                 <Factory className="w-3 h-3 text-amber-400" /> Evening EV Peak
               </div>
-              <div className="text-[10px] text-amber-400/80 font-mono">50 W/m² · 120kW Load</div>
+              <div className="text-[10px] text-amber-400/80 font-mono font-light">50 W/m² · 120kW Load</div>
             </button>
 
             <button
               onClick={() => setScenario('storm')}
               className="px-2 py-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-500/30 text-left transition-all"
             >
-              <div className="font-bold flex items-center gap-1">
+              <div className="font-normal flex items-center gap-1">
                 <CloudRain className="w-3 h-3 text-rose-400" /> Severe Storm
               </div>
-              <div className="text-[10px] text-rose-400/80 font-mono">220 W/m² · 95kW Load</div>
+              <div className="text-[10px] text-rose-400/80 font-mono font-light">220 W/m² · 95kW Load</div>
             </button>
 
             <button
               onClick={() => setScenario('balanced')}
-              className="px-2 py-1.5 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/30 text-left transition-all"
+              className="px-2 py-1.5 rounded-lg bg-[#34d399]/15 hover:bg-[#34d399]/25 text-[#86efac] border border-[#34d399]/30 text-left transition-all"
             >
-              <div className="font-bold flex items-center gap-1">
-                <Sparkles className="w-3 h-3 text-cyan-400" /> Balanced Base
+              <div className="font-normal flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-[#34d399]" /> Balanced Base
               </div>
-              <div className="text-[10px] text-cyan-400/80 font-mono">780 W/m² · 58kW Load</div>
+              <div className="text-[10px] text-[#86efac] font-mono font-light">780 W/m² · 58kW Load</div>
             </button>
           </div>
         </div>
@@ -136,13 +136,13 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
         <div className="space-y-4">
           
           {/* Slider 1: Solar Irradiance */}
-          <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3">
+          <div className="bg-[#121510] border border-white/10 rounded-xl p-3">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                <Sun className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="text-xs font-light text-[#f2f3ef] flex items-center gap-1.5">
+                <Sun className="w-3.5 h-3.5 text-[#34d399]" />
                 <span>Solar Irradiance (G)</span>
               </label>
-              <span className="font-mono text-xs font-bold text-emerald-400 px-2 py-0.5 rounded bg-emerald-950/80 border border-emerald-500/40">
+              <span className="font-mono text-xs font-normal text-[#86efac] px-2 py-0.5 rounded bg-[#161913] border border-[#34d399]/30">
                 {state.irradiance} W/m²
               </span>
             </div>
@@ -153,9 +153,9 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
               step="10"
               value={state.irradiance}
               onChange={(e) => onUpdateState({ irradiance: Number(e.target.value) })}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-400 focus:outline-none"
+              className="w-full h-1.5 bg-[#282e22] rounded-lg appearance-none cursor-pointer accent-[#34d399] focus:outline-none"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+            <div className="flex justify-between text-[10px] font-mono text-[#7c8177] mt-1 font-light">
               <span>0 (Dark Night)</span>
               <span>500 (Moderate)</span>
               <span>1000 W/m² (Peak Noon)</span>
@@ -163,13 +163,13 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
           </div>
 
           {/* Slider 2: Facility & EV Surge Load */}
-          <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3">
+          <div className="bg-[#121510] border border-white/10 rounded-xl p-3">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+              <label className="text-xs font-light text-[#f2f3ef] flex items-center gap-1.5">
                 <Factory className="w-3.5 h-3.5 text-amber-400" />
                 <span>Facility & EV Surge Load (P_L)</span>
               </label>
-              <span className="font-mono text-xs font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-950/80 border border-amber-500/40">
+              <span className="font-mono text-xs font-normal text-amber-400 px-2 py-0.5 rounded bg-[#161913] border border-amber-500/30">
                 {state.baseFacilityLoad} kW
               </span>
             </div>
@@ -180,9 +180,9 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
               step="1"
               value={state.baseFacilityLoad}
               onChange={(e) => onUpdateState({ baseFacilityLoad: Number(e.target.value) })}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400 focus:outline-none"
+              className="w-full h-1.5 bg-[#282e22] rounded-lg appearance-none cursor-pointer accent-amber-400 focus:outline-none"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+            <div className="flex justify-between text-[10px] font-mono text-[#7c8177] mt-1 font-light">
               <span>20 kW (Off-Peak)</span>
               <span>85 kW (Standard Shift)</span>
               <span>150 kW (Heavy EV Surge)</span>
@@ -190,13 +190,13 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
           </div>
 
           {/* Slider 3: Minimum Protected SoC Constraint */}
-          <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3">
+          <div className="bg-[#121510] border border-white/10 rounded-xl p-3">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-                <Battery className="w-3.5 h-3.5 text-cyan-400" />
+              <label className="text-xs font-light text-[#f2f3ef] flex items-center gap-1.5">
+                <Battery className="w-3.5 h-3.5 text-[#34d399]" />
                 <span>Battery Minimum SoC Constraint (SoC_min)</span>
               </label>
-              <span className="font-mono text-xs font-bold text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/40">
+              <span className="font-mono text-xs font-normal text-[#86efac] px-2 py-0.5 rounded bg-[#161913] border border-[#34d399]/30">
                 {state.minSocConstraint}%
               </span>
             </div>
@@ -207,9 +207,9 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
               step="1"
               value={state.minSocConstraint}
               onChange={(e) => onUpdateState({ minSocConstraint: Number(e.target.value) })}
-              className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400 focus:outline-none"
+              className="w-full h-1.5 bg-[#282e22] rounded-lg appearance-none cursor-pointer accent-[#34d399] focus:outline-none"
             />
-            <div className="flex justify-between text-[10px] font-mono text-slate-500 mt-1">
+            <div className="flex justify-between text-[10px] font-mono text-[#7c8177] mt-1 font-light">
               <span>10% (High Stress)</span>
               <span>20% (Optimal +15% Life)</span>
               <span>30% (High Reserve)</span>
@@ -217,40 +217,40 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
           </div>
 
           {/* Weather Forecast Horizon 3-Way Selector */}
-          <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3">
-            <label className="text-xs font-semibold text-slate-200 flex items-center gap-1.5 mb-2">
-              <CloudSun className="w-3.5 h-3.5 text-purple-400" />
+          <div className="bg-[#121510] border border-white/10 rounded-xl p-3">
+            <label className="text-xs font-light text-[#f2f3ef] flex items-center gap-1.5 mb-2">
+              <CloudSun className="w-3.5 h-3.5 text-[#86efac]" />
               <span>Weather Forecast Horizon</span>
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 onClick={() => onUpdateState({ weatherHorizon: 'clear' })}
-                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-light transition-all ${
                   state.weatherHorizon === 'clear'
-                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-[#10b981]/20 text-[#86efac] border border-[#34d399]/40 shadow-sm font-normal'
+                    : 'bg-[#20241b] text-[#9da395] hover:text-[#f2f3ef] border border-white/10'
                 }`}
               >
-                <SunMedium className="w-3.5 h-3.5 text-emerald-400" />
+                <SunMedium className="w-3.5 h-3.5 text-[#34d399]" />
                 <span>Clear Sky</span>
               </button>
               <button
                 onClick={() => onUpdateState({ weatherHorizon: 'intermittent' })}
-                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-light transition-all ${
                   state.weatherHorizon === 'intermittent'
-                    ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-[#34d399]/20 text-[#86efac] border border-[#34d399]/40 shadow-sm font-normal'
+                    : 'bg-[#20241b] text-[#9da395] hover:text-[#f2f3ef] border border-white/10'
                 }`}
               >
-                <CloudSun className="w-3.5 h-3.5 text-cyan-400" />
+                <CloudSun className="w-3.5 h-3.5 text-[#34d399]" />
                 <span>Passing Cumulus</span>
               </button>
               <button
                 onClick={() => onUpdateState({ weatherHorizon: 'storm' })}
-                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-light transition-all ${
                   state.weatherHorizon === 'storm'
-                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm'
-                    : 'bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800'
+                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm font-normal'
+                    : 'bg-[#20241b] text-[#9da395] hover:text-[#f2f3ef] border border-white/10'
                 }`}
               >
                 <CloudRain className="w-3.5 h-3.5 text-rose-400" />
@@ -262,12 +262,12 @@ export const SandboxControlPanel: React.FC<SandboxControlPanelProps> = ({
         </div>
       </div>
 
-      <div className="mt-3 pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+      <div className="mt-3 pt-3 border-t border-white/10 text-[11px] text-[#9da395] flex items-center justify-between font-light">
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          Live Closed-Loop Physics: <span className="font-mono text-emerald-300">1.5s Cycle</span>
+          <span className="w-2 h-2 rounded-full bg-[#34d399] animate-ping"></span>
+          Live Closed-Loop Physics: <span className="font-mono text-[#86efac]">1.5s Cycle</span>
         </span>
-        <span className="font-mono text-slate-500">
+        <span className="font-mono text-[#7c8177]">
           Δt = 90ms Edge Slew
         </span>
       </div>

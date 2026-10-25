@@ -354,98 +354,98 @@ export const App: React.FC = () => {
                 {/* Metric 1: Clean Solar Generation */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/90 hover:border-emerald-500/50 hover:shadow-[0_10px_25px_-5px_rgba(16,185,129,0.2)] transition-all relative overflow-hidden group"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-[#34d399]/40 hover:shadow-[0_10px_25px_-5px_rgba(52,211,153,0.15)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#10b981]/5 rounded-full blur-xl group-hover:bg-[#10b981]/10 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400 font-medium">Solar Generation</span>
-                    <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400">
+                    <span className="text-xs text-[#9da395] font-light">Solar Generation</span>
+                    <div className="p-2 rounded-xl bg-[#10b981]/15 text-[#34d399]">
                       <Sun className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-400">
+                    <span className="text-2xl sm:text-3xl font-light font-mono text-[#34d399]">
                       {state.solarKW}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">kW</span>
+                    <span className="text-xs text-[#9da395] font-light">kW</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 font-mono">
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Irradiance: {state.irradiance} W/m²</span>
-                    <span className="text-emerald-400 font-bold">100% Clean</span>
+                    <span className="text-[#86efac] font-medium">100% Clean</span>
                   </div>
                 </motion.div>
 
                 {/* Metric 2: Smart Battery Storage */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/90 hover:border-cyan-500/50 hover:shadow-[0_10px_25px_-5px_rgba(6,182,212,0.2)] transition-all relative overflow-hidden group"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-[#34d399]/40 hover:shadow-[0_10px_25px_-5px_rgba(52,211,153,0.15)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rounded-full blur-xl group-hover:bg-cyan-500/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full blur-xl group-hover:bg-[#34d399]/10 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400 font-medium">Battery Energy Storage</span>
-                    <div className="p-2 rounded-xl bg-cyan-500/15 text-cyan-400">
+                    <span className="text-xs text-[#9da395] font-light">Battery Energy Storage</span>
+                    <div className="p-2 rounded-xl bg-[#34d399]/15 text-[#86efac]">
                       <BatteryCharging className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-extrabold font-mono text-cyan-300">
+                    <span className="text-2xl sm:text-3xl font-light font-mono text-[#86efac]">
                       {state.bessSoC}%
                     </span>
-                    <span className="text-xs text-cyan-400 font-mono">
+                    <span className="text-xs text-[#34d399] font-mono">
                       ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
                     </span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 font-mono">
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Health: {state.bessHealthPct}% SoH</span>
-                    <span className="text-cyan-300 font-bold">+15.2% Life Ext.</span>
+                    <span className="text-[#86efac] font-medium">+15.2% Life Ext.</span>
                   </div>
                 </motion.div>
 
                 {/* Metric 3: Facility Demand */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/90 hover:border-amber-500/50 hover:shadow-[0_10px_25px_-5px_rgba(245,158,11,0.2)] transition-all relative overflow-hidden group"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-amber-500/40 hover:shadow-[0_10px_25px_-5px_rgba(245,158,11,0.15)] transition-all relative overflow-hidden group font-sans"
                 >
                   <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl group-hover:bg-amber-500/10 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400 font-medium">Facility Consumption</span>
+                    <span className="text-xs text-[#9da395] font-light">Facility Consumption</span>
                     <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
                       <Factory className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-extrabold font-mono text-amber-400">
+                    <span className="text-2xl sm:text-3xl font-light font-mono text-amber-400">
                       {state.facilityLoadKW}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">kW</span>
+                    <span className="text-xs text-[#9da395] font-light">kW</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 font-mono">
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Diesel Generator:</span>
-                    <span className="text-emerald-400 font-bold uppercase">{state.dieselStatus}</span>
+                    <span className="text-[#34d399] font-medium uppercase">{state.dieselStatus}</span>
                   </div>
                 </motion.div>
 
                 {/* Metric 4: Environmental & Cost Savings */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-slate-900/70 border border-slate-800/90 hover:border-emerald-500/50 hover:shadow-[0_10px_25px_-5px_rgba(16,185,129,0.2)] transition-all relative overflow-hidden group"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-[#34d399]/40 hover:shadow-[0_10px_25px_-5px_rgba(52,211,153,0.15)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full blur-xl group-hover:bg-emerald-500/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#10b981]/5 rounded-full blur-xl group-hover:bg-[#10b981]/10 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-slate-400 font-medium">Avoided Carbon & Cost</span>
-                    <div className="p-2 rounded-xl bg-emerald-500/15 text-emerald-400">
+                    <span className="text-xs text-[#9da395] font-light">Avoided Carbon & Cost</span>
+                    <div className="p-2 rounded-xl bg-[#10b981]/15 text-[#34d399]">
                       <Leaf className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-extrabold font-mono text-emerald-400">
+                    <span className="text-2xl sm:text-3xl font-light font-mono text-[#34d399]">
                       {state.cumulativeCo2SavedKg.toFixed(2)}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">kg CO₂</span>
+                    <span className="text-xs text-[#9da395] font-light">kg CO₂</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-800/80 pt-2 font-mono">
+                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Saved: +${state.costSavingsUSD.toFixed(2)}</span>
-                    <span className="text-emerald-400 font-bold">Zero Diesel Used</span>
+                    <span className="text-[#86efac] font-medium">Zero Diesel Used</span>
                   </div>
                 </motion.div>
 
@@ -454,46 +454,46 @@ export const App: React.FC = () => {
               {/* View Switcher: Interactive Circuit Topology vs 3D Solar Flux Curtain */}
               <div className="flex items-center justify-between gap-3 pt-1">
                 <div className="flex items-center gap-2">
-                  <div className="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-800 relative text-xs">
+                  <div className="inline-flex p-1 bg-[#121510] rounded-xl border border-white/10 relative text-xs">
                     <button
                       onClick={() => setOverviewDisplay('circuit')}
-                      className={`relative px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 z-10 ${
-                        overviewDisplay === 'circuit' ? 'text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                      className={`relative px-3.5 py-1.5 rounded-lg font-light transition-all flex items-center gap-1.5 z-10 ${
+                        overviewDisplay === 'circuit' ? 'text-white font-normal' : 'text-[#9da395] hover:text-[#f2f3ef]'
                       }`}
                     >
                       {overviewDisplay === 'circuit' && (
                         <motion.div
                           layoutId="overviewDisplayPill"
-                          className="absolute inset-0 bg-slate-800 rounded-lg -z-10 shadow-sm border border-slate-700"
+                          className="absolute inset-0 bg-[#282e22] rounded-lg -z-10 shadow-sm border border-white/10"
                           transition={{ type: "spring", stiffness: 450, damping: 35 }}
                         />
                       )}
-                      <Layers className="w-3.5 h-3.5 text-emerald-400" />
+                      <Layers className="w-3.5 h-3.5 text-[#34d399]" />
                       <span>Live Power Grid Circuit</span>
                     </button>
 
                     <button
                       onClick={() => setOverviewDisplay('aurora-3d')}
-                      className={`relative px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-1.5 z-10 ${
-                        overviewDisplay === 'aurora-3d' ? 'text-white font-bold' : 'text-slate-400 hover:text-slate-200'
+                      className={`relative px-3.5 py-1.5 rounded-lg font-light transition-all flex items-center gap-1.5 z-10 ${
+                        overviewDisplay === 'aurora-3d' ? 'text-white font-normal' : 'text-[#9da395] hover:text-[#f2f3ef]'
                       }`}
                     >
                       {overviewDisplay === 'aurora-3d' && (
                         <motion.div
                           layoutId="overviewDisplayPill"
-                          className="absolute inset-0 bg-slate-800 rounded-lg -z-10 shadow-sm border border-slate-700"
+                          className="absolute inset-0 bg-[#282e22] rounded-lg -z-10 shadow-sm border border-white/10"
                           transition={{ type: "spring", stiffness: 450, damping: 35 }}
                         />
                       )}
-                      <Box className="w-3.5 h-3.5 text-cyan-400" />
+                      <Box className="w-3.5 h-3.5 text-[#86efac]" />
                       <span>3D Solar Flux Curtain</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-ping" />
                     </button>
                   </div>
                 </div>
 
-                <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#9da395]">
+                  <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
                   <span>Interactive Real-Time Mode</span>
                 </div>
               </div>
@@ -521,28 +521,28 @@ export const App: React.FC = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.99 }}
                     transition={{ duration: 0.2 }}
-                    className="glass-panel rounded-3xl p-5 border border-slate-800 shadow-2xl space-y-4"
+                    className="glass-panel rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4 bg-[#20241b]/90"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                       <div>
-                        <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                        <h2 className="text-sm font-light text-white flex items-center gap-2">
                           3D Solar Electromagnetic Wave Curtain
                         </h2>
-                        <p className="text-xs text-slate-400">
+                        <p className="text-xs text-[#9da395] font-light">
                           Rayleigh-Mie atmospheric scattering · 3 drifting layers of photon radiation
                         </p>
                       </div>
                       <div className="flex items-center gap-2 font-mono text-xs">
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-emerald-400 font-bold">
+                        <span className="px-2.5 py-1 rounded-lg bg-[#161913] border border-white/10 text-[#86efac]">
                           Solar: {state.solarKW} kW
                         </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-cyan-400 font-bold">
+                        <span className="px-2.5 py-1 rounded-lg bg-[#161913] border border-white/10 text-[#34d399]">
                           GHI: {state.irradiance} W/m²
                         </span>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl overflow-hidden border border-slate-800/80 bg-slate-950/60">
+                    <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#121510]">
                       <AuroraCurtain
                         columns={56}
                         layers={3}
@@ -560,20 +560,20 @@ export const App: React.FC = () => {
               </AnimatePresence>
 
               {/* Real-Time Edge-AI Activity Ticker (Customer-Friendly Live Action) */}
-              <div className="p-3.5 rounded-2xl bg-slate-950/80 border border-slate-800/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-inner">
+              <div className="p-3.5 rounded-2xl bg-[#121510] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-inner">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="p-1.5 rounded-lg bg-emerald-500/15 text-emerald-400 shrink-0">
+                  <div className="p-1.5 rounded-lg bg-[#10b981]/15 text-[#34d399] shrink-0">
                     <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '8s' }} />
                   </div>
                   <div className="truncate">
-                    <span className="text-slate-400 font-mono mr-2">[{latestLog.timestamp}]</span>
-                    <span className="text-slate-200 font-medium">{latestLog.message}</span>
+                    <span className="text-[#9da395] font-mono mr-2">[{latestLog.timestamp}]</span>
+                    <span className="text-[#f2f3ef] font-light">{latestLog.message}</span>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setActiveTab('ledger')}
-                  className="text-[11px] font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1 shrink-0 self-end sm:self-center"
+                  className="text-[11px] font-mono text-[#34d399] hover:text-[#86efac] flex items-center gap-1 shrink-0 self-end sm:self-center"
                 >
                   <span>View Full Audit Log</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -585,64 +585,64 @@ export const App: React.FC = () => {
                 <motion.button
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('forecast')}
-                  className="p-4 rounded-2xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-cyan-500/40 text-left transition-all flex items-center justify-between group shadow-sm"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 hover:bg-[#282e22] border border-white/10 hover:border-[#34d399]/40 text-left transition-all flex items-center justify-between group shadow-sm"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 group-hover:bg-cyan-500/20 transition-colors">
+                    <div className="p-2.5 rounded-xl bg-[#10b981]/10 text-[#34d399] group-hover:bg-[#10b981]/20 transition-colors">
                       <TrendingUp className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-slate-200 group-hover:text-cyan-300">
+                      <div className="text-sm font-light text-[#f2f3ef] group-hover:text-[#86efac]">
                         24-Hour AI Forecast
                       </div>
-                      <div className="text-xs text-slate-400">
+                      <div className="text-xs text-[#9da395] font-light">
                         96 intervals · 3.12% MAPE
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#34d399] group-hover:translate-x-0.5 transition-all" />
                 </motion.button>
 
                 <motion.button
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('battery')}
-                  className="p-4 rounded-2xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-purple-500/40 text-left transition-all flex items-center justify-between group shadow-sm"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 hover:bg-[#282e22] border border-white/10 hover:border-[#34d399]/40 text-left transition-all flex items-center justify-between group shadow-sm"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 group-hover:bg-purple-500/20 transition-colors">
+                    <div className="p-2.5 rounded-xl bg-[#34d399]/10 text-[#86efac] group-hover:bg-[#34d399]/20 transition-colors">
                       <BatteryCharging className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-slate-200 group-hover:text-purple-300">
+                      <div className="text-sm font-light text-[#f2f3ef] group-hover:text-[#86efac]">
                         Battery Degradation Model
                       </div>
-                      <div className="text-xs text-slate-400">
+                      <div className="text-xs text-[#9da395] font-light">
                         +15.2% life extension · 10-yr curves
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-purple-400 group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#34d399] group-hover:translate-x-0.5 transition-all" />
                 </motion.button>
 
                 <motion.button
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('sandbox')}
-                  className="p-4 rounded-2xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-amber-500/40 text-left transition-all flex items-center justify-between group shadow-sm"
+                  className="p-4 rounded-2xl bg-[#20241b]/90 hover:bg-[#282e22] border border-white/10 hover:border-amber-500/40 text-left transition-all flex items-center justify-between group shadow-sm"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500/20 transition-colors">
                       <Sliders className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-bold text-slate-200 group-hover:text-amber-300">
+                      <div className="text-sm font-light text-[#f2f3ef] group-hover:text-amber-300">
                         Live Sandbox & Sliders
                       </div>
-                      <div className="text-xs text-slate-400">
+                      <div className="text-xs text-[#9da395] font-light">
                         Change irradiance, load & storm fronts
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
                 </motion.button>
               </div>
 
@@ -712,17 +712,17 @@ export const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-slate-800/80 bg-[#070A14] px-6 py-3.5 text-xs font-mono text-slate-500">
+        <footer className="border-t border-white/10 bg-[#121510] px-6 py-3.5 text-xs font-mono text-[#7c8177]">
           <div className="max-w-[1500px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2 text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-2 text-[#9da395] font-light">
+              <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
               <span>VoltSense Edge-AI Dispatch Engine</span>
               <span>·</span>
               <span>Raspberry Pi 5 + ESP32 RTOS</span>
             </div>
             <div className="flex items-center gap-3">
               <span>Ticks: {tickCounter}</span>
-              <span className="text-emerald-400 font-bold">100% Offline Autonomous</span>
+              <span className="text-[#86efac] font-medium">100% Offline Autonomous</span>
             </div>
           </div>
         </footer>

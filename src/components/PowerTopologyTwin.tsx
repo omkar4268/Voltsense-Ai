@@ -49,33 +49,33 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
   };
 
   return (
-    <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-2xl relative overflow-hidden bg-[#0A0F1D]/80">
+    <div className="glass-panel rounded-3xl p-5 sm:p-6 border border-white/10 shadow-2xl relative overflow-hidden bg-[#20241b]/90 font-sans">
       
       {/* Topology Header & 1-Click Interactive Scenarios Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-800/80">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-4 pb-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="relative p-2.5 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 text-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+          <div className="relative p-2.5 rounded-2xl bg-[#10b981]/20 border border-[#34d399]/40 text-[#34d399] shadow-[0_0_20px_rgba(52,211,153,0.2)]">
             <Layers className="w-5 h-5" />
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#34d399] animate-ping" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h2 className="text-base sm:text-lg font-light text-white tracking-tight">
                 Live Microgrid Power Topology
               </h2>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-mono text-emerald-300 font-bold">
+              <span className="px-2 py-0.5 rounded-full bg-[#10b981]/15 border border-[#34d399]/30 text-[10px] font-mono text-[#86efac] font-medium">
                 100% Balanced
               </span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[#9da395] font-light">
               Real-time vector flows between Solar PV, BESS Battery, Grid & Facility Load
             </p>
           </div>
         </div>
 
         {/* 1-Click Interactive Scenarios (Effortless Testing) */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-slate-950 rounded-2xl border border-slate-800/90 text-xs font-medium">
-          <span className="text-[11px] font-mono text-slate-400 px-2 py-1 hidden sm:inline">
+        <div className="flex flex-wrap items-center gap-1.5 p-1 bg-[#121510] rounded-2xl border border-white/10 text-xs font-light">
+          <span className="text-[11px] font-mono text-[#9da395] px-2 py-1 hidden sm:inline">
             Quick Scenarios:
           </span>
 
@@ -83,11 +83,11 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
             onClick={() => handleScenarioClick('sunny')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
               activeScenario === 'sunny'
-                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-[#10b981]/20 text-[#86efac] border border-[#34d399]/40 font-medium shadow-sm'
+                : 'text-[#9da395] hover:text-[#f2f3ef]'
             }`}
           >
-            <Sun className="w-3.5 h-3.5 text-emerald-400" />
+            <Sun className="w-3.5 h-3.5 text-[#34d399]" />
             <span>Sunny Peak</span>
           </button>
 
@@ -95,8 +95,8 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
             onClick={() => handleScenarioClick('cloud')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
               activeScenario === 'cloud'
-                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-medium shadow-sm'
+                : 'text-[#9da395] hover:text-[#f2f3ef]'
             }`}
           >
             <CloudRain className="w-3.5 h-3.5 text-amber-400" />
@@ -107,11 +107,11 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
             onClick={() => handleScenarioClick('night')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
               activeScenario === 'night'
-                ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-[#34d399]/20 text-[#86efac] border border-[#34d399]/40 font-medium shadow-sm'
+                : 'text-[#9da395] hover:text-[#f2f3ef]'
             }`}
           >
-            <Moon className="w-3.5 h-3.5 text-cyan-400" />
+            <Moon className="w-3.5 h-3.5 text-[#34d399]" />
             <span>Night Discharge</span>
           </button>
 
@@ -119,8 +119,8 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
             onClick={() => handleScenarioClick('islanded')}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all ${
               activeScenario === 'islanded'
-                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 font-medium shadow-sm'
+                : 'text-[#9da395] hover:text-[#f2f3ef]'
             }`}
           >
             <Zap className="w-3.5 h-3.5 text-rose-400" />
@@ -130,7 +130,7 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
       </div>
 
       {/* SVG Canvas - Unified Coordinates (1000 x 580) */}
-      <div className="w-full aspect-[16/9] min-h-[420px] max-h-[580px] bg-[#060913] rounded-2xl border border-slate-800/90 relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
+      <div className="w-full aspect-[16/9] min-h-[420px] max-h-[580px] bg-[#121510] rounded-2xl border border-white/10 relative overflow-hidden flex items-center justify-center p-2 shadow-inner">
         
         {/* Subtle dot matrix grid */}
         <div 
@@ -430,17 +430,17 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.2 }}
-            className="mt-4 p-4 rounded-2xl bg-slate-950/95 border border-slate-800 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+            className="mt-4 p-4 rounded-2xl bg-[#121510] border border-white/10 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
           >
             <div className="flex items-start sm:items-center gap-3">
-              <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 text-cyan-400">
+              <div className="p-2 rounded-xl bg-[#20241b] border border-white/10 text-[#34d399]">
                 <Activity className="w-4 h-4" />
               </div>
               <div>
-                <span className="font-bold text-white uppercase tracking-wider block sm:inline mr-2">
+                <span className="font-medium text-white uppercase tracking-wider block sm:inline mr-2">
                   Station Telemetry ({selectedNode}):
                 </span>
-                <span className="text-slate-300">
+                <span className="text-[#cbd0c5] font-light">
                   {selectedNode === 'solar' && `Real-time irradiance is ${state.irradiance} W/m². The array generates ${state.solarKW} kW of clean electricity, avoiding carbon emissions.`}
                   {selectedNode === 'bess' && `Capacity: 200 kWh LiFePO4. Protected minimum constraint is ${state.minSocConstraint}%. Battery temp: ${state.bessTempC}°C. Health: ${state.bessHealthPct}%.`}
                   {selectedNode === 'grid' && `Diesel backup is fully suppressed by Edge-AI. Grid interchange: ${state.gridKW} kW. Running in 100% clean autonomous mode.`}
@@ -450,7 +450,7 @@ export const PowerTopologyTwin: React.FC<PowerTopologyTwinProps> = ({
             </div>
             <button 
               onClick={() => setSelectedNode(null)}
-              className="text-[11px] font-mono text-slate-400 hover:text-white px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-colors whitespace-nowrap self-end sm:self-center"
+              className="text-[11px] font-mono text-[#9da395] hover:text-white px-3 py-1.5 rounded-xl bg-[#20241b] hover:bg-[#282e22] border border-white/10 transition-colors whitespace-nowrap self-end sm:self-center"
             >
               Dismiss
             </button>

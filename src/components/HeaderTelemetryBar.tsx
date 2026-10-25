@@ -46,7 +46,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {onToggleMobileMenu && (
             <button
               onClick={onToggleMobileMenu}
-              className="lg:hidden p-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-colors"
+              className="lg:hidden p-2 rounded-xl bg-[#20241b] border border-white/10 text-[#9da395] hover:text-white transition-colors"
               aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
@@ -56,15 +56,15 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           <div className="flex items-center gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-base sm:text-lg font-bold text-white tracking-tight">
+                <h1 className="text-base sm:text-lg font-light text-white tracking-tight">
                   {activeTabTitle}
                 </h1>
-                <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[10px] font-mono text-emerald-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#10b981]/15 border border-[#34d399]/30 text-[10px] font-mono text-[#86efac]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-ping" />
                   <span>Edge-AI Active</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-400 hidden sm:block">
+              <p className="text-xs text-[#9da395] hidden sm:block font-light">
                 Predictive microgrid power dispatch & electrochemical battery protection
               </p>
             </div>
@@ -75,28 +75,28 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
         <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-start lg:justify-end">
           
           {/* Mode Switcher with Framer Motion layout pill */}
-          <div className="inline-flex p-1 bg-slate-950/90 border border-slate-800 rounded-xl text-xs font-medium relative">
+          <div className="inline-flex p-1 bg-[#121510] border border-white/10 rounded-xl text-xs font-light relative">
             <button
               onClick={() => onModeChange('autonomous')}
               className={`relative px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 z-10 ${
-                state.controllerMode === 'autonomous' ? 'text-emerald-300 font-bold' : 'text-slate-400 hover:text-slate-200'
+                state.controllerMode === 'autonomous' ? 'text-[#86efac] font-normal' : 'text-[#9da395] hover:text-white'
               }`}
             >
               {state.controllerMode === 'autonomous' && (
                 <motion.div
                   layoutId="headerModePill"
-                  className="absolute inset-0 bg-emerald-500/20 border border-emerald-500/40 rounded-lg -z-10 shadow-[0_0_12px_rgba(16,185,129,0.25)]"
+                  className="absolute inset-0 bg-[#10b981]/20 border border-[#34d399]/40 rounded-lg -z-10 shadow-[0_0_12px_rgba(52,211,153,0.25)]"
                   transition={{ type: "spring", stiffness: 450, damping: 35 }}
                 />
               )}
-              <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+              <Sparkles className="w-3.5 h-3.5 text-[#34d399]" />
               <span>Autonomous AI</span>
             </button>
 
             <button
               onClick={() => onModeChange('legacy')}
               className={`relative px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 z-10 ${
-                state.controllerMode === 'legacy' ? 'text-amber-300 font-bold' : 'text-slate-400 hover:text-slate-200'
+                state.controllerMode === 'legacy' ? 'text-amber-300 font-normal' : 'text-[#9da395] hover:text-white'
               }`}
             >
               {state.controllerMode === 'legacy' && (
@@ -113,7 +113,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
             <button
               onClick={() => onModeChange('islanded')}
               className={`relative px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 z-10 ${
-                state.controllerMode === 'islanded' ? 'text-rose-300 font-bold' : 'text-slate-400 hover:text-slate-200'
+                state.controllerMode === 'islanded' ? 'text-rose-300 font-normal' : 'text-[#9da395] hover:text-white'
               }`}
             >
               {state.controllerMode === 'islanded' && (
@@ -131,10 +131,10 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {/* Quick Chaos Stress-Test Trigger */}
           <button
             onClick={onTriggerChaos}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all border ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-mono transition-all border ${
               state.isCloudCoverChaosActive
-                ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse'
-                : 'bg-slate-900/80 hover:bg-slate-900 text-amber-400 border-amber-500/30 hover:border-amber-400/60 shadow-sm'
+                ? 'bg-amber-500 text-[#121510] border-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse font-bold'
+                : 'bg-[#20241b] hover:bg-[#282e22] text-amber-300 border-amber-500/30 hover:border-amber-400/60 shadow-sm'
             }`}
           >
             <CloudRain className="w-3.5 h-3.5" />
@@ -149,13 +149,13 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {onToggleSim && (
             <button
               onClick={onToggleSim}
-              className="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-900 border border-slate-800 text-slate-300 hover:text-white transition-all"
+              className="p-2 rounded-xl bg-[#20241b] hover:bg-[#282e22] border border-white/10 text-[#cbd0c5] hover:text-white transition-all"
               title={isSimRunning ? 'Pause Engine Simulation' : 'Resume Engine Simulation'}
             >
               {isSimRunning ? (
                 <Pause className="w-3.5 h-3.5 text-amber-400" />
               ) : (
-                <Play className="w-3.5 h-3.5 text-emerald-400" />
+                <Play className="w-3.5 h-3.5 text-[#34d399]" />
               )}
             </button>
           )}
@@ -164,7 +164,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {onGoHome && (
             <button
               onClick={onGoHome}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-light bg-[#20241b] hover:bg-[#2a3024] border border-[#34d399]/40 text-[#86efac] hover:text-white transition-all shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-light bg-[#20241b] hover:bg-[#282e22] border border-[#34d399]/40 text-[#86efac] hover:text-white transition-all shadow-sm cursor-pointer"
               title="Return to Living Green Homepage"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#34d399]" />
@@ -175,9 +175,9 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {/* Dedicated "Specs" Button */}
           <button
             onClick={onOpenSpecsModal}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-cyan-950 via-slate-900 to-blue-950 hover:from-cyan-900 hover:to-blue-900 text-cyan-200 border border-cyan-500/40 hover:border-cyan-400/80 transition-all shadow-[0_0_15px_rgba(6,182,212,0.15)] group"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium bg-[#20241b] hover:bg-[#282e22] text-[#f2f3ef] border border-white/10 hover:border-[#34d399]/40 transition-all shadow-sm group"
           >
-            <FileText className="w-4 h-4 text-cyan-400 group-hover:scale-110 transition-transform" />
+            <FileText className="w-4 h-4 text-[#34d399] group-hover:scale-110 transition-transform" />
             <span>Specs</span>
           </button>
 

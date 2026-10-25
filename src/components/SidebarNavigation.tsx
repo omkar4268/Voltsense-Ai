@@ -128,8 +128,8 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
         {/* Navigation Items with Clear Labels */}
         <nav className="p-3.5 space-y-1.5 flex-1 overflow-y-auto">
-          <div className="px-3 pt-2 pb-1 text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500">
-            Navigation
+          <div className="px-3 pt-2 pb-1 text-[10px] font-mono uppercase tracking-wider text-[#7c8177]">
+            System Modules
           </div>
 
           {navItems.map((item) => {
@@ -145,18 +145,18 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
                 }}
                 className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all border text-left group ${
                   isActive
-                    ? `${item.activeBg} font-semibold shadow-sm`
-                    : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/60'
+                    ? `${item.activeBg} font-medium shadow-sm`
+                    : 'border-transparent text-[#9da395] hover:text-[#f2f3ef] hover:bg-[#20241b]'
                 }`}
               >
-                <div className={`p-2 rounded-lg ${isActive ? 'bg-slate-950/80' : 'bg-slate-900/80'} ${item.color}`}>
+                <div className={`p-2 rounded-lg ${isActive ? 'bg-[#121510]' : 'bg-[#20241b]'} ${item.color}`}>
                   <Icon className="w-4 h-4" />
                 </div>
                 <div className="flex-1 truncate">
-                  <div className="text-xs font-bold text-slate-200">
+                  <div className="text-xs font-light text-[#f2f3ef]">
                     {item.label}
                   </div>
-                  <div className="text-[10px] text-slate-500 group-hover:text-slate-400 truncate">
+                  <div className="text-[10px] text-[#7c8177] group-hover:text-[#9da395] truncate font-light">
                     {item.subtitle}
                   </div>
                 </div>
@@ -166,26 +166,26 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
         </nav>
 
         {/* Edge Hardware Status Widget at Bottom */}
-        <div className="p-4 border-t border-slate-800/80 bg-slate-950/70">
-          <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs font-mono space-y-1.5">
+        <div className="p-4 border-t border-white/10 bg-[#121510]">
+          <div className="p-3 rounded-xl bg-[#161913] border border-white/10 text-xs font-mono space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-slate-300 font-bold">
-                <Cpu className="w-3.5 h-3.5 text-cyan-400" /> Edge Node
+              <span className="flex items-center gap-1.5 text-[#cbd0c5] font-normal">
+                <Cpu className="w-3.5 h-3.5 text-[#34d399]" /> Edge Node
               </span>
-              <span className="text-emerald-400 font-bold flex items-center gap-1 text-[10px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+              <span className="text-[#86efac] font-medium flex items-center gap-1 text-[10px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-ping" />
                 ONLINE
               </span>
             </div>
-            <div className="text-[11px] text-slate-400 space-y-0.5">
+            <div className="text-[11px] text-[#9da395] space-y-0.5 font-light">
               <div>RPi 5 + ESP32 RTOS</div>
               <div className="flex justify-between">
                 <span>Latency:</span>
-                <span className="text-cyan-300 font-bold">{state.inferenceLatencyMs} ms</span>
+                <span className="text-[#34d399] font-normal">{state.inferenceLatencyMs} ms</span>
               </div>
               <div className="flex justify-between">
                 <span>Cloud:</span>
-                <span className="text-purple-300 font-bold">0% (Offline)</span>
+                <span className="text-[#a7f3d0] font-normal">0% (Offline)</span>
               </div>
             </div>
           </div>

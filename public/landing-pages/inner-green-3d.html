@@ -35,13 +35,25 @@
 
   *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
 
-  html{ background:#383b34; }
+  html, body {
+    overflow: hidden !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
   body{
     font-family:'Lexend',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     font-weight:300;
     color:var(--ink);
     background:#383b34;
-    overflow-x:hidden;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
   }
@@ -50,8 +62,9 @@
   .hero{
     position:relative;
     width:100%;
+    height:100vh;
     height:100svh;
-    min-height:calc(880 * var(--u));
+    max-height:100vh;
     overflow:hidden;
     isolation:isolate;
     /* the reference screen reads a near-flat #4a4d44 corner to corner —
@@ -717,36 +730,41 @@
   <canvas id="scene"></canvas>
 
   <div class="dock-wrap">
-    <nav class="dock par-dock" style="--pd:5" data-spec aria-label="Primary">
-      <a class="dock-item dock-mark" data-dock data-spec data-burst href="#" style="--d:120ms" aria-label="Sylva — home">
-        <svg viewBox="0 0 22 24" aria-hidden="true">
-          <path d="M11 1.3c-2.1 0-3.95 1.2-4.75 2.95C3.95 4.55 2.3 6.25 2.3 8.35c0 2.3 1.9 4.2 4.3 4.2h8.8c2.4 0 4.3-1.9 4.3-4.2 0-2.1-1.65-3.8-4-4.1C14.95 2.5 13.1 1.3 11 1.3Z"/>
-          <path d="M9.6 12.55h2.8v4.2c1.35.3 2.45 1.15 3.15 2.4-1.35.4-2.4.15-3.15-.4v4.15H9.6v-4.15c-.75.55-1.8.8-3.15.4.7-1.25 1.8-2.1 3.15-2.4v-4.2Z"/>
+    <nav class="dock par-dock" style="--pd:5" data-spec aria-label="Primary Navigation">
+      <a class="dock-item dock-mark" data-dock data-spec data-burst href="#" data-tab="landing" style="--d:120ms" aria-label="VoltSense AI — Home">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" stroke="none"/>
         </svg>
       </a>
-      <a class="dock-item is-active" data-dock data-spec data-burst href="#" style="--d:180ms">
+      <a class="dock-item is-active" data-dock data-spec data-burst href="#" data-tab="overview" style="--d:180ms">
         <span class="glyph" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M8 14V9"/><path d="M8 9c0-2.4 1.7-4.3 4-4.3.2 2.6-1.6 4.6-4 4.3Z"/><path d="M8 10.5C7.9 8.4 6.4 6.8 4.4 6.8 4.3 8.9 5.9 10.6 8 10.5Z"/></svg>
+          <svg viewBox="0 0 16 16"><path d="M2 3h12v10H2z" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M6 3v10M10 3v10M2 8h12"/></svg>
         </span>
-        <span>Grove</span>
+        <span>Topology</span>
       </a>
-      <a class="dock-item" data-dock data-spec data-burst href="#" style="--d:230ms">
+      <a class="dock-item" data-dock data-spec data-burst href="#" data-tab="forecast" style="--d:230ms">
         <span class="glyph" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M1.6 12.4c2.4-3.4 4.3-5.1 5.7-5.1 2 0 3 3.6 5 3.6 1.1 0 1.9-.5 2.4-1.4"/><path d="M4.3 6.2C5.5 4.4 6.6 3.5 7.6 3.5c1.5 0 2.2 2.4 3.7 2.4"/></svg>
+          <svg viewBox="0 0 16 16"><path d="M2 13l3.5-5 3 3.5 5.5-8" stroke="currentColor" stroke-width="1.3" fill="none"/><circle cx="14" cy="3.5" r="1.5" fill="currentColor"/></svg>
         </span>
-        <span>Habitats</span>
+        <span>Forecast</span>
       </a>
-      <a class="dock-item" data-dock data-spec data-burst href="#" style="--d:280ms">
+      <a class="dock-item" data-dock data-spec data-burst href="#" data-tab="battery" style="--d:280ms">
         <span class="glyph" aria-hidden="true">
-          <svg viewBox="0 0 16 16"><path d="M4 2.4h5.3L12 5.1v8.5H4z"/><path d="M9.2 2.4V5h2.7"/><path d="M6 8.4h4M6 10.8h2.8"/></svg>
+          <svg viewBox="0 0 16 16"><rect x="2" y="4" width="11" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M14.5 7v2" stroke="currentColor" stroke-width="1.2"/><path d="M5 8h4M7 6v4" stroke="currentColor" stroke-width="1.2"/></svg>
         </span>
-        <span>Journal</span>
+        <span>Battery</span>
       </a>
-      <a class="dock-item dock-item--enter" data-dock data-spec data-burst href="#" style="--d:330ms">
+      <a class="dock-item" data-dock data-spec data-burst href="#" data-tab="specs" style="--d:310ms">
+        <span class="glyph" aria-hidden="true">
+          <svg viewBox="0 0 16 16"><path d="M3 2h7l3 3v9H3z" stroke="currentColor" stroke-width="1.2" fill="none"/><path d="M10 2v3h3M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.2"/></svg>
+        </span>
+        <span>Specs</span>
+      </a>
+      <a class="dock-item dock-item--enter" data-dock data-spec data-burst href="#" data-tab="overview" style="--d:350ms">
         <span class="glyph" aria-hidden="true">
           <svg viewBox="0 0 16 16"><path d="M6.6 2.5h5.1a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6.6"/><path d="M2.6 8h6.6"/><path d="m7 5.6 2.4 2.4L7 10.4"/></svg>
         </span>
-        <span>Enter</span>
+        <span>Console →</span>
       </a>
     </nav>
   </div>
@@ -759,43 +777,42 @@
       <i style="left:calc(1091 * var(--u))"></i>
     </div>
 
-    <div class="ghost fade" style="--d:1150ms" aria-hidden="true">SYLVA</div>
+    <div class="ghost fade" style="--d:1150ms" aria-hidden="true">VOLTSENSE</div>
 
     <!-- card 1 sits *behind* the canvas so the moss drapes over its shoulder -->
-    <article class="card card--about mask" style="--d:760ms; --pd:10; --pr:2.2">
+    <article class="card card--about mask" data-tab="forecast" style="--d:760ms; --pd:10; --pr:2.2; cursor:pointer;" title="View AI Forecast Architecture">
       <figure class="portal" data-delay="920">
-        <span class="portal-media"><img src="inner-green-assets/card-ethos.jpg" alt="A cushion of moss grown over lichen-crusted stones" loading="eager" decoding="async"></span>
+        <span class="portal-media"><img src="inner-green-assets/card-ethos.jpg" alt="BiLSTM Neural Dispatch" loading="eager" decoding="async"></span>
         <canvas class="pixel-reveal" aria-hidden="true"></canvas>
       </figure>
-      <p class="label">Our Ethos</p>
-      <h2>Let the wild lead.</h2>
+      <p class="label">BiLSTM Neural Core</p>
+      <h2>Sub-second dispatch.</h2>
     </article>
 
     <!-- the About knob rides *outside* the card: the card has to stay a plain
          painted box under #scene, so anything that must sit in front of the
          moss lives here instead, sharing the card's parallax origin -->
     <span class="knob-float" style="--pd:10; --pr:2.2">
-      <button class="knob knob--about mask-circle" style="--d:1100ms" aria-label="Read about Sylva">
+      <button class="knob knob--about mask-circle" data-tab="forecast" style="--d:1100ms" aria-label="Open AI Forecast & BiLSTM Core">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
-          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
         </svg>
       </button>
     </span>
 
     <h1 class="headline" style="--pd:18; --pr:1.2">
-      <span><i style="--d:260ms">Step into</i></span>
-      <span><i style="--d:360ms">the living world</i></span>
+      <span><i style="--d:260ms">Intelligent Energy</i></span>
+      <span><i style="--d:360ms">in living rhythm</i></span>
     </h1>
 
-    <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">We restore wild places through patient design, native planting, and a deeper kind of stewardship.</p>
+    <p class="lede mask" style="--d:480ms; --pd:14; --pr:1">Edge-AI predictive power dispatch and battery longevity optimization for sustainable microgrids and clean resilient infrastructure.</p>
 
     <div class="pill-clip">
       <div class="pill mask" style="--d:600ms; --pd:15; --pr:1.4">
-        <div class="liquid-stage liquid-stage--explore" data-liquid-metal="explore">
+        <div class="liquid-stage liquid-stage--explore" data-liquid-metal="explore" data-tab="overview">
           <div class="liquid-plate plate" aria-hidden="true"></div>
           <canvas class="liquid-fx" aria-hidden="true"></canvas>
-          <button class="liquid-button liquid-button--explore btn" type="button">
+          <button class="liquid-button liquid-button--explore btn" type="button" data-tab="overview">
             <svg class="ico" viewBox="0 0 115 115" aria-hidden="true">
               <g stroke="currentColor" stroke-width="11" stroke-linecap="round">
                 <path d="M14 34.5 H101"/>
@@ -803,7 +820,7 @@
                 <path d="M14 80.5 H68"/>
               </g>
             </svg>
-            <span class="lbl">Explore the work</span>
+            <span class="lbl">Launch SCADA Console</span>
           </button>
         </div>
       </div>
@@ -812,10 +829,10 @@
     <span class="play-wrap" style="--pd:20">
       <span class="play-clip">
         <span class="play-glass mask-circle" style="--d:900ms">
-          <span class="liquid-stage liquid-stage--play" data-liquid-metal="play">
+          <span class="liquid-stage liquid-stage--play" data-liquid-metal="play" data-tab="sandbox">
             <span class="liquid-plate plate" aria-hidden="true"></span>
             <canvas class="liquid-fx" aria-hidden="true"></canvas>
-            <button class="liquid-button liquid-button--play btn" type="button" aria-label="Play the film">
+            <button class="liquid-button liquid-button--play btn" type="button" data-tab="sandbox" aria-label="Launch Live Sandbox Simulation">
               <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M8 5.2v13.6L19 12z" fill="currentColor"/>
               </svg>
@@ -834,7 +851,7 @@
           <circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none"/>
         </svg>
       </span>
-      <div><dt>Canopy restored</dt><dd>282 ha</dd></div>
+      <div><dt>Clean Autonomy</dt><dd>99.4%</dd></div>
     </dl>
 
     <dl class="stat stat--b mask" style="--d:770ms; --pd:13">
@@ -847,25 +864,27 @@
           <circle cx="15" cy="15" r="3.6"/>
         </svg>
       </span>
-      <div><dt>Native species</dt><dd>43 mapped</dd></div>
+      <div><dt>Edge Latency</dt><dd>11.4 ms</dd></div>
     </dl>
 
-    <article class="card card--stove mask" style="--d:880ms; --pd:22; --pr:2.4">
-      <p class="label">Field Note 07</p>
-      <h2>After the Rain</h2>
+    <article class="card card--stove mask" data-tab="battery" style="--d:880ms; --pd:22; --pr:2.4; cursor:pointer;" title="View Battery Degradation Model">
+      <p class="label">Battery Guardian</p>
+      <h2>Zero cell degradation.</h2>
       <figure class="portal" data-delay="1080">
-        <span class="portal-media"><img src="inner-green-assets/card-ecostove.jpg" alt="Moss-covered boulders in a misty grove" loading="eager" decoding="async"></span>
+        <span class="portal-media"><img src="inner-green-assets/card-ecostove.jpg" alt="Battery Guardian cell protection" loading="eager" decoding="async"></span>
         <canvas class="pixel-reveal" aria-hidden="true"></canvas>
       </figure>
-      <button class="knob" aria-label="Open field note: After the Rain">
+      <button class="knob" data-tab="battery" aria-label="Open Battery Degradation Guardian">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 21v-7"/><path d="M12 14c0-3.3 2.4-6 5.5-6 .3 3.6-2.2 6.4-5.5 6Z"/>
-          <path d="M12 16c-.1-2.9-2.2-5.2-4.9-5.2C6.8 13.7 9 16 12 16Z"/>
+          <rect x="2" y="6" width="18" height="12" rx="2"/>
+          <path d="M22 10v4"/>
+          <path d="M7 12h4"/>
+          <path d="M9 10v4"/>
         </svg>
       </button>
     </article>
 
-    <a class="scroll mask" style="--d:1040ms; --pd:9" href="#">Discover<span class="track"></span></a>
+    <a class="scroll mask" style="--d:1040ms; --pd:9" href="#" data-tab="overview">Explore<span class="track"></span></a>
 
   </div>
 </main>
@@ -4298,6 +4317,37 @@ window.__seek   = v => { clock = v; drawn = null; };
 
   /* never leave the page invisible if something stalls */
   setTimeout(ready, 4000);
+})();
+
+// Interactivity bridge to parent React application
+(function() {
+  function dispatchNav(tab) {
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({ type: 'VOLTSENSE_NAV', tab: tab || 'overview' }, '*');
+      }
+    } catch (e) {
+      console.warn('Navigation message failed:', e);
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    var target = e.target.closest('[data-tab], .liquid-button--explore, .liquid-button--play, .knob, .card, .dock-item, .scroll');
+    if (!target) return;
+    
+    e.preventDefault();
+    e.stopPropagation();
+
+    var tab = target.getAttribute('data-tab');
+    if (!tab) {
+      if (target.classList.contains('liquid-button--play')) tab = 'sandbox';
+      else if (target.classList.contains('card--about') || target.classList.contains('knob--about')) tab = 'forecast';
+      else if (target.classList.contains('card--stove')) tab = 'battery';
+      else if (target.classList.contains('dock-mark')) tab = 'landing';
+      else tab = 'overview';
+    }
+    dispatchNav(tab);
+  }, true);
 })();
 </script>
 </body>
