@@ -289,9 +289,9 @@ export const App: React.FC = () => {
 
   if (activeTab === 'landing') {
     return (
-      <div className="min-h-screen bg-[#060913] text-slate-100 font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+      <div className="min-h-screen bg-[#161913] text-[#F2F3EF] font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
         <LandingPage
-          onLaunchConsole={() => setActiveTab('overview')}
+          onLaunchConsole={(initialTab) => setActiveTab(initialTab || 'overview')}
           onOpenSpecs={() => setIsSpecsModalOpen(true)}
           state={state}
           onApplyScenario={handleApplyScenario}
@@ -305,11 +305,11 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#070A12] text-slate-100 flex font-sans selection:bg-emerald-500/30 selection:text-emerald-200 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#161913] text-[#F2F3EF] flex font-sans selection:bg-emerald-500/30 selection:text-emerald-200 relative overflow-x-hidden">
       
       {/* Ambient Animated Atmospheric Glow Orbs (Subtle Depth) */}
-      <div className="fixed top-1/4 left-1/4 w-[32rem] h-[32rem] bg-emerald-500/10 rounded-full blur-[140px] pointer-events-none animate-float-drift -z-10" />
-      <div className="fixed bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-cyan-500/10 rounded-full blur-[160px] pointer-events-none animate-float-drift-reverse -z-10" />
+      <div className="fixed top-1/4 left-1/4 w-[32rem] h-[32rem] bg-[#10b981]/12 rounded-full blur-[140px] pointer-events-none animate-float-drift -z-10" />
+      <div className="fixed bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-[#86efac]/8 rounded-full blur-[160px] pointer-events-none animate-float-drift-reverse -z-10" />
 
       {/* 1. Sidebar Navigation */}
       <SidebarNavigation

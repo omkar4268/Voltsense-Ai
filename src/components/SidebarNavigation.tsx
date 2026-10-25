@@ -33,11 +33,11 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   const navItems = [
     {
       id: 'landing' as NavTab,
-      label: 'Commercial Home',
-      subtitle: 'Product Showcase & ROI',
+      label: 'Homepage & 3D Scene',
+      subtitle: 'Sylva Living Green',
       icon: Sparkles,
-      color: 'text-amber-400',
-      activeBg: 'bg-amber-500/15 border-amber-500/40 text-amber-300',
+      color: 'text-[#86efac]',
+      activeBg: 'bg-[#10b981]/15 border-[#34d399]/40 text-[#86efac]',
     },
     {
       id: 'overview' as NavTab,
@@ -101,27 +101,27 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
 
       {/* Main Sidebar Container - Clean, Readable, and Expanded by Default */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-[#080D1A] border-r border-slate-800/80 transition-transform duration-300 flex flex-col justify-between select-none ${
+        className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-[#161913] border-r border-white/10 transition-transform duration-300 flex flex-col justify-between select-none ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Brand Header */}
-        <div className="p-5 border-b border-slate-800/80 flex items-center gap-3">
-          <div className="relative flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.2)] text-emerald-400">
+        <div className="p-5 border-b border-white/10 flex items-center gap-3">
+          <div className="relative flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-[#10b981]/25 to-[#34d399]/20 border border-[#34d399]/40 shadow-[0_0_15px_rgba(52,211,153,0.25)] text-[#34d399]">
             <Zap className="w-5 h-5 animate-pulse" />
-            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[#34d399] animate-ping" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base tracking-tight text-white">
-                VoltSense <span className="text-emerald-400 font-mono">AI</span>
+              <span className="font-light text-base tracking-tight text-white">
+                VoltSense <span className="text-[#34d399] font-normal">AI</span>
               </span>
-              <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold">
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-[#10b981]/15 border border-[#34d399]/30 text-[#86efac] font-medium">
                 v2.4
               </span>
             </div>
-            <span className="text-[11px] text-slate-400 font-medium">
-              Edge Microgrid SCADA
+            <span className="text-[11px] text-[#9da395] font-light">
+              Living Green SCADA
             </span>
           </div>
         </div>

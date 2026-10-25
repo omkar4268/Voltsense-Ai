@@ -22,21 +22,44 @@ import {
   Activity, 
   Box, 
   ChevronDown, 
-  Clock, 
   Server,
   CloudRain,
-  Moon
+  Moon,
+  Compass,
+  Database
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AuroraCurtain } from './ui/aurora-curtain';
+import { SylvaHero } from "@designcodeio/threeui";
+import "@designcodeio/threeui/style.css";
 import { MicrogridState } from '../types';
 import { PowerTopologyTwin } from './PowerTopologyTwin';
 
 interface LandingPageProps {
-  onLaunchConsole: () => void;
+  onLaunchConsole: (initialTab?: 'overview' | 'forecast' | 'battery' | 'sandbox' | 'ledger') => void;
   onOpenSpecs: () => void;
   state: MicrogridState;
   onApplyScenario: (sc: 'sunny' | 'cloud' | 'night' | 'islanded') => void;
+}
+
+/**
+ * Living Green 3D Shader Scene using DesignCode ThreeUI SylvaHero
+ */
+export function Scene() {
+  return (
+    <div className="shader-frame">
+      <SylvaHero
+        variant="living-green"
+        headingFont="lexend"
+        bodyFont="lexend"
+        headingWeight="300"
+        bodyWeight="300"
+        primaryColor="#ffffff"
+        headingSize={63}
+        bodySize={16.5}
+        headingLetterSpacing={-0.006}
+      />
+    </div>
+  );
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -47,7 +70,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   // ROI Calculator state
   const [facilitySizeKW, setFacilitySizeKW] = useState<number>(150);
-  const [heroTab, setHeroTab] = useState<'3d-aurora' | 'grid-twin'>('3d-aurora');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
   // Derived ROI metrics based on facility load
@@ -59,90 +81,147 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   const faqs = [
     {
-      q: "Does VoltSense AI require an active internet or cloud connection?",
+      q: "Does VoltSense AI require an active internet connection?",
       a: "No. VoltSense AI is engineered for mission-critical, 100% air-gapped environments. The ONNX-quantized BiLSTM model and RTOS controller execute entirely on local Raspberry Pi 5 + ESP32 edge hardware with sub-12ms latency, ensuring zero cloud dependency or vulnerability."
     },
     {
-      q: "How does the system prevent battery degradation and protect warranties?",
-      a: "VoltSense AI embeds Rainflow cycle-counting and dynamic slew-rate limiting (12.5 kW/s). It eliminates destructive high-frequency micro-cycling, clamps thermal runaways, and keeps Depth of Discharge (DoD) in the optimal buffer, extending LFP/NMC battery life by +15.2%."
+      q: "How does the Living Green algorithm protect battery warranties?",
+      a: "VoltSense AI embeds Rainflow cycle-counting and dynamic slew-rate limiting (12.5 kW/s). It dampens destructive shallow reversals, prevents thermal hotspots, and keeps Depth of Discharge in the optimal buffer, extending LFP/NMC battery life by +15.2%."
     },
     {
-      q: "Can VoltSense AI operate with existing PLC and SCADA infrastructure?",
-      a: "Yes. VoltSense AI communicates via standard Modbus TCP/RTU, DNP3, and IEC 61850 protocols. It acts as an intelligent setpoint coprocessor for existing inverters (SMA, Schneider, Sungrow, Tesla Megapack) without requiring replacement of power electronics."
+      q: "Can VoltSense AI interface with legacy microgrid inverters and PLCs?",
+      a: "Yes. VoltSense AI communicates via standard industrial Modbus TCP/RTU, DNP3, and IEC 61850 protocols. It functions as an intelligent dispatch coprocessor for existing inverters (SMA, Schneider, Sungrow, Tesla Megapack) without requiring hardware replacements."
     },
     {
-      q: "What happens during a sudden cloud storm or grid blackout?",
-      a: "The ensemble inference engine detects solar irradiance collapse within 11.4ms. It preemptively ramps BESS inverter dispatch before bus frequency deviates, preventing voltage sags and keeping diesel generators suppressed."
+      q: "What happens during severe cloud transient drops or grid blackouts?",
+      a: "The ensemble inference engine detects solar irradiance collapse within 11.4ms. It preemptively ramps battery inverter dispatch before bus frequency deviates, preventing voltage sags and keeping diesel generators suppressed."
     }
   ];
 
-  return (
-    <div className="min-h-screen bg-[#060913] text-slate-100 font-sans selection:bg-emerald-500/30 selection:text-emerald-200 relative overflow-hidden">
-      
-      {/* Mind-Boggling Ambient Glowing Orbs / Cosmic Grid Background */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[60rem] h-[35rem] bg-gradient-to-b from-emerald-500/15 via-cyan-500/10 to-transparent rounded-full blur-[160px] pointer-events-none -z-10 animate-float-drift" />
-      <div className="fixed top-1/3 right-0 w-[40rem] h-[40rem] bg-cyan-500/10 rounded-full blur-[180px] pointer-events-none -z-10 animate-float-drift-reverse" />
-      <div className="fixed bottom-0 left-0 w-[45rem] h-[30rem] bg-purple-500/10 rounded-full blur-[170px] pointer-events-none -z-10" />
+  const functionalModules = [
+    {
+      id: 'overview' as const,
+      title: 'Power Topology Twin',
+      desc: 'Interactive 4-station real-time vector flows between Solar, BESS, Grid & Facility.',
+      icon: Layers,
+      tag: 'Real-Time Vector',
+      color: 'text-emerald-400',
+      bgGlow: 'hover:border-emerald-500/50 hover:shadow-[0_10px_30px_rgba(16,185,129,0.2)]',
+    },
+    {
+      id: 'forecast' as const,
+      title: '24-Hour AI Forecast',
+      desc: '96-epoch rolling forecast with BiLSTM ensemble and 3D solar flux visualization.',
+      icon: TrendingUp,
+      tag: '3.12% MAPE Accuracy',
+      color: 'text-teal-400',
+      bgGlow: 'hover:border-teal-500/50 hover:shadow-[0_10px_30px_rgba(45,212,191,0.2)]',
+    },
+    {
+      id: 'battery' as const,
+      title: 'Battery Longevity Model',
+      desc: 'Rainflow cycle-wear mitigation, thermal buffering, and 10-year degradation curves.',
+      icon: BatteryCharging,
+      tag: '+15.2% Asset Life',
+      color: 'text-green-300',
+      bgGlow: 'hover:border-green-400/50 hover:shadow-[0_10px_30px_rgba(74,222,128,0.2)]',
+    },
+    {
+      id: 'sandbox' as const,
+      title: 'Live Sandbox & Chaos Lab',
+      desc: 'Stress-test irradiance collapse (-80%), facility peak surges, and storm horizons.',
+      icon: Sliders,
+      tag: 'Instant Simulation',
+      color: 'text-amber-400',
+      bgGlow: 'hover:border-amber-500/50 hover:shadow-[0_10px_30px_rgba(245,158,11,0.2)]',
+    },
+    {
+      id: 'ledger' as const,
+      title: 'Carbon & ESG Audit Log',
+      desc: 'Cryptographically verifiable ledger of avoided fuel, carbon credits, and CSV exports.',
+      icon: Database,
+      tag: 'Scope 1 & 2 Auditable',
+      color: 'text-emerald-300',
+      bgGlow: 'hover:border-emerald-400/50 hover:shadow-[0_10px_30px_rgba(52,211,153,0.2)]',
+    },
+    {
+      id: 'specs' as const,
+      title: 'Full Engineering Specs',
+      desc: 'Hardware BOM, mathematical formulation, Modbus register maps, and system schematics.',
+      icon: FileText,
+      tag: 'Complete Math & BOM',
+      color: 'text-slate-200',
+      bgGlow: 'hover:border-slate-400/50 hover:shadow-[0_10px_30px_rgba(255,255,255,0.15)]',
+    },
+  ];
 
-      {/* Subtle Matrix Grid Texture */}
+  return (
+    <div className="min-h-screen bg-[#161913] text-[#F2F3EF] font-sans selection:bg-emerald-500/30 selection:text-emerald-200 relative overflow-hidden">
+      
+      {/* ── LIVING GREEN AMBIENT LIGHT POOLS & TEXTURES ── */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[70rem] h-[35rem] bg-gradient-to-b from-[#34d399]/12 via-[#10b981]/8 to-transparent rounded-full blur-[180px] pointer-events-none -z-10 animate-float-drift" />
+      <div className="fixed top-1/3 right-0 w-[42rem] h-[42rem] bg-[#86efac]/8 rounded-full blur-[190px] pointer-events-none -z-10 animate-float-drift-reverse" />
+      <div className="fixed bottom-0 left-0 w-[45rem] h-[30rem] bg-[#22c55e]/8 rounded-full blur-[180px] pointer-events-none -z-10" />
+
+      {/* Subtle living-green grid rule */}
       <div 
-        className="fixed inset-0 opacity-10 pointer-events-none -z-10"
+        className="fixed inset-0 opacity-[0.06] pointer-events-none -z-10"
         style={{
-          backgroundImage: `linear-gradient(to right, #334155 1px, transparent 1px), linear-gradient(to bottom, #334155 1px, transparent 1px)`,
-          backgroundSize: '64px 64px',
+          backgroundImage: `linear-gradient(to right, #86efac 1px, transparent 1px), linear-gradient(to bottom, #86efac 1px, transparent 1px)`,
+          backgroundSize: '56px 56px',
         }}
       />
 
-      {/* TOP COMMERCIAL NAVBAR */}
-      <header className="sticky top-0 z-50 backdrop-blur-2xl bg-[#060913]/85 border-b border-slate-800/80 px-4 sm:px-8 py-4 transition-all">
+      {/* ── TOP LIVING-GREEN FLOATING NAVBAR ── */}
+      <header className="sticky top-0 z-50 backdrop-blur-2xl bg-[#161913]/90 border-b border-white/10 px-4 sm:px-8 py-4 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3 cursor-pointer">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500/30 to-cyan-500/30 border border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.3)] text-emerald-400">
-              <Zap className="w-5 h-5 animate-pulse" />
-              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+          {/* Brand Logo in Lexend Living Green */}
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br from-[#10b981]/30 to-[#34d399]/20 border border-[#34d399]/40 shadow-[0_0_20px_rgba(52,211,153,0.3)] text-[#34d399]">
+              <Leaf className="w-5 h-5 animate-pulse" />
+              <div className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#34d399] animate-ping" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg tracking-tight text-white">
-                  VoltSense <span className="text-emerald-400 font-mono">AI</span>
+                <span className="font-light text-xl tracking-tight text-white font-sans">
+                  VoltSense <span className="text-[#34d399] font-normal">AI</span>
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 font-bold">
-                  v2.4
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#10b981]/15 border border-[#34d399]/30 text-[#86efac] font-medium">
+                  Sylva Living Green
                 </span>
               </div>
-              <span className="text-[11px] text-slate-400 font-medium hidden sm:block">
-                Autonomous Microgrid Operating System
+              <span className="text-[11px] text-[#9da395] font-light hidden sm:block">
+                Autonomous Clean Energy Microgrid Operating System
               </span>
             </div>
           </div>
 
-          {/* Nav Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-slate-300">
-            <a href="#features" className="hover:text-emerald-400 transition-colors">Features</a>
-            <a href="#interactive-demo" className="hover:text-cyan-400 transition-colors">Interactive Demo</a>
-            <a href="#roi-calculator" className="hover:text-amber-400 transition-colors">ROI Calculator</a>
-            <a href="#architecture" className="hover:text-purple-400 transition-colors">Edge Hardware</a>
-            <a href="#faq" className="hover:text-slate-200 transition-colors">FAQ</a>
+          {/* Navigation Links */}
+          <nav className="hidden md:flex items-center gap-7 text-xs font-light text-[#cbd0c5]">
+            <a href="#living-world" className="hover:text-[#34d399] transition-colors">3D Living World</a>
+            <a href="#navigation-hub" className="hover:text-[#86efac] transition-colors">Navigation Hub</a>
+            <a href="#features" className="hover:text-[#34d399] transition-colors">Core Systems</a>
+            <a href="#simulator" className="hover:text-[#a7f3d0] transition-colors">Simulator</a>
+            <a href="#roi-yield" className="hover:text-[#fde047] transition-colors">Clean Yield</a>
           </nav>
 
           {/* Action CTAs */}
           <div className="flex items-center gap-3">
             <button
               onClick={onOpenSpecs}
-              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 text-slate-200 transition-all"
+              className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-light bg-[#20241b] hover:bg-[#2a3024] border border-white/10 text-[#f2f3ef] transition-all"
             >
-              <FileText className="w-3.5 h-3.5 text-cyan-400" />
+              <FileText className="w-3.5 h-3.5 text-[#34d399]" />
               <span>Specs</span>
             </button>
 
             <button
-              onClick={onLaunchConsole}
-              className="relative group overflow-hidden px-4 sm:px-5 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 transition-all shadow-[0_0_25px_rgba(16,185,129,0.4)] hover:shadow-[0_0_35px_rgba(16,185,129,0.6)] flex items-center gap-2"
+              onClick={() => onLaunchConsole('overview')}
+              className="relative group overflow-hidden px-4 sm:px-5 py-2.5 rounded-xl text-xs font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] hover:opacity-95 text-[#121510] transition-all shadow-[0_0_25px_rgba(52,211,153,0.35)] flex items-center gap-2 cursor-pointer"
             >
-              <span className="relative z-10 flex items-center gap-1.5">
-                <span>Launch Live SCADA</span>
+              <span className="relative z-10 flex items-center gap-1.5 font-medium">
+                <span>Enter SCADA Console</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>
             </button>
@@ -151,8 +230,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </header>
 
-      {/* SECTION 1: HERO SECTION */}
-      <section className="relative pt-12 sm:pt-20 pb-16 sm:pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
+      {/* ── SECTION 1: LIVING GREEN 3D HERO (DESIGNCODE THREEUI SYLVA HERO) ── */}
+      <section id="living-world" className="relative pt-10 sm:pt-16 pb-16 sm:pb-24 px-4 sm:px-8 max-w-7xl mx-auto">
         
         {/* Floating Release Pill */}
         <div className="flex justify-center mb-6">
@@ -160,290 +239,272 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900/90 border border-emerald-500/30 text-xs font-medium text-emerald-300 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#20241b]/90 border border-[#34d399]/30 text-xs font-light text-[#86efac] shadow-[0_0_25px_rgba(52,211,153,0.15)]"
           >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400 animate-spin" style={{ animationDuration: '6s' }} />
-            <span>Next-Gen Edge-AI Power Dispatch · 100% Offline Autonomous</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <Sparkles className="w-3.5 h-3.5 text-[#34d399]" />
+            <span>Living Green Variant · ThreeUI 3D Shader Architecture</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-pulse" />
           </motion.div>
         </div>
 
-        {/* Hero Headline */}
-        <div className="text-center max-w-4xl mx-auto space-y-6">
+        {/* Hero Title & Ethos */}
+        <div className="text-center max-w-4xl mx-auto space-y-5 mb-10">
           <motion.h1 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.12]"
+            className="text-4xl sm:text-6xl lg:text-7xl font-light tracking-tight text-white leading-[1.12]"
           >
-            The Autonomous Brain for{' '}
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
-              Clean Microgrids & BESS
-            </span>
+            Into the{' '}
+            <span className="bg-gradient-to-r from-[#86efac] via-[#34d399] to-[#10b981] bg-clip-text text-transparent font-normal">
+              Living World
+            </span>{' '}
+            of Clean Power
           </motion.h1>
 
           <motion.p 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-base sm:text-xl text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed"
+            className="text-base sm:text-xl text-[#cbd0c5] max-w-2xl mx-auto font-light leading-relaxed"
           >
-            Eliminate costly diesel generator runtime, extend battery lifespan by <strong className="text-cyan-300">+15.2%</strong>, and dispatch megawatts of clean solar with <strong className="text-emerald-400">11.4ms</strong> edge inference on Raspberry Pi 5 hardware.
+            Restoring energy independence through patient edge design, autonomous solar dispatch, and intelligent battery longevity on air-gapped hardware.
           </motion.p>
 
-          {/* Action CTAs */}
+          {/* Quick Hero CTAs */}
           <motion.div 
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-3"
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
           >
             <button
-              onClick={onLaunchConsole}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 transition-all shadow-[0_0_30px_rgba(16,185,129,0.45)] hover:shadow-[0_0_45px_rgba(16,185,129,0.7)] flex items-center justify-center gap-2 group cursor-pointer"
+              onClick={() => onLaunchConsole('overview')}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] hover:opacity-95 text-[#121510] transition-all shadow-[0_0_30px_rgba(52,211,153,0.35)] flex items-center justify-center gap-2 group cursor-pointer"
             >
-              <Play className="w-4 h-4 fill-current text-slate-950" />
-              <span>Launch Live SCADA Console</span>
+              <Play className="w-4 h-4 fill-current text-[#121510]" />
+              <span>Enter SCADA Console</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
 
             <a
-              href="#interactive-demo"
-              className="w-full sm:w-auto px-7 py-4 rounded-2xl text-sm font-bold bg-slate-900/80 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 text-slate-200 transition-all flex items-center justify-center gap-2"
+              href="#navigation-hub"
+              className="w-full sm:w-auto px-7 py-4 rounded-2xl text-sm font-light bg-[#20241b] hover:bg-[#2a3024] border border-white/10 hover:border-[#34d399]/40 text-[#f2f3ef] transition-all flex items-center justify-center gap-2"
             >
-              <Box className="w-4 h-4 text-cyan-400" />
-              <span>Explore 3D Demo</span>
+              <Compass className="w-4 h-4 text-[#34d399]" />
+              <span>Explore Functional Modules</span>
             </a>
           </motion.div>
-
-          {/* 4 Hero Credibility Tickers */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-8 border-t border-slate-800/80 max-w-3xl mx-auto font-mono text-left"
-          >
-            <div className="p-3 rounded-xl bg-slate-900/40 border border-slate-800/80">
-              <span className="text-[11px] text-slate-400 block">Inference Speed</span>
-              <span className="text-xl sm:text-2xl font-bold text-emerald-400">11.4 ms</span>
-              <span className="text-[10px] text-slate-500 block">Sub-second local</span>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/40 border border-slate-800/80">
-              <span className="text-[11px] text-slate-400 block">Forecast Error</span>
-              <span className="text-xl sm:text-2xl font-bold text-cyan-400">3.12%</span>
-              <span className="text-[10px] text-slate-500 block">96-interval MAPE</span>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/40 border border-slate-800/80">
-              <span className="text-[11px] text-slate-400 block">Battery Life</span>
-              <span className="text-xl sm:text-2xl font-bold text-purple-400">+15.2%</span>
-              <span className="text-[10px] text-slate-500 block">Rainflow dampened</span>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/40 border border-slate-800/80">
-              <span className="text-[11px] text-slate-400 block">Diesel Reduced</span>
-              <span className="text-xl sm:text-2xl font-bold text-amber-400">28.4%</span>
-              <span className="text-[10px] text-slate-500 block">Auto-suppression</span>
-            </div>
-          </motion.div>
-
         </div>
 
-        {/* HERO INTERACTIVE SHOWCASE CONTAINER */}
+        {/* ── THE EXACT SYLVA HERO 3D SCENE COMPONENT ── */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.35 }}
-          className="mt-12 sm:mt-16 rounded-3xl p-3 sm:p-5 bg-gradient-to-b from-slate-800/60 via-slate-900/70 to-[#070A14] border border-slate-700/60 shadow-[0_20px_70px_-10px_rgba(6,182,212,0.18)] relative overflow-hidden"
+          className="relative w-full"
         >
-          {/* Top Window Bar */}
-          <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800/80 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              </div>
-              <span className="font-mono text-slate-400 text-[11px] ml-2 hidden sm:inline">
-                voltsense-edge-node-01.local // live telemetry viewport
-              </span>
-            </div>
-
-            {/* Display Switcher */}
-            <div className="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs">
-              <button
-                onClick={() => setHeroTab('3d-aurora')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
-                  heroTab === '3d-aurora'
-                    ? 'bg-slate-800 text-white font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <Box className="w-3.5 h-3.5 text-cyan-400" />
-                <span>3D Solar Curtain</span>
-              </button>
-              <button
-                onClick={() => setHeroTab('grid-twin')}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg transition-all ${
-                  heroTab === 'grid-twin'
-                    ? 'bg-slate-800 text-white font-bold shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Live Power Grid</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Embedded Showcase Content */}
-          <AnimatePresence mode="wait">
-            {heroTab === '3d-aurora' ? (
-              <motion.div
-                key="hero-aurora"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="rounded-2xl overflow-hidden border border-slate-800/80 bg-slate-950/70"
-              >
-                <AuroraCurtain
-                  columns={60}
-                  layers={3}
-                  palette="aurora"
-                  title="3D Atmospheric Electromagnetic Solar Flux"
-                  subtitle="Rayleigh-Mie wave oscillation · Drag to orbit 3D camera"
-                  hint="Interactive 3D Stage · Drag to orbit · Hover emitters to inspect intensity · Click swatches to filter"
-                  height={420}
-                  autoRotate={0.18}
-                  className="bg-transparent border-0"
-                />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="hero-grid"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <PowerTopologyTwin state={state} onApplyScenario={onApplyScenario} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
+          <Scene />
         </motion.div>
+
+        {/* 4 Living-Green Credibility Tickers */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 max-w-4xl mx-auto font-mono text-left">
+          <div className="p-4 rounded-2xl bg-[#20241b]/70 border border-white/10">
+            <span className="text-[11px] text-[#9da395] block">Local Edge Latency</span>
+            <span className="text-xl sm:text-2xl font-light text-[#34d399]">11.4 ms</span>
+            <span className="text-[10px] text-[#7c8177] block font-sans">Raspberry Pi 5 RTOS</span>
+          </div>
+          <div className="p-4 rounded-2xl bg-[#20241b]/70 border border-white/10">
+            <span className="text-[11px] text-[#9da395] block">Horizon Forecast</span>
+            <span className="text-xl sm:text-2xl font-light text-[#86efac]">3.12% MAPE</span>
+            <span className="text-[10px] text-[#7c8177] block font-sans">96-interval BiLSTM</span>
+          </div>
+          <div className="p-4 rounded-2xl bg-[#20241b]/70 border border-white/10">
+            <span className="text-[11px] text-[#9da395] block">Battery Life Guard</span>
+            <span className="text-xl sm:text-2xl font-light text-[#a7f3d0]">+15.2%</span>
+            <span className="text-[10px] text-[#7c8177] block font-sans">Rainflow dampened</span>
+          </div>
+          <div className="p-4 rounded-2xl bg-[#20241b]/70 border border-white/10">
+            <span className="text-[11px] text-[#9da395] block">Diesel Suppression</span>
+            <span className="text-xl sm:text-2xl font-light text-[#fde047]">28.4%</span>
+            <span className="text-[10px] text-[#7c8177] block font-sans">Zero idle runtime</span>
+          </div>
+        </div>
 
       </section>
 
-      {/* SECTION 2: BENTO GRID VALUE PROPOSITIONS */}
-      <section id="features" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+      {/* ── SECTION 2: SEPARATE FRONT PAGE NAVIGATION HUB ── */}
+      <section id="navigation-hub" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-white/10">
         
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30">
-            Engineered For Critical Infrastructure
+          <span className="text-xs font-mono font-medium uppercase tracking-wider text-[#34d399] px-3 py-1 rounded-full bg-[#10b981]/15 border border-[#34d399]/30">
+            Interactive Navigation Hub
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Why Modern Microgrids Choose VoltSense AI
+          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
+            Explore All Functional Systems
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base">
-            Conventional PLC controllers rely on crude static thresholds. VoltSense AI models physics, weather forecasts, and electrochemistry in real time.
+          <p className="text-[#9da395] text-sm sm:text-base font-light">
+            VoltSense AI divides microgrid operations into specialized modules. Select any system below to launch directly into its dedicated functional page.
           </p>
         </div>
 
-        {/* Bento Grid */}
+        {/* 6 High-Fidelity Living Green Module Navigation Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {functionalModules.map((mod) => {
+            const Icon = mod.icon;
+            return (
+              <motion.div
+                key={mod.id}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+                onClick={() => {
+                  if (mod.id === 'specs') {
+                    onOpenSpecs();
+                  } else {
+                    onLaunchConsole(mod.id);
+                  }
+                }}
+                className={`p-6 sm:p-7 rounded-3xl bg-[#20241b]/80 border border-white/10 ${mod.bgGlow} transition-all flex flex-col justify-between group cursor-pointer`}
+              >
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className={`p-3 rounded-2xl bg-[#2a3024] border border-white/10 ${mod.color}`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-[11px] font-mono px-2.5 py-1 rounded-full bg-[#161913] border border-white/10 text-[#9da395]">
+                      {mod.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-normal text-white group-hover:text-[#34d399] transition-colors">
+                    {mod.title}
+                  </h3>
+
+                  <p className="text-[#9da395] text-xs sm:text-sm font-light leading-relaxed">
+                    {mod.desc}
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-[#cbd0c5] group-hover:text-white transition-colors">
+                  <span className="font-light">Launch Operational Interface</span>
+                  <ArrowRight className="w-4 h-4 text-[#34d399] group-hover:translate-x-1.5 transition-transform" />
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+      </section>
+
+      {/* ── SECTION 3: LIVING GREEN BENTO GRID SHOWCASE ── */}
+      <section id="features" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-white/10">
+        
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <span className="text-xs font-mono font-medium uppercase tracking-wider text-[#86efac] px-3 py-1 rounded-full bg-[#10b981]/15 border border-[#34d399]/30">
+            Architectural Excellence
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
+            Engineered for Ecological Stewardship
+          </h2>
+          <p className="text-[#9da395] text-sm sm:text-base font-light">
+            Traditional industrial controllers use crude, fossil-first relays. VoltSense AI models electrochemistry, thermodynamics, and atmospheric photons in real-time.
+          </p>
+        </div>
+
+        {/* Bento Grid in Living Green palette */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Bento Item 1: Large Span */}
-          <div className="md:col-span-2 p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800/90 hover:border-emerald-500/40 hover:shadow-[0_15px_40px_-10px_rgba(16,185,129,0.2)] transition-all flex flex-col justify-between group">
+          <div className="md:col-span-2 p-7 sm:p-9 rounded-3xl bg-[#20241b]/80 border border-white/10 hover:border-[#34d399]/40 transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="p-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 w-fit">
+              <div className="p-3 rounded-2xl bg-[#2a3024] border border-white/10 text-[#34d399] w-fit">
                 <Cpu className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold text-white group-hover:text-emerald-300 transition-colors">
+              <h3 className="text-2xl font-normal text-white group-hover:text-[#34d399] transition-colors">
                 Sub-Second BiLSTM Predictive Dispatch
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed max-w-xl">
+              <p className="text-[#9da395] text-sm font-light leading-relaxed max-w-xl">
                 Traditional SCADA takes 15 minutes to adjust setpoints. VoltSense AI’s quantized ONNX ensemble calculates power demand across 96 future intervals and dispatches in <strong>11.4 milliseconds</strong>, instantly stabilizing voltage.
               </p>
             </div>
 
-            <div className="mt-8 grid grid-cols-3 gap-3 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs font-mono">
+            <div className="mt-8 grid grid-cols-3 gap-3 p-4 rounded-2xl bg-[#161913] border border-white/10 text-xs font-mono">
               <div>
-                <span className="text-slate-500 block">Latency</span>
-                <span className="text-emerald-400 font-bold text-base">11.4 ms</span>
+                <span className="text-[#7c8177] block">Latency</span>
+                <span className="text-[#34d399] font-light text-base">11.4 ms</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Jitter</span>
-                <span className="text-cyan-400 font-bold text-base">±0.3 ms</span>
+                <span className="text-[#7c8177] block">Jitter</span>
+                <span className="text-[#86efac] font-light text-base">±0.3 ms</span>
               </div>
               <div>
-                <span className="text-slate-500 block">Model Size</span>
-                <span className="text-purple-400 font-bold text-base">4.2 MB INT8</span>
+                <span className="text-[#7c8177] block">Model Size</span>
+                <span className="text-[#f2f3ef] font-light text-base">4.2 MB INT8</span>
               </div>
             </div>
           </div>
 
           {/* Bento Item 2: Battery Wear Protection */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800/90 hover:border-cyan-500/40 hover:shadow-[0_15px_40px_-10px_rgba(6,182,212,0.2)] transition-all flex flex-col justify-between group">
+          <div className="p-7 sm:p-9 rounded-3xl bg-[#20241b]/80 border border-white/10 hover:border-[#34d399]/40 transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="p-3 rounded-2xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 w-fit">
+              <div className="p-3 rounded-2xl bg-[#2a3024] border border-white/10 text-[#86efac] w-fit">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+              <h3 className="text-2xl font-normal text-white group-hover:text-[#86efac] transition-colors">
                 Electrochemical Battery Guardian
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
+              <p className="text-[#9da395] text-sm font-light leading-relaxed">
                 Rainflow cycle-counting dampens destructive shallow reversals and enforces strict slew-rate limits (12.5 kW/s), extending battery asset lifespan by <strong>+15.2%</strong>.
               </p>
             </div>
 
-            <div className="mt-8 p-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
-              <span className="text-slate-400">Micro-Cycles Suppressed:</span>
-              <span className="text-cyan-400 font-bold text-sm">142 today</span>
+            <div className="mt-8 p-3 rounded-2xl bg-[#161913] border border-white/10 flex items-center justify-between text-xs font-mono">
+              <span className="text-[#9da395]">Micro-Cycles Suppressed:</span>
+              <span className="text-[#34d399] font-light text-sm">142 today</span>
             </div>
           </div>
 
           {/* Bento Item 3: 100% Offline Air-Gapped */}
-          <div className="p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800/90 hover:border-purple-500/40 hover:shadow-[0_15px_40px_-10px_rgba(168,85,247,0.2)] transition-all flex flex-col justify-between group">
+          <div className="p-7 sm:p-9 rounded-3xl bg-[#20241b]/80 border border-white/10 hover:border-[#34d399]/40 transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="p-3 rounded-2xl bg-purple-500/15 border border-purple-500/30 text-purple-400 w-fit">
+              <div className="p-3 rounded-2xl bg-[#2a3024] border border-white/10 text-[#a7f3d0] w-fit">
                 <Lock className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">
+              <h3 className="text-2xl font-normal text-white group-hover:text-[#a7f3d0] transition-colors">
                 100% Air-Gapped & Offline
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
+              <p className="text-[#9da395] text-sm font-light leading-relaxed">
                 Zero cloud dependencies. No recurring API tokens, no vendor lock-in, and zero external attack surface for mission-critical industrial substations.
               </p>
             </div>
 
-            <div className="mt-8 p-3 rounded-2xl bg-slate-950/80 border border-slate-800 flex items-center justify-between text-xs font-mono">
-              <span className="text-slate-400">Target Hardware:</span>
-              <span className="text-purple-300 font-bold text-sm">RPi 5 + ESP32</span>
+            <div className="mt-8 p-3 rounded-2xl bg-[#161913] border border-white/10 flex items-center justify-between text-xs font-mono">
+              <span className="text-[#9da395]">Hardware:</span>
+              <span className="text-[#86efac] font-light text-sm">RPi 5 + ESP32 RTOS</span>
             </div>
           </div>
 
           {/* Bento Item 4: Large Span (Diesel Suppression & ESG) */}
-          <div className="md:col-span-2 p-6 sm:p-8 rounded-3xl bg-slate-900/60 border border-slate-800/90 hover:border-amber-500/40 hover:shadow-[0_15px_40px_-10px_rgba(245,158,11,0.2)] transition-all flex flex-col justify-between group">
+          <div className="md:col-span-2 p-7 sm:p-9 rounded-3xl bg-[#20241b]/80 border border-white/10 hover:border-[#34d399]/40 transition-all flex flex-col justify-between group">
             <div className="space-y-4">
-              <div className="p-3 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 w-fit">
+              <div className="p-3 rounded-2xl bg-[#2a3024] border border-white/10 text-[#fde047] w-fit">
                 <Leaf className="w-6 h-6" />
               </div>
-              <h3 className="text-2xl font-bold text-white group-hover:text-amber-300 transition-colors">
-                Automated Diesel Generator Suppression & ESG Ledger
+              <h3 className="text-2xl font-normal text-white group-hover:text-[#fde047] transition-colors">
+                Automated Diesel Generator Suppression & Carbon Accounting
               </h3>
-              <p className="text-slate-400 text-sm leading-relaxed max-w-xl">
+              <p className="text-[#9da395] text-sm font-light leading-relaxed max-w-xl">
                 Instead of running diesel generators as a blunt buffer, VoltSense AI uses battery ramp margins to keep generators off. Generates cryptographically verifiable CSV & JSON emissions ledgers.
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-slate-950/80 border border-slate-800 text-xs font-mono">
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl bg-[#161913] border border-white/10 text-xs font-mono">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span className="text-slate-300">28.4% Diesel Hours Reduced</span>
+                <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
+                <span className="text-[#cbd0c5]">28.4% Diesel Hours Reduced</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-                <span className="text-slate-300">Scope 1 & 2 Automated Audit Export</span>
+                <CheckCircle2 className="w-4 h-4 text-[#86efac]" />
+                <span className="text-[#cbd0c5]">Scope 1 & 2 Automated Audit Export</span>
               </div>
             </div>
           </div>
@@ -452,18 +513,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       </section>
 
-      {/* SECTION 3: INTERACTIVE DEMO SCENARIOS */}
-      <section id="interactive-demo" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+      {/* ── SECTION 4: INTERACTIVE 1-CLICK SIMULATOR ── */}
+      <section id="simulator" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-white/10">
         
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30">
+          <span className="text-xs font-mono font-medium uppercase tracking-wider text-[#34d399] px-3 py-1 rounded-full bg-[#10b981]/15 border border-[#34d399]/30">
             Live Interactive Simulator
           </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Test the System With 1-Click
+          <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
+            Witness the Living Grid in Motion
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base">
-            Click any scenario button below to see how VoltSense AI automatically balances power flow and protects the grid in real-time.
+          <p className="text-[#9da395] text-sm sm:text-base font-light">
+            Trigger sunny peaks, storm cloud transient drops, or grid blackouts. See how the sub-second controller routes power.
           </p>
         </div>
 
@@ -474,28 +535,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       </section>
 
-      {/* SECTION 4: INTERACTIVE ENTERPRISE ROI CALCULATOR */}
-      <section id="roi-calculator" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+      {/* ── SECTION 5: CLEAN YIELD & FINANCIAL CALCULATOR ── */}
+      <section id="roi-yield" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-white/10">
         
-        <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-7 sm:p-11 border border-white/10 shadow-2xl relative overflow-hidden">
           
           <div className="text-center space-y-2 mb-8">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-amber-400 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30">
-              Commercial Viability & Payback
+            <span className="text-xs font-mono font-medium uppercase tracking-wider text-[#fde047] px-3 py-1 rounded-full bg-[#fde047]/15 border border-[#fde047]/30">
+              Commercial Viability & Stewardship
             </span>
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-white">
-              Calculate Your Facility Savings
+            <h2 className="text-2xl sm:text-4xl font-light text-white">
+              Calculate Your Facility Clean Yield
             </h2>
-            <p className="text-slate-400 text-xs sm:text-sm">
-              Adjust the slider to match your microgrid scale and see real financial and carbon dividends.
+            <p className="text-[#9da395] text-xs sm:text-sm font-light">
+              Adjust the microgrid load slider to calculate your estimated annual carbon and fiscal dividends.
             </p>
           </div>
 
           {/* Slider */}
-          <div className="p-6 rounded-2xl bg-slate-950/80 border border-slate-800/90 mb-8 space-y-4">
-            <div className="flex justify-between items-center text-sm font-semibold">
-              <span className="text-slate-300">Microgrid Facility Capacity:</span>
-              <span className="text-xl font-bold font-mono text-emerald-400 bg-slate-900 px-3 py-1 rounded-xl border border-emerald-500/30">
+          <div className="p-6 rounded-2xl bg-[#161913] border border-white/10 mb-8 space-y-4">
+            <div className="flex justify-between items-center text-sm font-light">
+              <span className="text-[#cbd0c5]">Microgrid Peak Capacity:</span>
+              <span className="text-xl font-normal font-mono text-[#34d399] bg-[#20241b] px-3 py-1 rounded-xl border border-[#34d399]/30">
                 {facilitySizeKW} kW
               </span>
             </div>
@@ -507,41 +568,41 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               step="25"
               value={facilitySizeKW}
               onChange={(e) => setFacilitySizeKW(Number(e.target.value))}
-              className="w-full h-2.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500"
+              className="w-full h-2.5 bg-[#2a3024] rounded-lg appearance-none cursor-pointer accent-[#10b981]"
             />
 
-            <div className="flex justify-between text-[11px] font-mono text-slate-500">
-              <span>50 kW (Small Commercial)</span>
+            <div className="flex justify-between text-[11px] font-mono text-[#7c8177]">
+              <span>50 kW (Commercial)</span>
               <span>500 kW (Campus / Resort)</span>
-              <span>1,000 kW (Industrial Substation)</span>
+              <span>1,000 kW (Industrial Island)</span>
             </div>
           </div>
 
           {/* Computed ROI Results Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             
-            <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/90 text-center">
-              <span className="text-xs text-slate-400 block mb-1">Annual Total Savings</span>
-              <span className="text-3xl font-extrabold font-mono text-emerald-400 glow-text-emerald">
+            <div className="p-5 rounded-2xl bg-[#20241b]/80 border border-white/10 text-center">
+              <span className="text-xs text-[#9da395] block mb-1">Annual Operational Savings</span>
+              <span className="text-3xl font-light font-mono text-[#34d399] glow-text-emerald">
                 ${annualTotalSavingsUSD.toLocaleString()}
               </span>
-              <span className="text-[11px] text-slate-500 block mt-1">Diesel fuel + battery wear</span>
+              <span className="text-[11px] text-[#7c8177] block mt-1">Diesel fuel + battery wear</span>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/90 text-center">
-              <span className="text-xs text-slate-400 block mb-1">Avoided Carbon Emitted</span>
-              <span className="text-3xl font-extrabold font-mono text-cyan-300 glow-text-cyan">
+            <div className="p-5 rounded-2xl bg-[#20241b]/80 border border-white/10 text-center">
+              <span className="text-xs text-[#9da395] block mb-1">Avoided Carbon Emitted</span>
+              <span className="text-3xl font-light font-mono text-[#86efac] glow-text-cyan">
                 {annualCo2SavedTons} Tons
               </span>
-              <span className="text-[11px] text-slate-500 block mt-1">Annual CO₂ equivalent</span>
+              <span className="text-[11px] text-[#7c8177] block mt-1">Annual CO₂ offset</span>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800/90 text-center">
-              <span className="text-xs text-slate-400 block mb-1">Estimated Payback Period</span>
-              <span className="text-3xl font-extrabold font-mono text-amber-400 glow-text-amber">
+            <div className="p-5 rounded-2xl bg-[#20241b]/80 border border-white/10 text-center">
+              <span className="text-xs text-[#9da395] block mb-1">Estimated Payback Period</span>
+              <span className="text-3xl font-light font-mono text-[#fde047] glow-text-amber">
                 {paybackMonths} Mo.
               </span>
-              <span className="text-[11px] text-slate-500 block mt-1">Full software ROI</span>
+              <span className="text-[11px] text-[#7c8177] block mt-1">Full software ROI</span>
             </div>
 
           </div>
@@ -549,10 +610,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* CTA */}
           <div className="text-center">
             <button
-              onClick={onLaunchConsole}
-              className="px-8 py-3.5 rounded-xl text-xs font-bold bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-all shadow-[0_0_25px_rgba(16,185,129,0.4)] inline-flex items-center gap-2 group cursor-pointer"
+              onClick={() => onLaunchConsole('sandbox')}
+              className="px-8 py-3.5 rounded-xl text-xs font-medium bg-[#10b981] hover:bg-[#34d399] text-[#121510] transition-all shadow-[0_0_25px_rgba(52,211,153,0.35)] inline-flex items-center gap-2 group cursor-pointer"
             >
-              <span>Test This Load in the Live SCADA Sandbox</span>
+              <span>Test This Load in the Functional SCADA Sandbox</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
@@ -561,66 +622,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       </section>
 
-      {/* SECTION 5: EDGE HARDWARE ARCHITECTURE */}
-      <section id="architecture" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
-        
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-400 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/30">
-            Hardware Stack
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-            Built for Industrial Ruggedization
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base">
-            Runs on cost-effective, off-the-shelf single-board hardware capable of operating continuously in -20°C to +70°C environments.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-400 w-fit">
-              <Server className="w-5 h-5" />
-            </div>
-            <h4 className="text-lg font-bold text-white">Raspberry Pi 5 (8GB)</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Quad-core Arm Cortex-A76 @ 2.4GHz. Runs the Linux container runtime, ONNX Quantized INT8 BiLSTM neural network, and web SCADA server.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="p-2.5 rounded-xl bg-cyan-500/15 text-cyan-400 w-fit">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <h4 className="text-lg font-bold text-white">ESP32 Dual-Core RTOS</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Dedicated deterministic FreeRTOS microcontroller executing emergency hardware-level circuit isolation and watchdog heartbeat protection in 1.2ms.
-            </p>
-          </div>
-
-          <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-3">
-            <div className="p-2.5 rounded-xl bg-emerald-500/15 text-emerald-400 w-fit">
-              <Radio className="w-5 h-5" />
-            </div>
-            <h4 className="text-lg font-bold text-white">Modbus TCP / RTU Bus</h4>
-            <p className="text-xs text-slate-400 leading-relaxed">
-              Industrial galvanic-isolated RS485 transceiver connecting directly to commercial battery inverters, revenue meters, and solar irradiance sensors.
-            </p>
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* SECTION 6: FAQ ACCORDION */}
-      <section id="faq" className="py-20 px-4 sm:px-8 max-w-4xl mx-auto border-t border-slate-800/80">
+      {/* ── SECTION 6: FREQUENTLY ASKED QUESTIONS ── */}
+      <section id="faq" className="py-20 px-4 sm:px-8 max-w-4xl mx-auto border-t border-white/10">
         
         <div className="text-center space-y-3 mb-12">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white">
+          <h2 className="text-3xl sm:text-4xl font-light text-white">
             Frequently Asked Questions
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm">
-            Everything you need to know about deploying VoltSense AI in production.
+          <p className="text-[#9da395] text-xs sm:text-sm font-light">
+            Everything you need to know about deploying VoltSense AI in the field.
           </p>
         </div>
 
@@ -630,17 +640,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             return (
               <div 
                 key={index}
-                className="rounded-2xl bg-slate-900/60 border border-slate-800 overflow-hidden transition-colors"
+                className="rounded-2xl bg-[#20241b]/80 border border-white/10 overflow-hidden transition-colors"
               >
                 <button
                   onClick={() => setOpenFaqIndex(isOpen ? null : index)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 text-sm font-bold text-slate-200 hover:text-white"
+                  className="w-full p-5 text-left flex items-center justify-between gap-4 text-sm font-light text-[#f2f3ef] hover:text-white"
                 >
                   <span>{faq.q}</span>
-                  <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-emerald-400' : ''}`} />
+                  <ChevronDown className={`w-4 h-4 text-[#9da395] transition-transform ${isOpen ? 'rotate-180 text-[#34d399]' : ''}`} />
                 </button>
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs text-slate-400 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <div className="px-5 pb-5 text-xs text-[#9da395] font-light leading-relaxed border-t border-white/10 pt-3">
                     {faq.a}
                   </div>
                 )}
@@ -651,28 +661,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       </section>
 
-      {/* SECTION 7: FINAL HIGH-CONVERTING BOTTOM CTA */}
-      <section className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-slate-800/80">
+      {/* ── SECTION 7: FINAL BOTTOM CTA ── */}
+      <section className="py-20 px-4 sm:px-8 max-w-7xl mx-auto border-t border-white/10">
         
-        <div className="rounded-3xl p-8 sm:p-14 bg-gradient-to-r from-emerald-950/60 via-slate-900/90 to-cyan-950/60 border border-emerald-500/30 text-center relative overflow-hidden shadow-[0_0_80px_rgba(16,185,129,0.15)]">
+        <div className="rounded-3xl p-8 sm:p-14 bg-gradient-to-r from-[#1b261b] via-[#20241b] to-[#16241b] border border-[#34d399]/30 text-center relative overflow-hidden shadow-[0_0_80px_rgba(52,211,153,0.15)]">
           <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-              Ready to Modernize Your Clean Microgrid?
+            <h2 className="text-3xl sm:text-5xl font-light text-white tracking-tight">
+              Ready to Modernize Your Microgrid?
             </h2>
-            <p className="text-slate-300 text-sm sm:text-base">
-              Explore the full interactive SCADA operating system live in your browser. No sign-up or credit card required.
+            <p className="text-[#cbd0c5] text-sm sm:text-base font-light">
+              Transition seamlessly into the live operational SCADA operating system. Zero sign-up required.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <button
-                onClick={onLaunchConsole}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-400 hover:to-cyan-400 text-slate-950 transition-all shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2 group cursor-pointer"
+                onClick={() => onLaunchConsole('overview')}
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-sm font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] hover:opacity-95 text-[#121510] transition-all shadow-[0_0_30px_rgba(52,211,153,0.4)] flex items-center justify-center gap-2 group cursor-pointer"
               >
-                <span>Launch Live SCADA Console</span>
+                <span>Enter SCADA Console</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={onOpenSpecs}
-                className="w-full sm:w-auto px-7 py-4 rounded-2xl text-sm font-bold bg-slate-900 border border-slate-700 hover:border-cyan-500/50 text-slate-200 transition-all"
+                className="w-full sm:w-auto px-7 py-4 rounded-2xl text-sm font-light bg-[#161913] border border-white/10 hover:border-[#34d399]/40 text-[#f2f3ef] transition-all"
               >
                 Inspect Technical Specs
               </button>
@@ -682,19 +692,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-slate-800/80 bg-[#040710] px-6 py-8 text-xs font-mono text-slate-500">
+      {/* ── FOOTER IN LIVING GREEN THEME ── */}
+      <footer className="border-t border-white/10 bg-[#121510] px-6 py-8 text-xs font-mono text-[#7c8177]">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3 text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>VoltSense AI Microgrid OS</span>
+          <div className="flex items-center gap-3 text-[#9da395]">
+            <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
+            <span>VoltSense AI Living Green OS</span>
             <span>·</span>
             <span>Raspberry Pi 5 + ESP32 RTOS</span>
           </div>
-          <div className="flex items-center gap-4 text-slate-400">
+          <div className="flex items-center gap-4 text-[#9da395]">
             <button onClick={onOpenSpecs} className="hover:text-white transition-colors">Documentation</button>
             <span>·</span>
-            <button onClick={onLaunchConsole} className="text-emerald-400 hover:underline">SCADA Console</button>
+            <button onClick={() => onLaunchConsole('overview')} className="text-[#34d399] hover:underline">SCADA Console</button>
             <span>·</span>
             <span>Apache 2.0 / MIT</span>
           </div>

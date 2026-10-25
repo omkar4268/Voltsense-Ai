@@ -38,7 +38,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
   onGoHome,
 }) => {
   return (
-    <header className="border-b border-slate-800/80 bg-[#080D1A]/95 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-6 py-3 transition-colors">
+    <header className="border-b border-white/10 bg-[#161913]/95 backdrop-blur-xl sticky top-0 z-30 px-4 sm:px-6 py-3 transition-colors">
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3">
         
         {/* Left: Mobile Menu & Clean Page Title */}
@@ -164,11 +164,11 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {onGoHome && (
             <button
               onClick={onGoHome}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-900/90 hover:bg-slate-800 border border-slate-700/80 text-amber-300 hover:text-amber-200 transition-all shadow-sm"
-              title="Return to Commercial Showcase"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-light bg-[#20241b] hover:bg-[#2a3024] border border-[#34d399]/40 text-[#86efac] hover:text-white transition-all shadow-sm cursor-pointer"
+              title="Return to Living Green Homepage"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>Commercial Home</span>
+              <Sparkles className="w-3.5 h-3.5 text-[#34d399]" />
+              <span>← Living Green Home</span>
             </button>
           )}
 

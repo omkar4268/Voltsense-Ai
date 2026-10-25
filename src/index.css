@@ -1,34 +1,48 @@
 @import "tailwindcss";
+@import "@designcodeio/threeui/style.css";
 
+/* ── SYLVA LIVING GREEN THEME DESIGN SYSTEM ── */
 :root {
   color-scheme: dark;
-  --bg-obsidian: #070A12;
-  --bg-card: #0F172A;
+  --bg-obsidian: #161913;
+  --bg-card: #20241b;
+  --bg-card-hover: #262b20;
   --accent-emerald: #10B981;
-  --accent-cyan: #06B6D4;
-  --accent-amber: #F59E0B;
-  --accent-rose: #EF4444;
+  --accent-living-green: #34D399;
+  --accent-sage: #86EFAC;
+  --accent-amber: #EAB308;
+  --accent-rose: #F87171;
 
-  --color-background: #070A12;
-  --color-foreground: #f1f5f9;
-  --color-card: #0b1120;
-  --color-card-foreground: #f1f5f9;
-  --color-popover: #0b1120;
-  --color-popover-foreground: #f1f5f9;
+  --color-background: #161913;
+  --color-foreground: #F2F3EF;
+  --color-card: #20241B;
+  --color-card-foreground: #F2F3EF;
+  --color-popover: #20241B;
+  --color-popover-foreground: #F2F3EF;
   --color-primary: #10B981;
-  --color-primary-foreground: #022c22;
-  --color-muted: #1e293b;
-  --color-muted-foreground: #94a3b8;
-  --color-border: #1e293b;
+  --color-primary-foreground: #121510;
+  --color-muted: #2A3024;
+  --color-muted-foreground: #9DA395;
+  --color-border: rgba(255, 255, 255, 0.08);
+
+  --ink: #FFFFFF;
+  --ink-soft: rgba(255, 255, 255, 0.65);
+  --ink-faint: rgba(255, 255, 255, 0.44);
+  --rule: rgba(255, 255, 255, 0.08);
+
+  --living-green-glow: 0 0 35px -5px rgba(16, 185, 129, 0.28);
 }
 
 body {
   margin: 0;
   padding: 0;
-  background-color: #070A12;
-  color: #f1f5f9;
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #161913;
+  color: #F2F3EF;
+  font-family: 'Lexend', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 300;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .font-mono {
@@ -41,57 +55,80 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #121510;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #2a3124;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #3e4835;
 }
 
-/* Glassmorphism helpers */
+/* Glassmorphism helpers in Living Green styling */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(32, 36, 27, 0.76);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .glass-panel-glow-emerald {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.15);
+  background: rgba(32, 36, 27, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  box-shadow: 0 0 30px -5px rgba(16, 185, 129, 0.22);
 }
 
 .glass-panel-glow-cyan {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.15);
+  background: rgba(32, 36, 27, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+  box-shadow: 0 0 30px -5px rgba(52, 211, 153, 0.2);
 }
 
 .glass-panel-glow-rose {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  box-shadow: 0 0 25px -5px rgba(239, 68, 68, 0.15);
+  background: rgba(32, 36, 27, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  box-shadow: 0 0 25px -5px rgba(248, 113, 113, 0.2);
 }
 
-/* Glowing text effects */
+/* Living Green Glowing Text */
 .glow-text-emerald {
-  text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+  text-shadow: 0 0 16px rgba(16, 185, 129, 0.65);
 }
 .glow-text-cyan {
-  text-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+  text-shadow: 0 0 16px rgba(52, 211, 153, 0.65);
 }
 .glow-text-amber {
-  text-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
+  text-shadow: 0 0 16px rgba(234, 179, 8, 0.65);
 }
 .glow-text-rose {
-  text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+  text-shadow: 0 0 16px rgba(248, 113, 113, 0.65);
+}
+
+/* Sylva Hero Shader Frame Container */
+.shader-frame {
+  position: relative;
+  width: 100%;
+  height: 82svh;
+  min-height: 560px;
+  max-height: 900px;
+  border-radius: 28px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #161913;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Ensure the iframe in SylvaHero fits the shader-frame */
+.shader-frame .landing-page-frame {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+  border-radius: inherit;
 }
 
 /* Animated particle pulse for SVG power flow */
@@ -107,7 +144,7 @@ body {
 
 @keyframes pulse-slow {
   0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.04); }
+  50% { opacity: 1; transform: scale(1.03); }
 }
 
 .animate-pulse-slow {
@@ -141,13 +178,12 @@ body {
   animation: radar-ring 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
 }
 
-/* Card hover glow utilities */
+/* Card hover glow utilities in Living Green */
 .hover-card-glow {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .hover-card-glow:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 30px -8px rgba(16, 185, 129, 0.22);
-  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 14px 34px -8px rgba(16, 185, 129, 0.26);
+  border-color: rgba(52, 211, 153, 0.5);
 }
-
