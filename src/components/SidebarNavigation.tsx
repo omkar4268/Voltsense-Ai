@@ -33,9 +33,9 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   const navItems = [
     {
       id: 'landing' as NavTab,
-      label: 'Homepage & 3D Scene',
-      subtitle: 'Sylva Living Green',
-      icon: Sparkles,
+      label: 'Living Green Home',
+      subtitle: 'Return to Commercial Site',
+      icon: Home,
       color: 'text-[#86efac]',
       activeBg: 'bg-[#10b981]/15 border-[#34d399]/40 text-[#86efac]',
     },

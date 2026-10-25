@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -9,11 +9,22 @@ import {
   Layers, 
   TrendingUp, 
   BatteryCharging,
-  Leaf
+  Leaf,
+  Sun,
+  CloudRain,
+  Moon,
+  Zap,
+  CheckCircle2,
+  BarChart3,
+  Lock,
+  Play,
+  Sliders,
+  ChevronRight,
+  ExternalLink,
+  Clock
 } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { SylvaHero } from "@designcodeio/threeui";
-import "@designcodeio/threeui/style.css";
+import { motion, AnimatePresence } from 'framer-motion';
+import { SylvaLivingWorldScene } from '@designcodeio/threeui';
 import { MicrogridState } from '../types';
 
 interface LandingPageProps {
@@ -23,62 +34,341 @@ interface LandingPageProps {
   onApplyScenario: (sc: 'sunny' | 'cloud' | 'night' | 'islanded') => void;
 }
 
-/**
- * Living Green 3D Shader Scene from DesignCode ThreeUI
- * Customized for VoltSense AI with zero inner overflow
- */
-export function Scene() {
-  return (
-    <div className="shader-frame w-full h-screen min-h-screen relative overflow-hidden bg-[#383b34]">
-      <SylvaHero
-        variant="living-green"
-        headingFont="lexend"
-        bodyFont="lexend"
-        headingWeight="300"
-        bodyWeight="300"
-        primaryColor="#ffffff"
-        headingSize={63}
-        bodySize={16.5}
-        headingLetterSpacing={-0.006}
-      />
-    </div>
-  );
-}
-
 export const LandingPage: React.FC<LandingPageProps> = ({
   onLaunchConsole,
   onOpenSpecs,
   state,
+  onApplyScenario,
 }) => {
-  // Listen for navigation messages dispatched from inside the 3D scene iframe
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'VOLTSENSE_NAV') {
-        const tab = event.data.tab;
-        if (tab === 'specs') {
-          onOpenSpecs();
-        } else if (tab === 'landing') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          onLaunchConsole(tab || 'overview');
-        }
-      }
-    };
+  const [activeScenario, setActiveScenario] = useState<'sunny' | 'cloud' | 'night' | 'islanded'>('sunny');
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [onLaunchConsole, onOpenSpecs]);
+  const handleScenarioClick = (sc: 'sunny' | 'cloud' | 'night' | 'islanded') => {
+    setActiveScenario(sc);
+    onApplyScenario(sc);
+  };
 
   return (
-    <div className="min-h-screen bg-[#161913] text-[#F2F3EF] selection:bg-[#34d399]/30 selection:text-white font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#161913] text-[#F2F3EF] selection:bg-[#34d399]/30 selection:text-white font-sans overflow-x-hidden relative">
       
-      {/* ── IMMERSIVE 3D LIVING GREEN HERO (SYLVA LIVING WORLD) ── */}
-      <section className="relative w-full h-screen overflow-hidden">
-        <Scene />
+      {/* ── 1. GLOBAL FLOATING GLASS NAVIGATION DOCK ── */}
+      <header className="fixed top-4 sm:top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+        <nav className="w-full max-w-5xl rounded-full bg-[#161913]/85 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.55)] px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between pointer-events-auto transition-all">
+          
+          {/* Brand Logo & Edge Indicator */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-[#10b981]/15 border border-[#34d399]/30 flex items-center justify-center text-[#34d399] shadow-[0_0_15px_rgba(52,211,153,0.3)]">
+              <Leaf className="w-4 h-4" />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-white font-medium text-base tracking-tight">VoltSense AI</span>
+              <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-[#20241b] border border-[#34d399]/30 text-[10px] font-mono text-[#86efac]">
+                v2.4 RTOS
+              </span>
+            </div>
+          </div>
+
+          {/* Center Navigation Shortcuts */}
+          <div className="hidden md:flex items-center gap-1 text-xs text-[#9da395] font-light">
+            <a 
+              href="#twin-preview" 
+              className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              Digital Twin
+            </a>
+            <a 
+              href="#pillars" 
+              className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              Architecture
+            </a>
+            <a 
+              href="#comparison" 
+              className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              Benchmark
+            </a>
+            <button 
+              onClick={onOpenSpecs}
+              className="px-3.5 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              Specs
+            </button>
+          </div>
+
+          {/* Right Action: Launch SCADA Console */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#20241b] border border-white/5 text-[11px] font-mono text-[#86efac]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
+              <span>11.4ms Edge</span>
+            </div>
+            
+            <button
+              onClick={() => onLaunchConsole('overview')}
+              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] text-[#121510] hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_20px_rgba(52,211,153,0.35)] flex items-center gap-1.5 sm:gap-2 cursor-pointer font-sans"
+            >
+              <span>Enter SCADA Console</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+        </nav>
+      </header>
+
+      {/* ── 2. HERO SECTION (LIVING WORLD 3D SHADER BACKDROP) ── */}
+      <section className="relative min-h-[96vh] flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-32 pb-16 overflow-hidden">
+        
+        {/* 3D Living Green Atmosphere Layer */}
+        <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden opacity-65">
+          <SylvaLivingWorldScene className="w-full h-full object-cover" />
+        </div>
+
+        {/* Ambient Dark-to-Vignette Gradients for Legibility */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#161913]/70 via-transparent to-[#161913] pointer-events-none z-1" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.08)_0%,transparent_70%)] pointer-events-none z-1" />
+
+        {/* Hero Content Stack */}
+        <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+          
+          {/* Eyebrow Pill */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#20241b]/90 backdrop-blur-md border border-[#34d399]/40 text-xs font-mono text-[#86efac] shadow-[0_0_20px_rgba(52,211,153,0.15)] mb-6"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-[#34d399]" />
+            <span>Autonomous Edge-AI Microgrid Operating System</span>
+          </motion.div>
+
+          {/* Main Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-light tracking-tight text-white leading-[1.08] max-w-4xl"
+          >
+            Intelligent Energy <br />
+            <span className="bg-gradient-to-r from-[#86efac] via-[#34d399] to-[#10b981] bg-clip-text text-transparent font-normal">
+              in Living Rhythm.
+            </span>
+          </motion.h1>
+
+          {/* Lede Paragraph */}
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="mt-6 text-sm sm:text-lg md:text-xl text-[#b4b9ad] font-light leading-relaxed max-w-2xl"
+          >
+            Sub-second neural power dispatch and electrochemical battery preservation executed 100% on edge microcontrollers. Zero cloud latency, zero unexpected cell degradation.
+          </motion.p>
+
+          {/* Hero Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="mt-8 flex flex-col sm:flex-row items-center gap-4 w-full justify-center"
+          >
+            <button
+              onClick={() => onLaunchConsole('overview')}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] text-[#121510] hover:opacity-95 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(52,211,153,0.4)] flex items-center justify-center gap-2 cursor-pointer font-sans"
+            >
+              <span>Launch Live SCADA Console</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={onOpenSpecs}
+              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-sm font-light bg-[#20241b]/80 hover:bg-[#20241b] backdrop-blur-md border border-white/10 hover:border-[#34d399]/40 text-white transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <FileText className="w-4 h-4 text-[#34d399]" />
+              <span>Technical Architecture & Specs</span>
+            </button>
+          </motion.div>
+
+          {/* Edge Telemetry Proof Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+            className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 w-full max-w-3xl"
+          >
+            <div className="p-3.5 rounded-2xl bg-[#20241b]/80 backdrop-blur-md border border-white/5 flex flex-col items-center">
+              <span className="text-[11px] text-[#9da395] font-light">Inference Latency</span>
+              <span className="text-base sm:text-lg font-mono font-medium text-[#86efac]">11.4 ms</span>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-[#20241b]/80 backdrop-blur-md border border-white/5 flex flex-col items-center">
+              <span className="text-[11px] text-[#9da395] font-light">BESS State of Health</span>
+              <span className="text-base sm:text-lg font-mono font-medium text-[#34d399]">{state.bessHealthPct.toFixed(1)}%</span>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-[#20241b]/80 backdrop-blur-md border border-white/5 flex flex-col items-center">
+              <span className="text-[11px] text-[#9da395] font-light">Clean Energy Ratio</span>
+              <span className="text-base sm:text-lg font-mono font-medium text-[#86efac]">100%</span>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-[#20241b]/80 backdrop-blur-md border border-white/5 flex flex-col items-center">
+              <span className="text-[11px] text-[#9da395] font-light">Cloud Dependency</span>
+              <span className="text-base sm:text-lg font-mono font-medium text-emerald-400">0% Air-Gapped</span>
+            </div>
+          </motion.div>
+
+        </div>
+
       </section>
 
-      {/* ── SECTION 2: CLEAN 3-PILLAR ARCHITECTURAL SYSTEM ── */}
-      <section id="pillars" className="relative py-24 px-6 sm:px-12 max-w-6xl mx-auto">
+      {/* ── 3. INTERACTIVE LIVE DIGITAL TWIN SANDBOX PREVIEW ── */}
+      <section id="twin-preview" className="relative py-16 px-4 sm:px-8 max-w-6xl mx-auto -mt-8 z-20">
+        <div className="rounded-[36px] bg-[#20241b]/95 backdrop-blur-2xl border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.65)] p-6 sm:p-10">
+          
+          {/* Header Bar */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-8 border-b border-white/10">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#161913] border border-[#34d399]/30 text-xs font-mono text-[#86efac] mb-2">
+                <Activity className="w-3.5 h-3.5 text-[#34d399] animate-pulse" />
+                <span>Live Digital Twin Sandbox</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+                Simulate Microgrid Dynamics in Real Time
+              </h2>
+              <p className="text-xs sm:text-sm text-[#9da395] font-light mt-1">
+                Trigger weather shifts or grid isolation to witness autonomous edge dispatch recalculating in 11.4ms.
+              </p>
+            </div>
+
+            {/* 1-Click Interactive Scenarios */}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => handleScenarioClick('sunny')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-light transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeScenario === 'sunny'
+                    ? 'bg-[#10b981]/25 border border-[#34d399] text-[#86efac] shadow-[0_0_15px_rgba(52,211,153,0.25)]'
+                    : 'bg-[#161913] border border-white/10 text-[#9da395] hover:text-white'
+                }`}
+              >
+                <Sun className="w-3.5 h-3.5 text-amber-400" />
+                <span>Sunny Peak</span>
+              </button>
+
+              <button
+                onClick={() => handleScenarioClick('cloud')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-light transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeScenario === 'cloud'
+                    ? 'bg-[#10b981]/25 border border-[#34d399] text-[#86efac] shadow-[0_0_15px_rgba(52,211,153,0.25)]'
+                    : 'bg-[#161913] border border-white/10 text-[#9da395] hover:text-white'
+                }`}
+              >
+                <CloudRain className="w-3.5 h-3.5 text-sky-400" />
+                <span>Cloud Chaos</span>
+              </button>
+
+              <button
+                onClick={() => handleScenarioClick('night')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-light transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeScenario === 'night'
+                    ? 'bg-[#10b981]/25 border border-[#34d399] text-[#86efac] shadow-[0_0_15px_rgba(52,211,153,0.25)]'
+                    : 'bg-[#161913] border border-white/10 text-[#9da395] hover:text-white'
+                }`}
+              >
+                <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Night Discharge</span>
+              </button>
+
+              <button
+                onClick={() => handleScenarioClick('islanded')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-light transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeScenario === 'islanded'
+                    ? 'bg-[#10b981]/25 border border-[#34d399] text-[#86efac] shadow-[0_0_15px_rgba(52,211,153,0.25)]'
+                    : 'bg-[#161913] border border-white/10 text-[#9da395] hover:text-white'
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5 text-rose-400" />
+                <span>Islanded Mode</span>
+              </button>
+            </div>
+          </div>
+
+          {/* 4 Core Power Nodes Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+            
+            {/* Node 1: Solar Generation */}
+            <div className="p-5 rounded-2xl bg-[#161913] border border-white/5 hover:border-amber-500/30 transition-all">
+              <div className="flex items-center justify-between text-xs text-[#9da395] mb-2 font-light">
+                <span>Solar PV Generation</span>
+                <Sun className="w-4 h-4 text-amber-400" />
+              </div>
+              <div className="text-2xl sm:text-3xl font-mono font-medium text-white">
+                {state.solarKW.toFixed(1)} <span className="text-sm font-light text-[#9da395]">kW</span>
+              </div>
+              <div className="text-[11px] font-mono text-[#86efac] mt-2 flex items-center gap-1">
+                <span>Irradiance: {state.irradiance} W/m²</span>
+              </div>
+            </div>
+
+            {/* Node 2: Neural Controller */}
+            <div className="p-5 rounded-2xl bg-[#161913] border border-white/5 hover:border-[#34d399]/30 transition-all">
+              <div className="flex items-center justify-between text-xs text-[#9da395] mb-2 font-light">
+                <span>AI Controller State</span>
+                <Cpu className="w-4 h-4 text-[#34d399]" />
+              </div>
+              <div className="text-2xl sm:text-3xl font-mono font-medium text-[#34d399] uppercase">
+                {state.controllerMode}
+              </div>
+              <div className="text-[11px] font-mono text-[#86efac] mt-2 flex items-center gap-1">
+                <span>Inference: 11.4ms · INT8 ONNX</span>
+              </div>
+            </div>
+
+            {/* Node 3: BESS Storage */}
+            <div className="p-5 rounded-2xl bg-[#161913] border border-white/5 hover:border-emerald-500/30 transition-all">
+              <div className="flex items-center justify-between text-xs text-[#9da395] mb-2 font-light">
+                <span>Lithium BESS Buffer</span>
+                <BatteryCharging className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="text-2xl sm:text-3xl font-mono font-medium text-white">
+                {state.bessKW > 0 ? `+${state.bessKW.toFixed(1)}` : state.bessKW.toFixed(1)} <span className="text-sm font-light text-[#9da395]">kW</span>
+              </div>
+              <div className="text-[11px] font-mono text-[#86efac] mt-2 flex items-center justify-between">
+                <span>SoC: {state.bessSoC.toFixed(1)}%</span>
+                <span>Temp: {state.bessTempC.toFixed(1)}°C</span>
+              </div>
+            </div>
+
+            {/* Node 4: Facility Load */}
+            <div className="p-5 rounded-2xl bg-[#161913] border border-white/5 hover:border-purple-500/30 transition-all">
+              <div className="flex items-center justify-between text-xs text-[#9da395] mb-2 font-light">
+                <span>Critical Facility Load</span>
+                <Zap className="w-4 h-4 text-purple-400" />
+              </div>
+              <div className="text-2xl sm:text-3xl font-mono font-medium text-white">
+                {state.facilityLoadKW.toFixed(1)} <span className="text-sm font-light text-[#9da395]">kW</span>
+              </div>
+              <div className="text-[11px] font-mono text-[#86efac] mt-2 flex items-center gap-1">
+                <span>Demand Met: 100.0% Clean</span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Console Launch Deep-Link */}
+          <div className="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-xs text-[#9da395] font-light">
+              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
+              <span>Full bidirectional power circuit visualization and control sliders available in console.</span>
+            </div>
+            <button
+              onClick={() => onLaunchConsole('overview')}
+              className="px-5 py-2.5 rounded-xl text-xs font-medium bg-[#161913] hover:bg-[#282e22] border border-[#34d399]/40 text-[#86efac] transition-all flex items-center gap-2 cursor-pointer"
+            >
+              <span>Open Full Interactive SCADA Twin</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── 4. SECTION 2: 3-PILLAR TECHNOLOGICAL ARCHITECTURE ── */}
+      <section id="pillars" className="relative py-24 px-4 sm:px-8 max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#20241b] border border-[#34d399]/30 text-xs font-mono text-[#86efac]">
             <Leaf className="w-3.5 h-3.5 text-[#34d399]" />
@@ -92,7 +382,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </p>
         </div>
 
-        {/* 3 Minimalist Luxury Cards */}
+        {/* 3 Luxury Bento Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Pillar 1 */}
@@ -165,50 +455,141 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </motion.div>
 
         </div>
+      </section>
 
-        {/* Clean Launch Action Strip */}
-        <div className="mt-16 p-8 rounded-[36px] bg-gradient-to-r from-[#20241b] via-[#282e22] to-[#20241b] border border-[#34d399]/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_20px_60px_rgba(16,185,129,0.1)]">
-          <div className="space-y-1 text-center sm:text-left">
-            <h4 className="text-xl font-light text-white">Ready to operate the microgrid?</h4>
-            <p className="text-xs text-[#9da395] font-light">
+      {/* ── 5. SECTION 3: BENCHMARK COMPARISON MATRIX ── */}
+      <section id="comparison" className="relative py-20 px-4 sm:px-8 max-w-5xl mx-auto">
+        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+          <h2 className="text-2xl sm:text-4xl font-light text-white tracking-tight">
+            Traditional SCADA vs. VoltSense AI
+          </h2>
+          <p className="text-xs sm:text-sm text-[#9da395] font-light">
+            Why edge-native predictive control outperforms legacy cloud-dependent controllers.
+          </p>
+        </div>
+
+        <div className="rounded-3xl bg-[#20241b]/90 border border-white/10 overflow-hidden shadow-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 border-b border-white/10 bg-[#161913]/50 text-xs font-mono text-[#9da395]">
+            <div className="font-semibold text-white">CAPABILITY</div>
+            <div className="mt-2 md:mt-0">LEGACY CLOUD SCADA</div>
+            <div className="mt-2 md:mt-0 text-[#86efac]">VOLTSENSE EDGE-AI</div>
+          </div>
+
+          <div className="divide-y divide-white/5 text-xs sm:text-sm">
+            
+            {/* Row 1 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+              <div className="font-medium text-white flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#34d399]" />
+                <span>Control Loop Latency</span>
+              </div>
+              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                5,000 – 30,000 ms (Cloud roundtrip lag)
+              </div>
+              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium">
+                11.4 ms (Local RTOS ONNX inference)
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+              <div className="font-medium text-white flex items-center gap-2">
+                <Lock className="w-4 h-4 text-[#34d399]" />
+                <span>Internet Outage Resilience</span>
+              </div>
+              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                Falls back to fossil diesel generation
+              </div>
+              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium">
+                100% Autonomous Air-Gapped Operation
+              </div>
+            </div>
+
+            {/* Row 3 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+              <div className="font-medium text-white flex items-center gap-2">
+                <BatteryCharging className="w-4 h-4 text-[#34d399]" />
+                <span>Battery Cell Preservation</span>
+              </div>
+              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                Crude hysteresis (damaging micro-cycles)
+              </div>
+              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium">
+                Rainflow Cycle & Slew-Rate Limiting (+15.2% life)
+              </div>
+            </div>
+
+            {/* Row 4 */}
+            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+              <div className="font-medium text-white flex items-center gap-2">
+                <BarChart3 className="w-4 h-4 text-[#34d399]" />
+                <span>Recurring Cloud Infrastructure</span>
+              </div>
+              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                $24,000+ / yr in cloud telemetry fees
+              </div>
+              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium">
+                $0 / yr (Zero recurring cloud bill)
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── 6. CONVERSION CALLOUT / LAUNCH GATEWAY ── */}
+      <section className="relative py-20 px-4 sm:px-8 max-w-5xl mx-auto">
+        <div className="p-8 sm:p-12 rounded-[36px] bg-gradient-to-r from-[#20241b] via-[#282e22] to-[#20241b] border border-[#34d399]/30 shadow-[0_20px_70px_rgba(16,185,129,0.15)] flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-2 text-center md:text-left">
+            <h3 className="text-2xl sm:text-3xl font-light text-white tracking-tight">
+              Ready to operate the microgrid?
+            </h3>
+            <p className="text-xs sm:text-sm text-[#9da395] font-light max-w-xl">
               Access the live digital twin, interactive sandbox, and telemetry ledger in the SCADA Console.
             </p>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={onOpenSpecs}
-              className="px-5 py-3 rounded-2xl text-xs font-light bg-[#161913] hover:bg-[#20241b] border border-white/10 text-white transition-all flex items-center gap-2"
+              className="px-5 py-3 rounded-2xl text-xs font-light bg-[#161913] hover:bg-[#20241b] border border-white/10 text-white transition-all flex items-center gap-2 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#34d399]" />
               <span>Specs</span>
             </button>
             <button
               onClick={() => onLaunchConsole('overview')}
-              className="px-6 py-3 rounded-2xl text-xs font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] text-[#121510] hover:opacity-95 transition-all shadow-[0_0_25px_rgba(52,211,153,0.3)] flex items-center gap-2"
+              className="px-6 py-3 rounded-2xl text-xs font-medium bg-gradient-to-r from-[#10b981] via-[#34d399] to-[#86efac] text-[#121510] hover:opacity-95 transition-all shadow-[0_0_25px_rgba(52,211,153,0.35)] flex items-center gap-2 cursor-pointer"
             >
               <span>Enter SCADA Console</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>
-
       </section>
 
-      {/* ── CLEAN MINIMALIST FOOTER ── */}
-      <footer className="py-12 px-6 border-t border-white/10 text-center text-xs text-[#7c8177] font-light">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Leaf className="w-4 h-4 text-[#34d399]" />
-            <span className="text-white font-normal">VoltSense AI</span>
+      {/* ── 7. PRO FOOTER ── */}
+      <footer className="py-12 px-6 border-t border-white/10 text-center text-xs text-[#7c8177] font-light bg-[#121510]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded-full bg-[#10b981]/20 border border-[#34d399]/40 flex items-center justify-center text-[#34d399]">
+              <Leaf className="w-3.5 h-3.5" />
+            </div>
+            <span className="text-white font-medium">VoltSense AI</span>
             <span className="text-[#9da395]">· Living Green Microgrid OS</span>
           </div>
-          <div className="flex items-center gap-6">
-            <button onClick={() => onLaunchConsole('overview')} className="hover:text-[#34d399] transition-colors">Topology</button>
-            <button onClick={() => onLaunchConsole('forecast')} className="hover:text-[#34d399] transition-colors">Forecast</button>
-            <button onClick={() => onLaunchConsole('battery')} className="hover:text-[#34d399] transition-colors">Battery</button>
-            <button onClick={onOpenSpecs} className="hover:text-[#34d399] transition-colors">Specs</button>
+
+          <div className="flex items-center gap-6 text-xs text-[#9da395]">
+            <button onClick={() => onLaunchConsole('overview')} className="hover:text-[#34d399] transition-colors cursor-pointer">Topology Twin</button>
+            <button onClick={() => onLaunchConsole('forecast')} className="hover:text-[#34d399] transition-colors cursor-pointer">Neural Forecast</button>
+            <button onClick={() => onLaunchConsole('battery')} className="hover:text-[#34d399] transition-colors cursor-pointer">Battery Guardian</button>
+            <button onClick={() => onLaunchConsole('sandbox')} className="hover:text-[#34d399] transition-colors cursor-pointer">Sandbox</button>
+            <button onClick={onOpenSpecs} className="hover:text-[#34d399] transition-colors cursor-pointer">Architecture</button>
           </div>
-          <p>© 2026 VoltSense AI. All rights reserved.</p>
+
+          <div className="flex items-center gap-2 text-[11px] font-mono text-[#86efac]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-ping" />
+            <span>Modbus RTU / IEC 61850 Active</span>
+          </div>
         </div>
       </footer>
 

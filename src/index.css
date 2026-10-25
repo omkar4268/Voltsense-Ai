@@ -108,27 +108,23 @@ body {
   text-shadow: 0 0 16px rgba(248, 113, 113, 0.65);
 }
 
-/* Sylva Hero Shader Frame Container */
-.shader-frame {
-  position: relative;
-  width: 100%;
-  height: 82svh;
-  min-height: 560px;
-  max-height: 900px;
-  border-radius: 28px;
-  overflow: hidden;
-  isolation: isolate;
-  background: #161913;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 25px 70px -15px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-/* Ensure the iframe in SylvaHero fits the shader-frame */
-.shader-frame .landing-page-frame {
+/* Sylva Living World 3D Scene full-bleed adaptation */
+.sylva-living-world-scene {
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  min-height: 100% !important;
-  border-radius: inherit;
+  background: transparent !important;
+}
+
+.sylva-living-world-scene iframe {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  background: transparent !important;
+  pointer-events: none !important;
 }
 
 /* Animated particle pulse for SVG power flow */
