@@ -65,6 +65,23 @@ body {
   background: #3e4835;
 }
 
+/* Specular Lit Glass Rim (Apple / Linear / Sylva aesthetic) */
+.specular-rim {
+  position: relative;
+}
+.specular-rim::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.03) 38%, rgba(52, 211, 153, 0.25) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
 /* Glassmorphism helpers in Living Green styling */
 .glass-panel {
   background: rgba(32, 36, 27, 0.76);
