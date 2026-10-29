@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowRight, 
   Sparkles, 
@@ -23,11 +23,16 @@ import {
   ExternalLink,
   Clock,
   Flame,
-  Award
+  Award,
+  Radio,
+  RefreshCw,
+  Eye,
+  SlidersHorizontal
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SylvaLivingWorldScene } from '@designcodeio/threeui';
 import { BioluminescentField } from './ui/BioluminescentField';
+import { AuroraCurtain } from './ui/aurora-curtain';
 import { MicrogridState } from '../types';
 
 interface LandingPageProps {
@@ -44,6 +49,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onApplyScenario,
 }) => {
   const [activeScenario, setActiveScenario] = useState<'sunny' | 'cloud' | 'night' | 'islanded'>('sunny');
+  const [benchmarkFilter, setBenchmarkFilter] = useState<'all' | 'latency' | 'resilience' | 'battery' | 'cost'>('all');
+  const [show3dCurtain, setShow3dCurtain] = useState<boolean>(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Track mouse coordinates for organic halo illumination
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   const handleScenarioClick = (sc: 'sunny' | 'cloud' | 'night' | 'islanded') => {
     setActiveScenario(sc);
@@ -51,7 +68,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#141712] text-[#F2F3EF] selection:bg-[#34d399]/30 selection:text-white font-sans overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#121510] text-[#F2F3EF] selection:bg-[#34d399]/30 selection:text-white font-sans overflow-x-hidden relative">
       
       {/* ── BACKGROUND LAYER 1: PERSISTENT 3D LIVING GREEN WORLD (FIXED) ── */}
       <div className="fixed inset-0 w-full h-screen pointer-events-none z-0 overflow-hidden opacity-60">
@@ -61,7 +78,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* ── BACKGROUND LAYER 2: BIOLUMINESCENT SPORE PARTICLES CANVAS (FIXED) ── */}
       <BioluminescentField className="opacity-95" />
 
-      {/* ── BACKGROUND LAYER 3: DYNAMIC LIVING ATMOSPHERIC LIGHT POOLS (FIXED) ── */}
+      {/* ── BACKGROUND LAYER 3: MOUSE-REACTIVE LIVING HALO ILLUMINATION ── */}
+      <motion.div
+        className="fixed w-[36rem] h-[36rem] rounded-full pointer-events-none z-0 blur-[130px] hidden md:block"
+        animate={{
+          x: mousePos.x - 288,
+          y: mousePos.y - 288,
+        }}
+        transition={{
+          type: "spring",
+          damping: 32,
+          stiffness: 120,
+          mass: 0.6
+        }}
+        style={{
+          background: "radial-gradient(circle, rgba(52,211,153,0.12) 0%, rgba(16,185,129,0.04) 45%, transparent 70%)"
+        }}
+      />
+
+      {/* ── BACKGROUND LAYER 4: DYNAMIC LIVING ATMOSPHERIC LIGHT POOLS ── */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Top Canopy Sunlit Mist */}
         <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[60rem] h-[36rem] bg-gradient-to-b from-[#10b981]/15 via-[#86efac]/8 to-transparent rounded-full blur-[140px]" />
@@ -74,12 +109,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="absolute bottom-[20%] left-1/4 w-[48rem] h-[32rem] bg-[#eab308]/6 rounded-full blur-[170px]" />
         
         {/* Global Cinematic Vignette Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#141712]/75 via-[#141712]/45 to-[#10130e]/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#121510]/75 via-[#121510]/45 to-[#0d100b]/95" />
       </div>
 
       {/* ── 1. GLOBAL FLOATING GLASS NAVIGATION DOCK ── */}
       <header className="fixed top-4 sm:top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
-        <nav className="w-full max-w-5xl rounded-full bg-[#161a13]/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.55)] px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between pointer-events-auto transition-all specular-rim">
+        <nav className="w-full max-w-5xl rounded-full bg-[#161a13]/85 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.55)] px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between pointer-events-auto transition-all specular-rim">
           
           {/* Brand Logo & Edge Indicator */}
           <div className="flex items-center gap-3">
@@ -150,7 +185,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* ── 2. HERO SECTION (LIVING WORLD CANOPY) ── */}
       <section className="relative min-h-[96vh] flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-32 pb-16 z-10">
         
-        {/* Subtle Botanical Leaf Silhouette Accents (Left & Right) */}
+        {/* Subtle Botanical Leaf Silhouette Accents */}
         <img 
           src="/landing-pages/meng-to-sketchbook/botany-left.png" 
           alt="" 
@@ -165,15 +200,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         {/* Hero Content Stack */}
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
           
-          {/* Eyebrow Pill */}
+          {/* Eyebrow Pill with Live Pulse */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#181d14]/85 backdrop-blur-md border border-[#34d399]/40 text-xs font-mono text-[#86efac] shadow-[0_0_25px_rgba(52,211,153,0.18)] mb-6 specular-rim"
+            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[#181d14]/85 backdrop-blur-md border border-[#34d399]/40 text-xs font-mono text-[#86efac] shadow-[0_0_25px_rgba(52,211,153,0.18)] mb-6 specular-rim"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#34d399]" />
+            <span className="w-2 h-2 rounded-full bg-[#10b981] animate-ping" />
             <span>Autonomous Edge-AI Microgrid Operating System</span>
+            <span className="text-[#9da395]">· 60.00 Hz Real-Time</span>
           </motion.div>
 
           {/* Main Headline */}
@@ -223,7 +259,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
           </motion.div>
 
-          {/* Edge Telemetry Proof Bar */}
+          {/* Edge Telemetry Proof Bar with Live Values */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -259,7 +295,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="w-px h-16 bg-gradient-to-b from-transparent via-[#86efac]/40 to-[#34d399]" />
       </div>
 
-      {/* ── 3. INTERACTIVE LIVE DIGITAL TWIN SANDBOX PREVIEW ── */}
+      {/* ── 3. INTERACTIVE LIVE DIGITAL TWIN SANDBOX PREVIEW & CONNECTED CIRCUIT ── */}
       <section id="twin-preview" className="relative py-12 px-4 sm:px-8 max-w-6xl mx-auto z-20">
         
         {/* Botanical Margin Foliage Accent */}
@@ -346,8 +382,53 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
 
+          {/* Interactive Dynamic SVG Power Circuit Visualization */}
+          <div className="mt-8 mb-6 p-4 rounded-2xl bg-[#121610]/90 border border-white/5 relative overflow-hidden">
+            <div className="flex items-center justify-between text-xs text-[#9da395] mb-2 font-mono">
+              <span className="flex items-center gap-2">
+                <Radio className="w-3.5 h-3.5 text-[#34d399] animate-pulse" />
+                <span>ACTIVE POWER BUS FLOW · 60.00 Hz SYNCHRONIZED</span>
+              </span>
+              <span className="text-[#86efac]">Net Power: {state.netKW >= 0 ? `+${state.netKW.toFixed(1)}` : state.netKW.toFixed(1)} kW</span>
+            </div>
+
+            {/* Circuit Line with Animated Flow Particles */}
+            <div className="relative py-3">
+              <div className="h-1.5 w-full bg-[#1a2016] rounded-full overflow-hidden relative">
+                <div 
+                  className={`h-full transition-all duration-700 ${
+                    state.bessKW < 0 
+                      ? 'bg-gradient-to-r from-amber-400 via-[#10b981] to-[#34d399]' 
+                      : 'bg-gradient-to-r from-purple-400 via-cyan-400 to-[#10b981]'
+                  }`}
+                  style={{ width: '100%' }}
+                />
+              </div>
+
+              {/* Node Indicators on the Bus */}
+              <div className="flex justify-between items-center mt-3 text-xs">
+                <div className="flex items-center gap-1.5 text-amber-300">
+                  <Sun className="w-3.5 h-3.5" />
+                  <span>Solar PV ({state.solarKW.toFixed(1)} kW)</span>
+                </div>
+                <div className="hidden sm:flex items-center gap-1.5 text-[#86efac]">
+                  <Cpu className="w-3.5 h-3.5" />
+                  <span>BiLSTM Slew-Rate Damping</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-400">
+                  <BatteryCharging className="w-3.5 h-3.5" />
+                  <span>BESS ({state.bessKW < 0 ? `Charge ${Math.abs(state.bessKW).toFixed(1)} kW` : `Discharge ${state.bessKW.toFixed(1)} kW`})</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-purple-300">
+                  <Zap className="w-3.5 h-3.5" />
+                  <span>Load ({state.facilityLoadKW.toFixed(1)} kW)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* 4 Core Power Nodes Grid (Frosted Glass with Living Rims) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 relative z-10">
             
             {/* Node 1: Solar Generation */}
             <div className="p-5 rounded-2xl bg-[#121610]/80 backdrop-blur-md border border-white/5 hover:border-amber-500/35 hover:shadow-[0_8px_25px_-5px_rgba(245,158,11,0.2)] transition-all specular-rim">
@@ -433,7 +514,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="w-px h-16 bg-gradient-to-b from-transparent via-[#86efac]/40 to-[#34d399]" />
       </div>
 
-      {/* ── 4. SECTION 2: 3-PILLAR TECHNOLOGICAL ARCHITECTURE ── */}
+      {/* ── 4. SECTION 2: 3-PILLAR TECHNOLOGICAL ARCHITECTURE & 3D AURORA TOGGLE ── */}
       <section id="pillars" className="relative py-20 px-4 sm:px-8 max-w-6xl mx-auto z-20">
         
         {/* Botanical Margin Foliage Accent */}
@@ -454,7 +535,47 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <p className="text-[#9da395] text-sm sm:text-base font-light leading-relaxed">
             A high-efficiency microgrid operating system that pairs sub-second edge neural inference with electrochemical battery preservation.
           </p>
+
+          {/* Interactive 3D Aurora Waveform Curtain Toggle */}
+          <div className="pt-2">
+            <button
+              onClick={() => setShow3dCurtain(!show3dCurtain)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-light bg-[#161a13]/80 hover:bg-[#20251b] border border-[#34d399]/30 text-[#86efac] hover:text-white transition-all shadow-sm specular-rim"
+            >
+              <Eye className="w-3.5 h-3.5 text-[#34d399]" />
+              <span>{show3dCurtain ? "Hide 3D Aurora Waveform" : "Inspect 3D Electromagnetic Wave Curtain (Interactive)"}</span>
+            </button>
+          </div>
         </div>
+
+        {/* Expandable 3D Aurora Waveform Canvas */}
+        <AnimatePresence>
+          {show3dCurtain && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-10 rounded-[32px] overflow-hidden border border-[#34d399]/40 bg-[#161a13]/90 backdrop-blur-2xl p-4 shadow-2xl"
+            >
+              <div className="flex items-center justify-between pb-3 px-3 border-b border-white/10 text-xs font-mono text-[#86efac]">
+                <span>3D ELECTROMAGNETIC WAVE HARMONIC ENGINE · DRAG TO ROTATE CAMERA</span>
+                <span className="text-[#9da395]">Living Green Spectrum</span>
+              </div>
+              <div className="pt-3">
+                <AuroraCurtain
+                  height={240}
+                  columns={48}
+                  layers={3}
+                  palette="aurora"
+                  autoRotate={0.2}
+                  title="BiLSTM 3D Horizon Field"
+                  subtitle="Electromagnetic power wave oscillation & turbulence damping"
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* 3 Luxury Bento Cards (Frosted Glass with Botanical Micro-Gauges) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -605,7 +726,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="w-px h-16 bg-gradient-to-b from-transparent via-[#86efac]/40 to-[#34d399]" />
       </div>
 
-      {/* ── 5. SECTION 3: BENCHMARK COMPARISON MATRIX ── */}
+      {/* ── 5. SECTION 3: BENCHMARK COMPARISON MATRIX & INTERACTIVE FILTERS ── */}
       <section id="comparison" className="relative py-20 px-4 sm:px-8 max-w-5xl mx-auto z-20">
         
         {/* Botanical Margin Foliage Accent */}
@@ -615,13 +736,36 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           className="hidden xl:block absolute -left-24 top-28 w-80 h-auto opacity-15 pointer-events-none select-none filter blur-[0.3px]" 
         />
 
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
           <h2 className="text-2xl sm:text-4xl font-light text-white tracking-tight">
             Traditional SCADA vs. VoltSense AI
           </h2>
           <p className="text-xs sm:text-sm text-[#9da395] font-light">
             Why edge-native predictive control outperforms legacy cloud-dependent controllers.
           </p>
+
+          {/* Interactive Benchmark Category Filters */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            {[
+              { id: 'all', label: 'All Benchmarks' },
+              { id: 'latency', label: 'Control Latency' },
+              { id: 'resilience', label: 'Outage Survival' },
+              { id: 'battery', label: 'Cell Longevity' },
+              { id: 'cost', label: 'Economic ROI' },
+            ].map((f) => (
+              <button
+                key={f.id}
+                onClick={() => setBenchmarkFilter(f.id as any)}
+                className={`px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer ${
+                  benchmarkFilter === f.id
+                    ? 'bg-[#10b981]/25 border border-[#34d399] text-[#86efac] shadow-[0_0_12px_rgba(52,211,153,0.25)]'
+                    : 'bg-[#161a13]/60 border border-white/5 text-[#9da395] hover:text-white'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <motion.div 
@@ -642,65 +786,73 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           <div className="divide-y divide-white/5 text-xs sm:text-sm">
             
-            {/* Row 1 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
-              <div className="font-medium text-white flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#34d399]" />
-                <span>Control Loop Latency</span>
+            {/* Row 1: Latency */}
+            {(benchmarkFilter === 'all' || benchmarkFilter === 'latency') && (
+              <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+                <div className="font-medium text-white flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-[#34d399]" />
+                  <span>Control Loop Latency</span>
+                </div>
+                <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                  5,000 – 30,000 ms (Cloud roundtrip lag)
+                </div>
+                <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
+                  <span>11.4 ms (Local RTOS ONNX inference)</span>
+                </div>
               </div>
-              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
-                5,000 – 30,000 ms (Cloud roundtrip lag)
-              </div>
-              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
-                <span>11.4 ms (Local RTOS ONNX inference)</span>
-              </div>
-            </div>
+            )}
 
-            {/* Row 2 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
-              <div className="font-medium text-white flex items-center gap-2">
-                <Lock className="w-4 h-4 text-[#34d399]" />
-                <span>Internet Outage Resilience</span>
+            {/* Row 2: Resilience */}
+            {(benchmarkFilter === 'all' || benchmarkFilter === 'resilience') && (
+              <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+                <div className="font-medium text-white flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-[#34d399]" />
+                  <span>Internet Outage Resilience</span>
+                </div>
+                <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                  Falls back to fossil diesel generation
+                </div>
+                <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
+                  <span>100% Autonomous Air-Gapped Operation</span>
+                </div>
               </div>
-              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
-                Falls back to fossil diesel generation
-              </div>
-              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
-                <span>100% Autonomous Air-Gapped Operation</span>
-              </div>
-            </div>
+            )}
 
-            {/* Row 3 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
-              <div className="font-medium text-white flex items-center gap-2">
-                <BatteryCharging className="w-4 h-4 text-[#34d399]" />
-                <span>Battery Cell Preservation</span>
+            {/* Row 3: Battery */}
+            {(benchmarkFilter === 'all' || benchmarkFilter === 'battery') && (
+              <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+                <div className="font-medium text-white flex items-center gap-2">
+                  <BatteryCharging className="w-4 h-4 text-[#34d399]" />
+                  <span>Battery Cell Preservation</span>
+                </div>
+                <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                  Crude hysteresis (damaging micro-cycles)
+                </div>
+                <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
+                  <span>Rainflow & Slew-Rate Limiter (+15.2% life)</span>
+                </div>
               </div>
-              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
-                Crude hysteresis (damaging micro-cycles)
-              </div>
-              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
-                <span>Rainflow & Slew-Rate Limiter (+15.2% life)</span>
-              </div>
-            </div>
+            )}
 
-            {/* Row 4 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
-              <div className="font-medium text-white flex items-center gap-2">
-                <BarChart3 className="w-4 h-4 text-[#34d399]" />
-                <span>Recurring Cloud Infrastructure</span>
+            {/* Row 4: Cost */}
+            {(benchmarkFilter === 'all' || benchmarkFilter === 'cost') && (
+              <div className="grid grid-cols-1 md:grid-cols-3 p-6 sm:p-8 hover:bg-white/[0.02] transition-colors">
+                <div className="font-medium text-white flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-[#34d399]" />
+                  <span>Recurring Cloud Infrastructure</span>
+                </div>
+                <div className="text-[#9da395] mt-1 md:mt-0 font-light">
+                  $24,000+ / yr in cloud telemetry fees
+                </div>
+                <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
+                  <span>$0 / yr (Zero recurring cloud bill)</span>
+                </div>
               </div>
-              <div className="text-[#9da395] mt-1 md:mt-0 font-light">
-                $24,000+ / yr in cloud telemetry fees
-              </div>
-              <div className="text-[#86efac] font-mono mt-1 md:mt-0 font-medium flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#34d399]" />
-                <span>$0 / yr (Zero recurring cloud bill)</span>
-              </div>
-            </div>
+            )}
 
           </div>
         </motion.div>
@@ -746,7 +898,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-6 rounded-3xl bg-[#161a13]/75 backdrop-blur-2xl border border-white/10 hover:border-[#34d399]/40 transition-all text-center group specular-rim shadow-[0_15px_40px_rgba(0,0,0,0.35)]"
           >
             <div className="text-4xl sm:text-5xl font-light text-white font-mono group-hover:text-[#86efac] transition-colors">
-              +15.2%
+              +{state.batteryLifespanExtPct.toFixed(1)}%
             </div>
             <div className="text-xs text-[#34d399] font-medium mt-2">BESS Longevity Extension</div>
             <p className="text-xs text-[#9da395] font-light mt-1">
@@ -763,7 +915,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-6 rounded-3xl bg-[#161a13]/75 backdrop-blur-2xl border border-white/10 hover:border-[#34d399]/40 transition-all text-center group specular-rim shadow-[0_15px_40px_rgba(0,0,0,0.35)]"
           >
             <div className="text-4xl sm:text-5xl font-light text-white font-mono group-hover:text-[#86efac] transition-colors">
-              11.4 ms
+              {state.inferenceLatencyMs.toFixed(1)} ms
             </div>
             <div className="text-xs text-[#34d399] font-medium mt-2">Edge Neural Latency</div>
             <p className="text-xs text-[#9da395] font-light mt-1">
@@ -780,11 +932,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-6 rounded-3xl bg-[#161a13]/75 backdrop-blur-2xl border border-white/10 hover:border-[#34d399]/40 transition-all text-center group specular-rim shadow-[0_15px_40px_rgba(0,0,0,0.35)]"
           >
             <div className="text-4xl sm:text-5xl font-light text-white font-mono group-hover:text-[#86efac] transition-colors">
-              28.4%
+              {state.cumulativeCo2SavedKg.toFixed(1)} kg
             </div>
-            <div className="text-xs text-[#34d399] font-medium mt-2">Diesel Fuel Abated</div>
+            <div className="text-xs text-[#34d399] font-medium mt-2">CO₂ Abated Real-Time</div>
             <p className="text-xs text-[#9da395] font-light mt-1">
-              Zero spinning reserve generator starts during solar cloud drops.
+              Diesel emissions eliminated during rapid cloud intermittency.
             </p>
           </motion.div>
 
@@ -797,11 +949,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-6 rounded-3xl bg-[#161a13]/75 backdrop-blur-2xl border border-white/10 hover:border-[#34d399]/40 transition-all text-center group specular-rim shadow-[0_15px_40px_rgba(0,0,0,0.35)]"
           >
             <div className="text-4xl sm:text-5xl font-light text-white font-mono group-hover:text-[#86efac] transition-colors">
-              100%
+              ${state.costSavingsUSD.toFixed(2)}
             </div>
-            <div className="text-xs text-[#34d399] font-medium mt-2">Clean Grid Continuity</div>
+            <div className="text-xs text-[#34d399] font-medium mt-2">Peak Tariff Shaving</div>
             <p className="text-xs text-[#9da395] font-light mt-1">
-              Full survival of complete wide-area telecommunication blackouts.
+              Automated arbitrage and demand-charge curtailment.
             </p>
           </motion.div>
 
