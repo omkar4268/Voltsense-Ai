@@ -11,6 +11,8 @@ import { AuditLedgerTerminal } from './components/AuditLedgerTerminal';
 import { PitchDeckModal } from './components/PitchDeckModal';
 import { AuroraCurtain } from './components/ui/aurora-curtain';
 import { LandingPage } from './components/LandingPage';
+import { SylvaLivingWorldScene } from '@designcodeio/threeui';
+import { BioluminescentField } from './components/ui/BioluminescentField';
 import { 
   Sun, 
   BatteryCharging, 
@@ -18,14 +20,16 @@ import {
   Leaf, 
   TrendingUp, 
   Sliders, 
-  ChevronRight,
+  ChevronRight, 
   ShieldCheck, 
-  FileText,
-  Activity,
-  Box,
-  Layers,
-  Sparkles,
-  DollarSign
+  FileText, 
+  Activity, 
+  Box, 
+  Layers, 
+  Sparkles, 
+  DollarSign,
+  Radio,
+  Cpu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -77,7 +81,7 @@ export const App: React.FC = () => {
       type: 'ONNX-AGENT',
       message: 'VoltSense Edge-AI active on Raspberry Pi 5. ONNX INT8 Ensemble running in 11.4ms.',
       deltaCo2: 0.42,
-      badgeColor: 'text-emerald-400 bg-emerald-950/60 border-emerald-500/30',
+      badgeColor: 'text-[#00F59B] bg-[#00F59B]/15 border-[#00F59B]/40',
     },
     {
       id: 'init-2',
@@ -85,7 +89,7 @@ export const App: React.FC = () => {
       type: 'DISPATCH',
       message: 'Horizon synced. Solar surplus (+10.2kW) routed to BESS charge buffer.',
       deltaCo2: 0.12,
-      badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30',
+      badgeColor: 'text-[#22D3EE] bg-[#22D3EE]/15 border-[#22D3EE]/40',
     },
     {
       id: 'init-3',
@@ -93,7 +97,7 @@ export const App: React.FC = () => {
       type: 'PROTECT',
       message: 'Slew-rate limit active (12.5 kW/s). Battery micro-cycling suppressed.',
       deltaCo2: 0.08,
-      badgeColor: 'text-purple-400 bg-purple-950/60 border-purple-500/30',
+      badgeColor: 'text-[#C084FC] bg-[#C084FC]/15 border-[#C084FC]/40',
     },
   ]);
 
@@ -103,6 +107,16 @@ export const App: React.FC = () => {
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(true);
   const [isSpecsModalOpen, setIsSpecsModalOpen] = useState<boolean>(false);
   const [tickCounter, setTickCounter] = useState<number>(0);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  // Track mouse coordinates for organic halo illumination
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   // Recalculate 96-forecast when sliders change
   useEffect(() => {
@@ -141,7 +155,7 @@ export const App: React.FC = () => {
       message: `[MODE SWITCH] Switched to ${mode.toUpperCase()} mode.`,
       deltaCo2: 0,
       badgeColor: mode === 'autonomous' 
-        ? 'text-emerald-400 bg-emerald-950/60 border-emerald-500/30'
+        ? 'text-[#00F59B] bg-[#00F59B]/15 border-[#00F59B]/40'
         : mode === 'legacy'
         ? 'text-amber-400 bg-amber-950/60 border-amber-500/30'
         : 'text-rose-400 bg-rose-950/60 border-rose-500/30',
@@ -186,7 +200,7 @@ export const App: React.FC = () => {
         type: 'ONNX-AGENT',
         message: '[SCENARIO: SUNNY PEAK] Irradiance 880 W/m². High solar surplus charging BESS buffer.',
         deltaCo2: 0.85,
-        badgeColor: 'text-emerald-400 bg-emerald-950/60 border-emerald-500/30',
+        badgeColor: 'text-[#00F59B] bg-[#00F59B]/15 border-[#00F59B]/40',
       }, ...prev]);
     } else if (scenario === 'cloud') {
       setState((prev) => ({
@@ -220,7 +234,7 @@ export const App: React.FC = () => {
         type: 'DISPATCH',
         message: '[SCENARIO: NIGHT DISCHARGE] Zero solar. BESS discharging smoothly to power facility.',
         deltaCo2: 0.44,
-        badgeColor: 'text-cyan-400 bg-cyan-950/60 border-cyan-500/30',
+        badgeColor: 'text-[#22D3EE] bg-[#22D3EE]/15 border-[#22D3EE]/40',
       }, ...prev]);
     } else if (scenario === 'islanded') {
       setState((prev) => ({
@@ -273,12 +287,12 @@ export const App: React.FC = () => {
   const getTabTitle = (tab: NavTab) => {
     switch (tab) {
       case 'landing': return 'Commercial Home';
-      case 'overview': return 'Overview';
+      case 'overview': return 'Power Topology Twin';
       case 'forecast': return 'AI Forecast';
-      case 'battery': return 'Battery Life';
-      case 'sandbox': return 'Live Sandbox';
-      case 'ledger': return 'Audit Log';
-      case 'specs': return 'Specs';
+      case 'battery': return 'Battery Life Engine';
+      case 'sandbox': return 'Live Sandbox & Chaos';
+      case 'ledger': return 'ESG Audit Log';
+      case 'specs': return 'Technical Specs';
     }
   };
 
@@ -289,7 +303,7 @@ export const App: React.FC = () => {
 
   if (activeTab === 'landing') {
     return (
-      <div className="min-h-screen bg-[#121510] text-[#F2F3EF] font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+      <div className="min-h-screen bg-[#0d110d] text-[#F2F3EF] font-sans selection:bg-[#00F59B]/30 selection:text-white">
         <LandingPage
           onLaunchConsole={(initialTab) => setActiveTab(initialTab || 'overview')}
           onOpenSpecs={() => setIsSpecsModalOpen(true)}
@@ -306,13 +320,43 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#161913] text-[#F2F3EF] flex font-sans selection:bg-emerald-500/30 selection:text-emerald-200 relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#0d110d] text-[#F2F3EF] flex font-sans selection:bg-[#00F59B]/30 selection:text-white relative overflow-x-hidden">
       
-      {/* Ambient Animated Atmospheric Glow Orbs (Subtle Depth) */}
-      <div className="fixed top-1/4 left-1/4 w-[32rem] h-[32rem] bg-[#10b981]/12 rounded-full blur-[140px] pointer-events-none animate-float-drift -z-10" />
-      <div className="fixed bottom-1/4 right-1/4 w-[36rem] h-[36rem] bg-[#86efac]/8 rounded-full blur-[160px] pointer-events-none animate-float-drift-reverse -z-10" />
+      {/* ── BACKGROUND LAYER 1: PERSISTENT 3D LIVING GREEN WORLD (FIXED) ── */}
+      <div className="fixed inset-0 w-full h-screen pointer-events-none z-0 overflow-hidden opacity-35">
+        <SylvaLivingWorldScene className="w-full h-full object-cover" />
+      </div>
 
-      {/* 1. Sidebar Navigation */}
+      {/* ── BACKGROUND LAYER 2: BIOLUMINESCENT SPORE PARTICLES CANVAS (FIXED) ── */}
+      <BioluminescentField className="opacity-90" />
+
+      {/* ── BACKGROUND LAYER 3: MOUSE-REACTIVE LIVING HALO ILLUMINATION ── */}
+      <motion.div
+        className="fixed w-[36rem] h-[36rem] rounded-full pointer-events-none z-0 blur-[140px] hidden md:block"
+        animate={{
+          x: mousePos.x - 288,
+          y: mousePos.y - 288,
+        }}
+        transition={{
+          type: "spring",
+          damping: 32,
+          stiffness: 120,
+          mass: 0.6
+        }}
+        style={{
+          background: "radial-gradient(circle, rgba(0,255,178,0.12) 0%, rgba(6,182,212,0.06) 40%, rgba(168,85,247,0.02) 65%, transparent 80%)"
+        }}
+      />
+
+      {/* ── BACKGROUND LAYER 4: DYNAMIC LIVING ATMOSPHERIC LIGHT POOLS ── */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-[36rem] h-[36rem] bg-[#00F59B]/10 rounded-full blur-[150px] animate-float-drift" />
+        <div className="absolute bottom-1/4 right-1/4 w-[40rem] h-[40rem] bg-[#22D3EE]/8 rounded-full blur-[160px] animate-float-drift-reverse" />
+        <div className="absolute top-[60%] left-1/3 w-[32rem] h-[32rem] bg-[#FBBF24]/6 rounded-full blur-[170px]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0d110d]/85 via-[#0d110d]/70 to-[#080c08]/95" />
+      </div>
+
+      {/* 1. Sidebar Navigation (Left Dock) */}
       <SidebarNavigation
         activeTab={activeTab}
         onTabChange={handleTabSelect}
@@ -322,7 +366,7 @@ export const App: React.FC = () => {
       />
 
       {/* 2. Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 relative z-10">
         
         {/* Top Header Bar */}
         <HeaderTelemetryBar
@@ -338,9 +382,9 @@ export const App: React.FC = () => {
         />
 
         {/* Main Canvas Body */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1500px] w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
           
-          {/* TAB 1: OVERVIEW (Clean, User-Friendly & Visually Engaging) */}
+          {/* TAB 1: OVERVIEW (Power Topology Twin Cockpit) */}
           {activeTab === 'overview' && (
             <motion.div 
               initial={{ opacity: 0, y: 12 }}
@@ -349,104 +393,104 @@ export const App: React.FC = () => {
               className="space-y-6"
             >
               
-              {/* Executive 4-Card KPI Impact Bar (With Framer Motion Hover Lift) */}
+              {/* Executive 4-Card Jewel-Tone KPI Bar */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 
                 {/* Metric 1: Clean Solar Generation */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-[#34d399]/40 hover:shadow-[0_10px_25px_-5px_rgba(52,211,153,0.15)] transition-all relative overflow-hidden group font-sans"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#00F59B]/50 hover:shadow-[0_15px_35px_rgba(0,245,155,0.22)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#10b981]/5 rounded-full blur-xl group-hover:bg-[#10b981]/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-28 h-28 bg-[#00F59B]/8 rounded-full blur-xl group-hover:bg-[#00F59B]/15 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs text-[#9da395] font-light">Solar Generation</span>
-                    <div className="p-2 rounded-xl bg-[#10b981]/15 text-[#34d399]">
+                    <div className="p-2.5 rounded-xl bg-[#00F59B]/15 text-[#00F59B] border border-[#00F59B]/30 shadow-[0_0_12px_rgba(0,245,155,0.3)]">
                       <Sun className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-light font-mono text-[#34d399]">
+                    <span className="text-3xl font-light font-mono text-[#00F59B]">
                       {state.solarKW}
                     </span>
                     <span className="text-xs text-[#9da395] font-light">kW</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Irradiance: {state.irradiance} W/m²</span>
-                    <span className="text-[#86efac] font-medium">100% Clean</span>
+                    <span className="text-[#00F59B] font-semibold">100% Clean</span>
                   </div>
                 </motion.div>
 
                 {/* Metric 2: Smart Battery Storage */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-[#34d399]/40 hover:shadow-[0_10px_25px_-5px_rgba(52,211,153,0.15)] transition-all relative overflow-hidden group font-sans"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#22D3EE]/50 hover:shadow-[0_15px_35px_rgba(34,211,238,0.22)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full blur-xl group-hover:bg-[#34d399]/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-28 h-28 bg-[#22D3EE]/8 rounded-full blur-xl group-hover:bg-[#22D3EE]/15 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-[#9da395] font-light">Battery Energy Storage</span>
-                    <div className="p-2 rounded-xl bg-[#34d399]/15 text-[#86efac]">
+                    <span className="text-xs text-[#9da395] font-light">BESS Storage Bank</span>
+                    <div className="p-2.5 rounded-xl bg-[#22D3EE]/15 text-[#22D3EE] border border-[#22D3EE]/30 shadow-[0_0_12px_rgba(34,211,238,0.3)]">
                       <BatteryCharging className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-light font-mono text-[#86efac]">
+                    <span className="text-3xl font-light font-mono text-[#22D3EE]">
                       {state.bessSoC}%
                     </span>
-                    <span className="text-xs text-[#34d399] font-mono">
+                    <span className="text-xs text-[#00F59B] font-mono">
                       ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
                     </span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Health: {state.bessHealthPct}% SoH</span>
-                    <span className="text-[#86efac] font-medium">+15.2% Life Ext.</span>
+                    <span className="text-[#00F59B] font-semibold">+15.2% Life Ext.</span>
                   </div>
                 </motion.div>
 
                 {/* Metric 3: Facility Demand */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-amber-500/40 hover:shadow-[0_10px_25px_-5px_rgba(245,158,11,0.15)] transition-all relative overflow-hidden group font-sans"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#FBBF24]/50 hover:shadow-[0_15px_35px_rgba(251,191,36,0.22)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/5 rounded-full blur-xl group-hover:bg-amber-500/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-28 h-28 bg-[#FBBF24]/8 rounded-full blur-xl group-hover:bg-[#FBBF24]/15 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs text-[#9da395] font-light">Facility Consumption</span>
-                    <div className="p-2 rounded-xl bg-amber-500/15 text-amber-400">
+                    <div className="p-2.5 rounded-xl bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30 shadow-[0_0_12px_rgba(251,191,36,0.3)]">
                       <Factory className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-light font-mono text-amber-400">
+                    <span className="text-3xl font-light font-mono text-[#FBBF24]">
                       {state.facilityLoadKW}
                     </span>
                     <span className="text-xs text-[#9da395] font-light">kW</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Diesel Generator:</span>
-                    <span className="text-[#34d399] font-medium uppercase">{state.dieselStatus}</span>
+                    <span className="text-[#00F59B] font-semibold uppercase">{state.dieselStatus}</span>
                   </div>
                 </motion.div>
 
                 {/* Metric 4: Environmental & Cost Savings */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 border border-white/10 hover:border-[#34d399]/40 hover:shadow-[0_10px_25px_-5px_rgba(52,211,153,0.15)] transition-all relative overflow-hidden group font-sans"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#C084FC]/50 hover:shadow-[0_15px_35px_rgba(192,132,252,0.22)] transition-all relative overflow-hidden group font-sans"
                 >
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#10b981]/5 rounded-full blur-xl group-hover:bg-[#10b981]/10 transition-all pointer-events-none" />
+                  <div className="absolute top-0 right-0 w-28 h-28 bg-[#C084FC]/8 rounded-full blur-xl group-hover:bg-[#C084FC]/15 transition-all pointer-events-none" />
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-[#9da395] font-light">Avoided Carbon & Cost</span>
-                    <div className="p-2 rounded-xl bg-[#10b981]/15 text-[#34d399]">
+                    <span className="text-xs text-[#9da395] font-light">Avoided Carbon & Net Value</span>
+                    <div className="p-2.5 rounded-xl bg-[#C084FC]/15 text-[#C084FC] border border-[#C084FC]/30 shadow-[0_0_12px_rgba(192,132,252,0.3)]">
                       <Leaf className="w-4 h-4" />
                     </div>
                   </div>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-2xl sm:text-3xl font-light font-mono text-[#34d399]">
+                    <span className="text-3xl font-light font-mono text-gradient-vibrant">
                       {state.cumulativeCo2SavedKg.toFixed(2)}
                     </span>
                     <span className="text-xs text-[#9da395] font-light">kg CO₂</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
                     <span>Saved: +${state.costSavingsUSD.toFixed(2)}</span>
-                    <span className="text-[#86efac] font-medium">Zero Diesel Used</span>
+                    <span className="text-[#00F59B] font-semibold">Zero Diesel Used</span>
                   </div>
                 </motion.div>
 
@@ -455,47 +499,47 @@ export const App: React.FC = () => {
               {/* View Switcher: Interactive Circuit Topology vs 3D Solar Flux Curtain */}
               <div className="flex items-center justify-between gap-3 pt-1">
                 <div className="flex items-center gap-2">
-                  <div className="inline-flex p-1 bg-[#121510] rounded-xl border border-white/10 relative text-xs">
+                  <div className="inline-flex p-1 bg-[#080d09]/90 rounded-2xl border border-white/10 relative text-xs shadow-inner">
                     <button
                       onClick={() => setOverviewDisplay('circuit')}
-                      className={`relative px-3.5 py-1.5 rounded-lg font-light transition-all flex items-center gap-1.5 z-10 ${
-                        overviewDisplay === 'circuit' ? 'text-white font-normal' : 'text-[#9da395] hover:text-[#f2f3ef]'
+                      className={`relative px-4 py-2 rounded-xl font-light transition-all flex items-center gap-2 z-10 ${
+                        overviewDisplay === 'circuit' ? 'text-white font-medium' : 'text-[#9da395] hover:text-[#f2f3ef]'
                       }`}
                     >
                       {overviewDisplay === 'circuit' && (
                         <motion.div
                           layoutId="overviewDisplayPill"
-                          className="absolute inset-0 bg-[#282e22] rounded-lg -z-10 shadow-sm border border-white/10"
+                          className="absolute inset-0 bg-gradient-to-r from-[#00F59B]/25 to-[#34D399]/20 rounded-xl -z-10 shadow-[0_0_15px_rgba(0,245,155,0.3)] border border-[#00F59B]/50"
                           transition={{ type: "spring", stiffness: 450, damping: 35 }}
                         />
                       )}
-                      <Layers className="w-3.5 h-3.5 text-[#34d399]" />
+                      <Layers className="w-3.5 h-3.5 text-[#00F59B]" />
                       <span>Live Power Grid Circuit</span>
                     </button>
 
                     <button
                       onClick={() => setOverviewDisplay('aurora-3d')}
-                      className={`relative px-3.5 py-1.5 rounded-lg font-light transition-all flex items-center gap-1.5 z-10 ${
-                        overviewDisplay === 'aurora-3d' ? 'text-white font-normal' : 'text-[#9da395] hover:text-[#f2f3ef]'
+                      className={`relative px-4 py-2 rounded-xl font-light transition-all flex items-center gap-2 z-10 ${
+                        overviewDisplay === 'aurora-3d' ? 'text-white font-medium' : 'text-[#9da395] hover:text-[#f2f3ef]'
                       }`}
                     >
                       {overviewDisplay === 'aurora-3d' && (
                         <motion.div
                           layoutId="overviewDisplayPill"
-                          className="absolute inset-0 bg-[#282e22] rounded-lg -z-10 shadow-sm border border-white/10"
+                          className="absolute inset-0 bg-gradient-to-r from-[#22D3EE]/25 to-[#06B6D4]/20 rounded-xl -z-10 shadow-[0_0_15px_rgba(34,211,238,0.3)] border border-[#22D3EE]/50"
                           transition={{ type: "spring", stiffness: 450, damping: 35 }}
                         />
                       )}
-                      <Box className="w-3.5 h-3.5 text-[#86efac]" />
+                      <Box className="w-3.5 h-3.5 text-[#22D3EE]" />
                       <span>3D Solar Flux Curtain</span>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#34d399] animate-ping" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00F59B] animate-ping" />
                     </button>
                   </div>
                 </div>
 
                 <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#9da395]">
-                  <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
-                  <span>Interactive Real-Time Mode</span>
+                  <span className="w-2 h-2 rounded-full bg-[#00F59B] animate-pulse" />
+                  <span>Real-Time Closed-Loop Physics</span>
                 </div>
               </div>
 
@@ -522,11 +566,11 @@ export const App: React.FC = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.99 }}
                     transition={{ duration: 0.2 }}
-                    className="glass-panel rounded-3xl p-5 border border-white/10 shadow-2xl space-y-4 bg-[#20241b]/90"
+                    className="glass-vibrant-card specular-rim rounded-3xl p-6 border border-white/10 shadow-2xl space-y-4"
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                       <div>
-                        <h2 className="text-sm font-light text-white flex items-center gap-2">
+                        <h2 className="text-base font-light text-white flex items-center gap-2">
                           3D Solar Electromagnetic Wave Curtain
                         </h2>
                         <p className="text-xs text-[#9da395] font-light">
@@ -534,16 +578,16 @@ export const App: React.FC = () => {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 font-mono text-xs">
-                        <span className="px-2.5 py-1 rounded-lg bg-[#161913] border border-white/10 text-[#86efac]">
+                        <span className="px-3 py-1 rounded-xl bg-[#080d09]/90 border border-white/10 text-[#00F59B]">
                           Solar: {state.solarKW} kW
                         </span>
-                        <span className="px-2.5 py-1 rounded-lg bg-[#161913] border border-white/10 text-[#34d399]">
+                        <span className="px-3 py-1 rounded-xl bg-[#080d09]/90 border border-white/10 text-[#22D3EE]">
                           GHI: {state.irradiance} W/m²
                         </span>
                       </div>
                     </div>
 
-                    <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#121510]">
+                    <div className="rounded-2xl overflow-hidden border border-white/10 bg-[#080d09]/90 shadow-inner">
                       <AuroraCurtain
                         columns={56}
                         layers={3}
@@ -551,7 +595,7 @@ export const App: React.FC = () => {
                         title="Solar Photon Radiance Field"
                         subtitle="Real-time atmospheric wave oscillation · Drag to orbit 3D camera"
                         hint="Drag to orbit · hover emitters to inspect photon density · click swatches"
-                        height={380}
+                        height={400}
                         autoRotate={0.16}
                         className="bg-transparent border-0"
                       />
@@ -560,10 +604,10 @@ export const App: React.FC = () => {
                 )}
               </AnimatePresence>
 
-              {/* Real-Time Edge-AI Activity Ticker (Customer-Friendly Live Action) */}
-              <div className="p-3.5 rounded-2xl bg-[#121510] border border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-inner">
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="p-1.5 rounded-lg bg-[#10b981]/15 text-[#34d399] shrink-0">
+              {/* Real-Time Edge-AI Activity Ticker */}
+              <div className="p-4 rounded-2xl glass-vibrant-card specular-rim flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="p-2 rounded-xl bg-[#00F59B]/20 border border-[#00F59B]/40 text-[#00F59B] shrink-0 shadow-[0_0_12px_rgba(0,245,155,0.3)]">
                     <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '8s' }} />
                   </div>
                   <div className="truncate">
@@ -574,10 +618,10 @@ export const App: React.FC = () => {
 
                 <button
                   onClick={() => setActiveTab('ledger')}
-                  className="text-[11px] font-mono text-[#34d399] hover:text-[#86efac] flex items-center gap-1 shrink-0 self-end sm:self-center"
+                  className="text-xs font-mono text-[#00F59B] hover:text-[#6EE7B7] flex items-center gap-1 shrink-0 self-end sm:self-center cursor-pointer transition-colors"
                 >
                   <span>View Full Audit Log</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
 
@@ -586,14 +630,14 @@ export const App: React.FC = () => {
                 <motion.button
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('forecast')}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 hover:bg-[#282e22] border border-white/10 hover:border-[#34d399]/40 text-left transition-all flex items-center justify-between group shadow-sm"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#22D3EE]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-[#10b981]/10 text-[#34d399] group-hover:bg-[#10b981]/20 transition-colors">
+                  <div className="flex items-center gap-3.5">
+                    <div className="p-3 rounded-2xl bg-[#22D3EE]/15 border border-[#22D3EE]/30 text-[#22D3EE] group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(34,211,238,0.25)]">
                       <TrendingUp className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-light text-[#f2f3ef] group-hover:text-[#86efac]">
+                      <div className="text-sm font-medium text-white group-hover:text-[#22D3EE] transition-colors">
                         24-Hour AI Forecast
                       </div>
                       <div className="text-xs text-[#9da395] font-light">
@@ -601,20 +645,20 @@ export const App: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#34d399] group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#22D3EE] group-hover:translate-x-1 transition-all" />
                 </motion.button>
 
                 <motion.button
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('battery')}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 hover:bg-[#282e22] border border-white/10 hover:border-[#34d399]/40 text-left transition-all flex items-center justify-between group shadow-sm"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#C084FC]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-[#34d399]/10 text-[#86efac] group-hover:bg-[#34d399]/20 transition-colors">
+                  <div className="flex items-center gap-3.5">
+                    <div className="p-3 rounded-2xl bg-[#C084FC]/15 border border-[#C084FC]/30 text-[#C084FC] group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(192,132,252,0.25)]">
                       <BatteryCharging className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-light text-[#f2f3ef] group-hover:text-[#86efac]">
+                      <div className="text-sm font-medium text-white group-hover:text-[#C084FC] transition-colors">
                         Battery Degradation Model
                       </div>
                       <div className="text-xs text-[#9da395] font-light">
@@ -622,28 +666,28 @@ export const App: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#34d399] group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#C084FC] group-hover:translate-x-1 transition-all" />
                 </motion.button>
 
                 <motion.button
                   whileHover={{ y: -3, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('sandbox')}
-                  className="p-4 rounded-2xl bg-[#20241b]/90 hover:bg-[#282e22] border border-white/10 hover:border-amber-500/40 text-left transition-all flex items-center justify-between group shadow-sm"
+                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#FBBF24]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400 group-hover:bg-amber-500/20 transition-colors">
+                  <div className="flex items-center gap-3.5">
+                    <div className="p-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/30 text-[#FBBF24] group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(251,191,36,0.25)]">
                       <Sliders className="w-5 h-5" />
                     </div>
                     <div>
-                      <div className="text-sm font-light text-[#f2f3ef] group-hover:text-amber-300">
+                      <div className="text-sm font-medium text-white group-hover:text-[#FBBF24] transition-colors">
                         Live Sandbox & Sliders
                       </div>
                       <div className="text-xs text-[#9da395] font-light">
-                        Change irradiance, load & storm fronts
+                        Irradiance, facility loads & chaos
                       </div>
                     </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all" />
+                  <ChevronRight className="w-4 h-4 text-[#7c8177] group-hover:text-[#FBBF24] group-hover:translate-x-1 transition-all" />
                 </motion.button>
               </div>
 
@@ -713,17 +757,17 @@ export const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-white/10 bg-[#121510] px-6 py-3.5 text-xs font-mono text-[#7c8177]">
-          <div className="max-w-[1500px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        <footer className="border-t border-white/10 bg-[#080d09]/80 backdrop-blur-xl px-6 py-4 text-xs font-mono text-[#7c8177] relative z-10">
+          <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-[#9da395] font-light">
-              <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse" />
-              <span>VoltSense Edge-AI Dispatch Engine</span>
+              <span className="w-2 h-2 rounded-full bg-[#00F59B] animate-pulse" />
+              <span className="text-white font-medium">VoltSense Edge-AI Dispatch Engine</span>
               <span>·</span>
               <span>Raspberry Pi 5 + ESP32 RTOS</span>
             </div>
             <div className="flex items-center gap-3">
               <span>Ticks: {tickCounter}</span>
-              <span className="text-[#86efac] font-medium">100% Offline Autonomous</span>
+              <span className="text-[#00F59B] font-semibold">100% Offline Autonomous</span>
             </div>
           </div>
         </footer>
