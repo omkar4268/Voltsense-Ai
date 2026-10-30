@@ -75,11 +75,70 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.03) 38%, rgba(52, 211, 153, 0.25) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.04) 38%, rgba(52, 211, 153, 0.35) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
+}
+
+/* Iridescent Animated Border for Hero & Featured Elements */
+.iridescent-border {
+  position: relative;
+  z-index: 1;
+}
+.iridescent-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(0, 255, 178, 0.6) 0%, rgba(6, 182, 212, 0.5) 30%, rgba(168, 85, 247, 0.4) 65%, rgba(251, 191, 36, 0.5) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+/* Vibrant Multi-Color Text Gradients */
+.text-gradient-vibrant {
+  background: linear-gradient(135deg, #A7F3D0 0%, #34D399 25%, #00F59B 50%, #22D3EE 75%, #FDE047 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-cyan {
+  background: linear-gradient(135deg, #E0F2FE 0%, #38BDF8 40%, #00F59B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-amber {
+  background: linear-gradient(135deg, #FEF08A 0%, #FBBF24 50%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-purple {
+  background: linear-gradient(135deg, #F5D0FE 0%, #C084FC 50%, #34D399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* High-End Refractive Glass Cards */
+.glass-vibrant-card {
+  background: rgba(18, 24, 19, 0.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.glass-vibrant-card:hover {
+  background: rgba(22, 30, 23, 0.82);
+  border-color: rgba(52, 211, 153, 0.45);
+  box-shadow: 0 30px 70px -10px rgba(0, 245, 155, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 /* Glassmorphism helpers in Living Green styling */

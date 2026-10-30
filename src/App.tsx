@@ -289,12 +289,13 @@ export const App: React.FC = () => {
 
   if (activeTab === 'landing') {
     return (
-      <div className="min-h-screen bg-[#161913] text-[#F2F3EF] font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
+      <div className="min-h-screen bg-[#121510] text-[#F2F3EF] font-sans selection:bg-emerald-500/30 selection:text-emerald-200">
         <LandingPage
           onLaunchConsole={(initialTab) => setActiveTab(initialTab || 'overview')}
           onOpenSpecs={() => setIsSpecsModalOpen(true)}
           state={state}
           onApplyScenario={handleApplyScenario}
+          onUpdateState={handleUpdateState}
         />
         <PitchDeckModal
           isOpen={isSpecsModalOpen}
