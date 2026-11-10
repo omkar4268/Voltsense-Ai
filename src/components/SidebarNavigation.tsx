@@ -12,7 +12,8 @@ import {
   Home,
   Radio,
   Activity,
-  ShieldCheck
+  ShieldCheck,
+  Lock
 } from 'lucide-react';
 import { MicrogridState } from '../types';
 
@@ -24,6 +25,7 @@ interface SidebarNavigationProps {
   state: MicrogridState;
   mobileOpen: boolean;
   onCloseMobile: () => void;
+  onOpenAuthModal?: () => void;
 }
 
 export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
@@ -32,6 +34,7 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
   state,
   mobileOpen,
   onCloseMobile,
+  onOpenAuthModal,
 }) => {
   const navItems = [
     {
@@ -187,6 +190,30 @@ export const SidebarNavigation: React.FC<SidebarNavigationProps> = ({
             );
           })}
         </nav>
+
+        {/* Operator Login Quick Pill (Coming Soon) */}
+        {onOpenAuthModal && (
+          <div className="px-3.5 pb-2">
+            <button
+              onClick={onOpenAuthModal}
+              className="w-full flex items-center justify-between p-2.5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 text-xs text-[#cbd0c5] hover:text-white transition-all cursor-pointer group shadow-sm"
+              title="Operator Login & SSO (Coming Soon)"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="p-1.5 rounded-xl bg-[#22D3EE]/15 text-[#22D3EE] group-hover:scale-105 transition-transform">
+                  <Lock className="w-3.5 h-3.5" />
+                </div>
+                <div className="text-left">
+                  <div className="text-white text-[11px] font-medium">Operator Login</div>
+                  <div className="text-[9px] text-[#7c8177]">Cloud Fleet SSO</div>
+                </div>
+              </div>
+              <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono">
+                Soon
+              </span>
+            </button>
+          </div>
+        )}
 
         {/* Edge Hardware Status Widget at Bottom (Luxury Telemetry Pod) */}
         <div className="p-4 border-t border-white/10 bg-[#080d09]/60">

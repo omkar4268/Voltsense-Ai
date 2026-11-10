@@ -13,7 +13,10 @@ import {
   Radio,
   ArrowLeft,
   Zap,
-  Activity
+  Activity,
+  User,
+  LogIn,
+  HelpCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -22,6 +25,9 @@ interface HeaderTelemetryBarProps {
   onModeChange: (mode: ControllerMode) => void;
   onTriggerChaos: () => void;
   onOpenSpecsModal: () => void;
+  onOpenAuthModal?: () => void;
+  onToggleGuide?: () => void;
+  isGuideOpen?: boolean;
   onToggleMobileMenu?: () => void;
   activeTabTitle?: string;
   isSimRunning?: boolean;
@@ -34,6 +40,9 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
   onModeChange,
   onTriggerChaos,
   onOpenSpecsModal,
+  onOpenAuthModal,
+  onToggleGuide,
+  isGuideOpen = false,
   onToggleMobileMenu,
   activeTabTitle = 'Overview',
   isSimRunning = true,
@@ -41,15 +50,15 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
   onGoHome,
 }) => {
   return (
-    <header className="border-b border-white/10 bg-[#0c120e]/85 backdrop-blur-2xl sticky top-0 z-30 px-4 sm:px-6 py-3 transition-colors specular-rim shadow-xl">
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-3 max-w-[1700px] mx-auto w-full">
+    <header className="border-b border-white/10 bg-[#0c120e]/90 backdrop-blur-2xl sticky top-0 z-30 px-4 sm:px-8 py-3.5 transition-colors specular-rim shadow-xl">
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 max-w-[1700px] mx-auto w-full">
         
         {/* Left: Mobile Menu & Clean Page Title */}
         <div className="flex items-center gap-3">
           {onToggleMobileMenu && (
             <button
               onClick={onToggleMobileMenu}
-              className="lg:hidden p-2 rounded-xl bg-white/[0.05] border border-white/10 text-[#9da395] hover:text-white transition-colors"
+              className="lg:hidden p-2.5 rounded-2xl bg-white/[0.05] border border-white/10 text-[#9da395] hover:text-white transition-colors"
               aria-label="Open navigation menu"
             >
               <Menu className="w-5 h-5" />
@@ -58,27 +67,44 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
 
           <div className="flex items-center gap-3">
             <div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="text-base sm:text-lg font-light text-white tracking-tight flex items-center gap-2">
+              <div className="flex items-center gap-3">
+                <h1 className="text-lg sm:text-xl font-light text-white tracking-tight flex items-center gap-2">
                   <span>{activeTabTitle}</span>
                 </h1>
-                <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#00F59B]/15 border border-[#00F59B]/40 text-[10px] font-mono text-[#00F59B] shadow-[0_0_12px_rgba(0,245,155,0.3)]">
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00F59B]/15 border border-[#00F59B]/40 text-[11px] font-mono text-[#00F59B] shadow-[0_0_12px_rgba(0,245,155,0.3)]">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#00F59B] animate-ping" />
                   <span className="font-semibold">Edge-AI Active</span>
                 </div>
               </div>
-              <p className="text-xs text-[#9da395] hidden sm:flex items-center gap-2 font-light">
-                <span>Autonomous dispatch & electrochemical battery life protection</span>
+              <p className="text-xs text-[#9da395] hidden sm:flex items-center gap-2 font-light mt-0.5">
+                <span>Autonomous dispatch & electrochemical battery protection</span>
                 <span>·</span>
-                <span className="text-[#34D399] font-mono text-[11px]">{state.simulatedClock}</span>
+                <span className="text-[#34D399] font-mono text-[11px] font-medium">{state.simulatedClock}</span>
               </p>
             </div>
           </div>
         </div>
 
-        {/* Right: Controller Mode Switcher + Chaos Test + SPECS Button */}
-        <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-start lg:justify-end">
+        {/* Right: Controller Mode Switcher + Chaos Test + Guide + Specs + Sign In */}
+        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-start lg:justify-end">
           
+          {/* Hackathon Guide Explainer Toggle Button */}
+          {onToggleGuide && (
+            <button
+              onClick={onToggleGuide}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs transition-all border shadow-sm cursor-pointer ${
+                isGuideOpen
+                  ? 'bg-[#00F59B]/20 text-[#00F59B] border-[#00F59B]/60 shadow-[0_0_15px_rgba(0,245,155,0.3)] font-medium'
+                  : 'bg-white/[0.04] hover:bg-white/[0.08] text-[#a0a89b] hover:text-white border-white/10'
+              }`}
+              title="Toggle Hackathon & New User Explainer Guide"
+            >
+              <HelpCircle className="w-4 h-4 text-[#00F59B]" />
+              <span className="hidden sm:inline">Hackathon Guide</span>
+              <span className="sm:hidden">Guide</span>
+            </button>
+          )}
+
           {/* Mode Switcher with Framer Motion layout pill */}
           <div className="inline-flex p-1 bg-[#080d09] border border-white/10 rounded-2xl text-xs font-light relative shadow-inner">
             <button
@@ -136,7 +162,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {/* Quick Chaos Stress-Test Trigger */}
           <button
             onClick={onTriggerChaos}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all border shadow-sm ${
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-mono transition-all border shadow-sm cursor-pointer ${
               state.isCloudCoverChaosActive
                 ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-[#0c120e] border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.7)] animate-pulse font-bold'
                 : 'bg-white/[0.04] hover:bg-white/[0.08] text-amber-300 border-amber-500/30 hover:border-amber-400/60 hover:shadow-[0_0_15px_rgba(245,158,11,0.25)]'
@@ -154,7 +180,7 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {onToggleSim && (
             <button
               onClick={onToggleSim}
-              className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[#cbd0c5] hover:text-white transition-all shadow-sm"
+              className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-[#cbd0c5] hover:text-white transition-all shadow-sm cursor-pointer"
               title={isSimRunning ? 'Pause Engine Simulation' : 'Resume Engine Simulation'}
             >
               {isSimRunning ? (
@@ -180,10 +206,23 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           {/* Dedicated "Specs" Modal Button */}
           <button
             onClick={onOpenSpecsModal}
-            className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/12 hover:border-[#00F59B]/50 transition-all shadow-sm group specular-rim"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl text-xs font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white border border-white/12 hover:border-[#00F59B]/50 transition-all shadow-sm group specular-rim cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5 text-[#00F59B] group-hover:scale-110 transition-transform" />
             <span>Specs</span>
+          </button>
+
+          {/* Sign In / Login Button (Opens Coming Soon Modal) */}
+          <button
+            onClick={onOpenAuthModal}
+            className="flex items-center gap-2 px-4 py-1.5 rounded-xl text-xs font-medium bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/15 hover:border-[#22D3EE]/60 transition-all shadow-sm group specular-rim cursor-pointer"
+            title="Operator Login & Cloud SSO (Coming Soon)"
+          >
+            <LogIn className="w-3.5 h-3.5 text-[#22D3EE] group-hover:scale-110 transition-transform" />
+            <span>Sign In</span>
+            <span className="hidden xl:inline text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono">
+              Soon
+            </span>
           </button>
 
         </div>

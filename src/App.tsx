@@ -9,6 +9,8 @@ import { ForecastChartModule } from './components/ForecastChartModule';
 import { BatteryDegradationPanel } from './components/BatteryDegradationPanel';
 import { AuditLedgerTerminal } from './components/AuditLedgerTerminal';
 import { PitchDeckModal } from './components/PitchDeckModal';
+import { AuthModal } from './components/AuthModal';
+import { HackathonWalkthroughBanner } from './components/HackathonWalkthroughBanner';
 import { AuroraCurtain } from './components/ui/aurora-curtain';
 import { LandingPage } from './components/LandingPage';
 import { SylvaLivingWorldScene } from '@designcodeio/threeui';
@@ -29,7 +31,10 @@ import {
   Sparkles, 
   DollarSign,
   Radio,
-  Cpu
+  Cpu,
+  Info,
+  HelpCircle,
+  Award
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -106,6 +111,8 @@ export const App: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(true);
   const [isSpecsModalOpen, setIsSpecsModalOpen] = useState<boolean>(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(true);
   const [tickCounter, setTickCounter] = useState<number>(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -307,6 +314,7 @@ export const App: React.FC = () => {
         <LandingPage
           onLaunchConsole={(initialTab) => setActiveTab(initialTab || 'overview')}
           onOpenSpecs={() => setIsSpecsModalOpen(true)}
+          onOpenAuthModal={() => setIsAuthModalOpen(true)}
           state={state}
           onApplyScenario={handleApplyScenario}
           onUpdateState={handleUpdateState}
@@ -314,6 +322,10 @@ export const App: React.FC = () => {
         <PitchDeckModal
           isOpen={isSpecsModalOpen}
           onClose={() => setIsSpecsModalOpen(false)}
+        />
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
         />
       </div>
     );
@@ -363,6 +375,7 @@ export const App: React.FC = () => {
         state={state}
         mobileOpen={isMobileMenuOpen}
         onCloseMobile={() => setIsMobileMenuOpen(false)}
+        onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 
       {/* 2. Main Content Area */}
@@ -374,6 +387,9 @@ export const App: React.FC = () => {
           onModeChange={handleModeChange}
           onTriggerChaos={handleTriggerChaos}
           onOpenSpecsModal={() => setIsSpecsModalOpen(true)}
+          onOpenAuthModal={() => setIsAuthModalOpen(true)}
+          onToggleGuide={() => setIsGuideOpen(!isGuideOpen)}
+          isGuideOpen={isGuideOpen}
           onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           activeTabTitle={getTabTitle(activeTab)}
           isSimRunning={isSimulationRunning}
@@ -381,8 +397,8 @@ export const App: React.FC = () => {
           onGoHome={() => setActiveTab('landing')}
         />
 
-        {/* Main Canvas Body */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-[1600px] w-full mx-auto">
+        {/* Main Canvas Body - Spacious & Clean Layout */}
+        <main className="flex-1 p-5 sm:p-8 lg:p-10 space-y-8 max-w-[1650px] w-full mx-auto">
           
           {/* TAB 1: OVERVIEW (Power Topology Twin Cockpit) */}
           {activeTab === 'overview' && (
@@ -390,31 +406,54 @@ export const App: React.FC = () => {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="space-y-6"
+              className="space-y-8"
             >
               
-              {/* Executive 4-Card Jewel-Tone KPI Bar */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* 1. Expandable Hackathon Walkthrough & 60-Second Explainer Banner */}
+              <HackathonWalkthroughBanner
+                onTriggerChaos={handleTriggerChaos}
+                onApplyScenario={handleApplyScenario}
+                onModeChange={handleModeChange}
+                isCloudChaosActive={state.isCloudCoverChaosActive}
+                controllerMode={state.controllerMode}
+              />
+
+              {/* 2. Executive 4-Card Jewel-Tone KPI Bar (Spacious & Descriptive) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 
                 {/* Metric 1: Clean Solar Generation */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#00F59B]/50 hover:shadow-[0_15px_35px_rgba(0,245,155,0.22)] transition-all relative overflow-hidden group font-sans"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#00F59B]/50 hover:shadow-[0_15px_35px_rgba(0,245,155,0.22)] transition-all relative overflow-hidden group font-sans flex flex-col justify-between"
                 >
                   <div className="absolute top-0 right-0 w-28 h-28 bg-[#00F59B]/8 rounded-full blur-xl group-hover:bg-[#00F59B]/15 transition-all pointer-events-none" />
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-[#9da395] font-light">Solar Generation</span>
-                    <div className="p-2.5 rounded-xl bg-[#00F59B]/15 text-[#00F59B] border border-[#00F59B]/30 shadow-[0_0_12px_rgba(0,245,155,0.3)]">
-                      <Sun className="w-4 h-4" />
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[#cbd0c5] font-medium">Solar Generation</span>
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-[#00F59B]/15 text-[#00F59B] border border-[#00F59B]/30">
+                          CLEAN
+                        </span>
+                      </div>
+                      <div className="p-2.5 rounded-2xl bg-[#00F59B]/15 text-[#00F59B] border border-[#00F59B]/30 shadow-[0_0_12px_rgba(0,245,155,0.3)]">
+                        <Sun className="w-4 h-4" />
+                      </div>
                     </div>
+
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl sm:text-4xl font-light font-mono text-[#00F59B]">
+                        {state.solarKW}
+                      </span>
+                      <span className="text-sm text-[#9da395] font-light">kW active</span>
+                    </div>
+
+                    <p className="text-[11px] text-[#9da395] font-light leading-relaxed">
+                      Photon harvest from solar panels. Supplies building demand directly; surplus charges BESS battery.
+                    </p>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-3xl font-light font-mono text-[#00F59B]">
-                      {state.solarKW}
-                    </span>
-                    <span className="text-xs text-[#9da395] font-light">kW</span>
-                  </div>
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+
+                  <div className="mt-4 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-3 font-mono">
                     <span>Irradiance: {state.irradiance} W/m²</span>
                     <span className="text-[#00F59B] font-semibold">100% Clean</span>
                   </div>
@@ -423,24 +462,38 @@ export const App: React.FC = () => {
                 {/* Metric 2: Smart Battery Storage */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#22D3EE]/50 hover:shadow-[0_15px_35px_rgba(34,211,238,0.22)] transition-all relative overflow-hidden group font-sans"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#22D3EE]/50 hover:shadow-[0_15px_35px_rgba(34,211,238,0.22)] transition-all relative overflow-hidden group font-sans flex flex-col justify-between"
                 >
                   <div className="absolute top-0 right-0 w-28 h-28 bg-[#22D3EE]/8 rounded-full blur-xl group-hover:bg-[#22D3EE]/15 transition-all pointer-events-none" />
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-[#9da395] font-light">BESS Storage Bank</span>
-                    <div className="p-2.5 rounded-xl bg-[#22D3EE]/15 text-[#22D3EE] border border-[#22D3EE]/30 shadow-[0_0_12px_rgba(34,211,238,0.3)]">
-                      <BatteryCharging className="w-4 h-4" />
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[#cbd0c5] font-medium">BESS Storage Bank</span>
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-[#22D3EE]/15 text-[#22D3EE] border border-[#22D3EE]/30">
+                          200 kWh
+                        </span>
+                      </div>
+                      <div className="p-2.5 rounded-2xl bg-[#22D3EE]/15 text-[#22D3EE] border border-[#22D3EE]/30 shadow-[0_0_12px_rgba(34,211,238,0.3)]">
+                        <BatteryCharging className="w-4 h-4" />
+                      </div>
                     </div>
+
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl sm:text-4xl font-light font-mono text-[#22D3EE]">
+                        {state.bessSoC}%
+                      </span>
+                      <span className="text-xs text-[#00F59B] font-mono font-medium">
+                        ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-[#9da395] font-light leading-relaxed">
+                      LiFePO4 buffer. Slew-rate limiter prevents micro-cycle wear and extends battery life by +3.2 years.
+                    </p>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-3xl font-light font-mono text-[#22D3EE]">
-                      {state.bessSoC}%
-                    </span>
-                    <span className="text-xs text-[#00F59B] font-mono">
-                      ({state.bessKW > 0 ? `+${state.bessKW}` : state.bessKW} kW)
-                    </span>
-                  </div>
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+
+                  <div className="mt-4 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-3 font-mono">
                     <span>Health: {state.bessHealthPct}% SoH</span>
                     <span className="text-[#00F59B] font-semibold">+15.2% Life Ext.</span>
                   </div>
@@ -449,22 +502,36 @@ export const App: React.FC = () => {
                 {/* Metric 3: Facility Demand */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#FBBF24]/50 hover:shadow-[0_15px_35px_rgba(251,191,36,0.22)] transition-all relative overflow-hidden group font-sans"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#FBBF24]/50 hover:shadow-[0_15px_35px_rgba(251,191,36,0.22)] transition-all relative overflow-hidden group font-sans flex flex-col justify-between"
                 >
                   <div className="absolute top-0 right-0 w-28 h-28 bg-[#FBBF24]/8 rounded-full blur-xl group-hover:bg-[#FBBF24]/15 transition-all pointer-events-none" />
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-[#9da395] font-light">Facility Consumption</span>
-                    <div className="p-2.5 rounded-xl bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30 shadow-[0_0_12px_rgba(251,191,36,0.3)]">
-                      <Factory className="w-4 h-4" />
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[#cbd0c5] font-medium">Facility Consumption</span>
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30">
+                          LOAD
+                        </span>
+                      </div>
+                      <div className="p-2.5 rounded-2xl bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30 shadow-[0_0_12px_rgba(251,191,36,0.3)]">
+                        <Factory className="w-4 h-4" />
+                      </div>
                     </div>
+
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl sm:text-4xl font-light font-mono text-[#FBBF24]">
+                        {state.facilityLoadKW}
+                      </span>
+                      <span className="text-sm text-[#9da395] font-light">kW load</span>
+                    </div>
+
+                    <p className="text-[11px] text-[#9da395] font-light leading-relaxed">
+                      Continuous hospital/fab manufacturing load. Maintained with zero brownout during cloud transitions.
+                    </p>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-3xl font-light font-mono text-[#FBBF24]">
-                      {state.facilityLoadKW}
-                    </span>
-                    <span className="text-xs text-[#9da395] font-light">kW</span>
-                  </div>
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+
+                  <div className="mt-4 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-3 font-mono">
                     <span>Diesel Generator:</span>
                     <span className="text-[#00F59B] font-semibold uppercase">{state.dieselStatus}</span>
                   </div>
@@ -473,22 +540,36 @@ export const App: React.FC = () => {
                 {/* Metric 4: Environmental & Cost Savings */}
                 <motion.div
                   whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#C084FC]/50 hover:shadow-[0_15px_35px_rgba(192,132,252,0.22)] transition-all relative overflow-hidden group font-sans"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#C084FC]/50 hover:shadow-[0_15px_35px_rgba(192,132,252,0.22)] transition-all relative overflow-hidden group font-sans flex flex-col justify-between"
                 >
                   <div className="absolute top-0 right-0 w-28 h-28 bg-[#C084FC]/8 rounded-full blur-xl group-hover:bg-[#C084FC]/15 transition-all pointer-events-none" />
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-[#9da395] font-light">Avoided Carbon & Net Value</span>
-                    <div className="p-2.5 rounded-xl bg-[#C084FC]/15 text-[#C084FC] border border-[#C084FC]/30 shadow-[0_0_12px_rgba(192,132,252,0.3)]">
-                      <Leaf className="w-4 h-4" />
+                  
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-[#cbd0c5] font-medium">Avoided Carbon & Net Value</span>
+                        <span className="px-1.5 py-0.2 rounded text-[9px] font-mono bg-[#C084FC]/15 text-[#C084FC] border border-[#C084FC]/30">
+                          ESG
+                        </span>
+                      </div>
+                      <div className="p-2.5 rounded-2xl bg-[#C084FC]/15 text-[#C084FC] border border-[#C084FC]/30 shadow-[0_0_12px_rgba(192,132,252,0.3)]">
+                        <Leaf className="w-4 h-4" />
+                      </div>
                     </div>
+
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <span className="text-3xl sm:text-4xl font-light font-mono text-gradient-vibrant">
+                        {state.cumulativeCo2SavedKg.toFixed(2)}
+                      </span>
+                      <span className="text-sm text-[#9da395] font-light">kg CO₂</span>
+                    </div>
+
+                    <p className="text-[11px] text-[#9da395] font-light leading-relaxed">
+                      Emissions avoided vs running legacy diesel generators. Verifiable via cryptographic ESG SHA-256 ledger.
+                    </p>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-3xl font-light font-mono text-gradient-vibrant">
-                      {state.cumulativeCo2SavedKg.toFixed(2)}
-                    </span>
-                    <span className="text-xs text-[#9da395] font-light">kg CO₂</span>
-                  </div>
-                  <div className="mt-3 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-2 font-mono">
+
+                  <div className="mt-4 flex items-center justify-between text-[11px] text-[#9da395] border-t border-white/10 pt-3 font-mono">
                     <span>Saved: +${state.costSavingsUSD.toFixed(2)}</span>
                     <span className="text-[#00F59B] font-semibold">Zero Diesel Used</span>
                   </div>
@@ -497,12 +578,12 @@ export const App: React.FC = () => {
               </div>
 
               {/* View Switcher: Interactive Circuit Topology vs 3D Solar Flux Curtain */}
-              <div className="flex items-center justify-between gap-3 pt-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
                 <div className="flex items-center gap-2">
-                  <div className="inline-flex p-1 bg-[#080d09]/90 rounded-2xl border border-white/10 relative text-xs shadow-inner">
+                  <div className="inline-flex p-1.5 bg-[#080d09]/90 rounded-2xl border border-white/10 relative text-xs shadow-inner">
                     <button
                       onClick={() => setOverviewDisplay('circuit')}
-                      className={`relative px-4 py-2 rounded-xl font-light transition-all flex items-center gap-2 z-10 ${
+                      className={`relative px-4 py-2 rounded-xl font-light transition-all flex items-center gap-2 z-10 cursor-pointer ${
                         overviewDisplay === 'circuit' ? 'text-white font-medium' : 'text-[#9da395] hover:text-[#f2f3ef]'
                       }`}
                     >
@@ -513,13 +594,13 @@ export const App: React.FC = () => {
                           transition={{ type: "spring", stiffness: 450, damping: 35 }}
                         />
                       )}
-                      <Layers className="w-3.5 h-3.5 text-[#00F59B]" />
-                      <span>Live Power Grid Circuit</span>
+                      <Layers className="w-4 h-4 text-[#00F59B]" />
+                      <span>Live Power Grid Circuit Twin</span>
                     </button>
 
                     <button
                       onClick={() => setOverviewDisplay('aurora-3d')}
-                      className={`relative px-4 py-2 rounded-xl font-light transition-all flex items-center gap-2 z-10 ${
+                      className={`relative px-4 py-2 rounded-xl font-light transition-all flex items-center gap-2 z-10 cursor-pointer ${
                         overviewDisplay === 'aurora-3d' ? 'text-white font-medium' : 'text-[#9da395] hover:text-[#f2f3ef]'
                       }`}
                     >
@@ -530,16 +611,16 @@ export const App: React.FC = () => {
                           transition={{ type: "spring", stiffness: 450, damping: 35 }}
                         />
                       )}
-                      <Box className="w-3.5 h-3.5 text-[#22D3EE]" />
-                      <span>3D Solar Flux Curtain</span>
+                      <Box className="w-4 h-4 text-[#22D3EE]" />
+                      <span>3D Solar Photon Wave Field</span>
                       <span className="w-1.5 h-1.5 rounded-full bg-[#00F59B] animate-ping" />
                     </button>
                   </div>
                 </div>
 
-                <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-[#9da395]">
+                <div className="flex items-center gap-2 text-xs font-mono text-[#9da395]">
                   <span className="w-2 h-2 rounded-full bg-[#00F59B] animate-pulse" />
-                  <span>Real-Time Closed-Loop Physics</span>
+                  <span>Real-Time Closed-Loop Physics (1.5s Cycles)</span>
                 </div>
               </div>
 
@@ -566,22 +647,22 @@ export const App: React.FC = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.99 }}
                     transition={{ duration: 0.2 }}
-                    className="glass-vibrant-card specular-rim rounded-3xl p-6 border border-white/10 shadow-2xl space-y-4"
+                    className="glass-vibrant-card specular-rim rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl space-y-4"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-white/10">
                       <div>
-                        <h2 className="text-base font-light text-white flex items-center gap-2">
+                        <h2 className="text-base sm:text-lg font-light text-white flex items-center gap-2">
                           3D Solar Electromagnetic Wave Curtain
                         </h2>
                         <p className="text-xs text-[#9da395] font-light">
-                          Rayleigh-Mie atmospheric scattering · 3 drifting layers of photon radiation
+                          Rayleigh-Mie atmospheric scattering · 3 drifting layers of photon radiation simulating cloud front extinction
                         </p>
                       </div>
                       <div className="flex items-center gap-2 font-mono text-xs">
-                        <span className="px-3 py-1 rounded-xl bg-[#080d09]/90 border border-white/10 text-[#00F59B]">
+                        <span className="px-3.5 py-1.5 rounded-xl bg-[#080d09]/90 border border-white/10 text-[#00F59B] font-semibold">
                           Solar: {state.solarKW} kW
                         </span>
-                        <span className="px-3 py-1 rounded-xl bg-[#080d09]/90 border border-white/10 text-[#22D3EE]">
+                        <span className="px-3.5 py-1.5 rounded-xl bg-[#080d09]/90 border border-white/10 text-[#22D3EE] font-semibold">
                           GHI: {state.irradiance} W/m²
                         </span>
                       </div>
@@ -595,7 +676,7 @@ export const App: React.FC = () => {
                         title="Solar Photon Radiance Field"
                         subtitle="Real-time atmospheric wave oscillation · Drag to orbit 3D camera"
                         hint="Drag to orbit · hover emitters to inspect photon density · click swatches"
-                        height={400}
+                        height={420}
                         autoRotate={0.16}
                         className="bg-transparent border-0"
                       />
@@ -605,8 +686,8 @@ export const App: React.FC = () => {
               </AnimatePresence>
 
               {/* Real-Time Edge-AI Activity Ticker */}
-              <div className="p-4 rounded-2xl glass-vibrant-card specular-rim flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl">
-                <div className="flex items-center gap-3 min-w-0">
+              <div className="p-4 sm:p-5 rounded-3xl glass-vibrant-card specular-rim flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl">
+                <div className="flex items-center gap-3.5 min-w-0">
                   <div className="p-2 rounded-xl bg-[#00F59B]/20 border border-[#00F59B]/40 text-[#00F59B] shrink-0 shadow-[0_0_12px_rgba(0,245,155,0.3)]">
                     <Sparkles className="w-4 h-4 animate-spin" style={{ animationDuration: '8s' }} />
                   </div>
@@ -620,28 +701,28 @@ export const App: React.FC = () => {
                   onClick={() => setActiveTab('ledger')}
                   className="text-xs font-mono text-[#00F59B] hover:text-[#6EE7B7] flex items-center gap-1 shrink-0 self-end sm:self-center cursor-pointer transition-colors"
                 >
-                  <span>View Full Audit Log</span>
+                  <span>View Full Cryptographic Audit Log</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* 3 Quick Visual Navigation Shortcuts */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* 3 Quick Visual Navigation Shortcuts (Spacious & Inviting) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <motion.button
-                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('forecast')}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#22D3EE]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#22D3EE]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="p-3 rounded-2xl bg-[#22D3EE]/15 border border-[#22D3EE]/30 text-[#22D3EE] group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-[#22D3EE]/15 border border-[#22D3EE]/30 text-[#22D3EE] group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(34,211,238,0.25)]">
                       <TrendingUp className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="text-sm font-medium text-white group-hover:text-[#22D3EE] transition-colors">
                         24-Hour AI Forecast
                       </div>
-                      <div className="text-xs text-[#9da395] font-light">
-                        96 intervals · 3.12% MAPE
+                      <div className="text-xs text-[#9da395] font-light mt-0.5">
+                        96 intervals · 3.12% MAPE multi-horizon model
                       </div>
                     </div>
                   </div>
@@ -649,20 +730,20 @@ export const App: React.FC = () => {
                 </motion.button>
 
                 <motion.button
-                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('battery')}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#C084FC]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#C084FC]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="p-3 rounded-2xl bg-[#C084FC]/15 border border-[#C084FC]/30 text-[#C084FC] group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(192,132,252,0.25)]">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-[#C084FC]/15 border border-[#C084FC]/30 text-[#C084FC] group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(192,132,252,0.25)]">
                       <BatteryCharging className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="text-sm font-medium text-white group-hover:text-[#C084FC] transition-colors">
                         Battery Degradation Model
                       </div>
-                      <div className="text-xs text-[#9da395] font-light">
-                        +15.2% life extension · 10-yr curves
+                      <div className="text-xs text-[#9da395] font-light mt-0.5">
+                        +15.2% life extension · 10-year electrochemical curve
                       </div>
                     </div>
                   </div>
@@ -670,20 +751,20 @@ export const App: React.FC = () => {
                 </motion.button>
 
                 <motion.button
-                  whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                  whileHover={{ y: -4, transition: { duration: 0.2 } }}
                   onClick={() => setActiveTab('sandbox')}
-                  className="p-5 rounded-2xl glass-vibrant-card specular-rim hover:border-[#FBBF24]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
+                  className="p-6 rounded-3xl glass-vibrant-card specular-rim hover:border-[#FBBF24]/50 text-left transition-all flex items-center justify-between group shadow-xl cursor-pointer"
                 >
-                  <div className="flex items-center gap-3.5">
-                    <div className="p-3 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/30 text-[#FBBF24] group-hover:scale-105 transition-transform shadow-[0_0_12px_rgba(251,191,36,0.25)]">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3.5 rounded-2xl bg-[#FBBF24]/15 border border-[#FBBF24]/30 text-[#FBBF24] group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(251,191,36,0.25)]">
                       <Sliders className="w-5 h-5" />
                     </div>
                     <div>
                       <div className="text-sm font-medium text-white group-hover:text-[#FBBF24] transition-colors">
                         Live Sandbox & Sliders
                       </div>
-                      <div className="text-xs text-[#9da395] font-light">
-                        Irradiance, facility loads & chaos
+                      <div className="text-xs text-[#9da395] font-light mt-0.5">
+                        Test irradiance, facility loads & chaos live
                       </div>
                     </div>
                   </div>
@@ -757,8 +838,8 @@ export const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-white/10 bg-[#080d09]/80 backdrop-blur-xl px-6 py-4 text-xs font-mono text-[#7c8177] relative z-10">
-          <div className="max-w-[1600px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+        <footer className="border-t border-white/10 bg-[#080d09]/80 backdrop-blur-xl px-6 sm:px-10 py-4 text-xs font-mono text-[#7c8177] relative z-10">
+          <div className="max-w-[1650px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="flex items-center gap-2 text-[#9da395] font-light">
               <span className="w-2 h-2 rounded-full bg-[#00F59B] animate-pulse" />
               <span className="text-white font-medium">VoltSense Edge-AI Dispatch Engine</span>
@@ -778,6 +859,12 @@ export const App: React.FC = () => {
       <PitchDeckModal
         isOpen={isSpecsModalOpen}
         onClose={() => setIsSpecsModalOpen(false)}
+      />
+
+      {/* Operator Login / SSO Modal (Coming Soon) */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
       />
 
     </div>

@@ -45,6 +45,7 @@ import { MicrogridState } from '../types';
 interface LandingPageProps {
   onLaunchConsole: (initialTab?: 'overview' | 'forecast' | 'battery' | 'sandbox' | 'ledger') => void;
   onOpenSpecs: () => void;
+  onOpenAuthModal?: () => void;
   state: MicrogridState;
   onApplyScenario: (sc: 'sunny' | 'cloud' | 'night' | 'islanded') => void;
   onUpdateState?: (updates: Partial<MicrogridState>) => void;
@@ -53,6 +54,7 @@ interface LandingPageProps {
 export const LandingPage: React.FC<LandingPageProps> = ({
   onLaunchConsole,
   onOpenSpecs,
+  onOpenAuthModal,
   state,
   onApplyScenario,
   onUpdateState,
@@ -207,12 +209,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
           </div>
 
-          {/* Right Action: Launch SCADA Console */}
+          {/* Right Action: Launch SCADA Console & Sign In */}
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#162018] border border-white/8 text-[11px] font-mono text-[#86efac]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00F59B] animate-ping" />
               <span>11.4ms Edge</span>
             </div>
+
+            {onOpenAuthModal && (
+              <button
+                onClick={onOpenAuthModal}
+                className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-light text-[#cbd0c5] hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition-colors cursor-pointer"
+                title="Operator Login & SSO (Coming Soon)"
+              >
+                <span>Sign In</span>
+                <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono">
+                  Soon
+                </span>
+              </button>
+            )}
             
             <button
               onClick={() => onLaunchConsole('overview')}
