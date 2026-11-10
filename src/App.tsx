@@ -10,7 +10,6 @@ import { BatteryDegradationPanel } from './components/BatteryDegradationPanel';
 import { AuditLedgerTerminal } from './components/AuditLedgerTerminal';
 import { PitchDeckModal } from './components/PitchDeckModal';
 import { AuthModal } from './components/AuthModal';
-import { HackathonWalkthroughBanner } from './components/HackathonWalkthroughBanner';
 import { AuroraCurtain } from './components/ui/aurora-curtain';
 import { LandingPage } from './components/LandingPage';
 import { SylvaLivingWorldScene } from '@designcodeio/threeui';
@@ -112,7 +111,6 @@ export const App: React.FC = () => {
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(true);
   const [isSpecsModalOpen, setIsSpecsModalOpen] = useState<boolean>(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
-  const [isGuideOpen, setIsGuideOpen] = useState<boolean>(true);
   const [tickCounter, setTickCounter] = useState<number>(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -388,8 +386,6 @@ export const App: React.FC = () => {
           onTriggerChaos={handleTriggerChaos}
           onOpenSpecsModal={() => setIsSpecsModalOpen(true)}
           onOpenAuthModal={() => setIsAuthModalOpen(true)}
-          onToggleGuide={() => setIsGuideOpen(!isGuideOpen)}
-          isGuideOpen={isGuideOpen}
           onToggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           activeTabTitle={getTabTitle(activeTab)}
           isSimRunning={isSimulationRunning}
@@ -409,16 +405,7 @@ export const App: React.FC = () => {
               className="space-y-8"
             >
               
-              {/* 1. Expandable Hackathon Walkthrough & 60-Second Explainer Banner */}
-              <HackathonWalkthroughBanner
-                onTriggerChaos={handleTriggerChaos}
-                onApplyScenario={handleApplyScenario}
-                onModeChange={handleModeChange}
-                isCloudChaosActive={state.isCloudCoverChaosActive}
-                controllerMode={state.controllerMode}
-              />
-
-              {/* 2. Executive 4-Card Jewel-Tone KPI Bar (Spacious & Descriptive) */}
+              {/* Executive 4-Card Jewel-Tone KPI Bar (Spacious & Descriptive) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                 
                 {/* Metric 1: Clean Solar Generation */}

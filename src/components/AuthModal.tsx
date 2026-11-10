@@ -75,14 +75,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         {/* Modal Body */}
         <div className="p-6 sm:p-7 space-y-6 relative z-10 overflow-y-auto max-h-[75vh]">
           
-          {/* Hackathon Notice Banner */}
-          <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 text-xs text-[#d7dcd2] space-y-1.5">
-            <div className="flex items-center gap-2 font-medium text-amber-300">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span>Hackathon Prototype Mode Active</span>
+          {/* Air-Gapped Edge Cockpit Notice Banner */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-[#00F59B]/10 via-emerald-500/5 to-transparent border border-[#00F59B]/30 text-xs text-[#d7dcd2] space-y-1.5">
+            <div className="flex items-center gap-2 font-medium text-[#00F59B]">
+              <Sparkles className="w-4 h-4 text-[#00F59B]" />
+              <span>Air-Gapped Edge Cockpit Active</span>
             </div>
             <p className="text-[#a0a89b] font-light leading-relaxed">
-              You are currently viewing the fully functional, air-gapped <strong>Edge-AI dispatch cockpit</strong> running autonomous inference. Cloud user accounts, multi-tenant SCADA fleet logins, and SSO are scheduled for our Phase 2 release.
+              You are currently viewing the fully functional, zero-latency <strong>Edge-AI dispatch cockpit</strong> running autonomous neural inference on-premise. Centralized multi-facility cloud accounts and federated SSO roll out in Phase 2.
             </p>
           </div>
 

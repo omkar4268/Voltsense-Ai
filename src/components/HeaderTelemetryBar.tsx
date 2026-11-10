@@ -26,8 +26,6 @@ interface HeaderTelemetryBarProps {
   onTriggerChaos: () => void;
   onOpenSpecsModal: () => void;
   onOpenAuthModal?: () => void;
-  onToggleGuide?: () => void;
-  isGuideOpen?: boolean;
   onToggleMobileMenu?: () => void;
   activeTabTitle?: string;
   isSimRunning?: boolean;
@@ -41,8 +39,6 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
   onTriggerChaos,
   onOpenSpecsModal,
   onOpenAuthModal,
-  onToggleGuide,
-  isGuideOpen = false,
   onToggleMobileMenu,
   activeTabTitle = 'Overview',
   isSimRunning = true,
@@ -85,26 +81,9 @@ export const HeaderTelemetryBar: React.FC<HeaderTelemetryBarProps> = ({
           </div>
         </div>
 
-        {/* Right: Controller Mode Switcher + Chaos Test + Guide + Specs + Sign In */}
+        {/* Right: Controller Mode Switcher + Chaos Test + Specs + Sign In */}
         <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-start lg:justify-end">
           
-          {/* Hackathon Guide Explainer Toggle Button */}
-          {onToggleGuide && (
-            <button
-              onClick={onToggleGuide}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs transition-all border shadow-sm cursor-pointer ${
-                isGuideOpen
-                  ? 'bg-[#00F59B]/20 text-[#00F59B] border-[#00F59B]/60 shadow-[0_0_15px_rgba(0,245,155,0.3)] font-medium'
-                  : 'bg-white/[0.04] hover:bg-white/[0.08] text-[#a0a89b] hover:text-white border-white/10'
-              }`}
-              title="Toggle Hackathon & New User Explainer Guide"
-            >
-              <HelpCircle className="w-4 h-4 text-[#00F59B]" />
-              <span className="hidden sm:inline">Hackathon Guide</span>
-              <span className="sm:hidden">Guide</span>
-            </button>
-          )}
-
           {/* Mode Switcher with Framer Motion layout pill */}
           <div className="inline-flex p-1 bg-[#080d09] border border-white/10 rounded-2xl text-xs font-light relative shadow-inner">
             <button
